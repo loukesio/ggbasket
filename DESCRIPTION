@@ -2,7 +2,7 @@ Package: ggbasket
 Type: Package
 Title: Story-Driven 'ggplot2' Graphics and Metrics for Basketball Data
 Version: 0.1.0
-Authors@R: person("ggbasket", "authors", email = "loukesio@gmail.com", role = c("aut", "cre"))
+Authors@R: person("Loukas", "Theodosiou", email = "loukesio@gmail.com", role = c("aut", "cre"))
 Description: Tidy metrics (possessions, ratings, four factors, inequality,
     shrunken shooting rates, shot value over expected) and 'ggplot2' graphics
     (NBA and FIBA/EuroLeague courts, hexagonal and zone shot charts, shooting
