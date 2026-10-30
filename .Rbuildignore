@@ -1,0 +1,5 @@
+^data-raw$
+^inst/gallery/out$
+^.*\.Rproj$
+^gallery$
+^BOOK_REVIEW\.md$

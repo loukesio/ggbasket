@@ -1,0 +1,36 @@
+Package: ggbasket
+Type: Package
+Title: Story-Driven 'ggplot2' Graphics and Metrics for Basketball Data
+Version: 0.1.0
+Authors@R: person("ggbasket", "authors", email = "loukesio@gmail.com", role = c("aut", "cre"))
+Description: Tidy metrics (possessions, ratings, four factors, inequality,
+    shrunken shooting rates, shot value over expected) and 'ggplot2' graphics
+    (NBA and FIBA/EuroLeague courts, hexagonal and zone shot charts, shooting
+    curves with uncertainty, percentile fingerprints, Lorenz curves, assist
+    networks, cluster profiles) for basketball box-score, shot and
+    play-by-play data. Inspired by, and a redesign of, the analyses in
+    Zuccolotto and Manisera (2020) "Basketball Data Science" and the
+    'BasketballAnalyzeR' package.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Depends: R (>= 4.1.0)
+Imports:
+    dplyr (>= 1.1.0),
+    ggplot2 (>= 3.5.0),
+    ggrepel,
+    rlang,
+    scales,
+    stats,
+    tibble,
+    tidyr
+Suggests:
+    BasketballAnalyzeR,
+    cluster,
+    MASS,
+    mgcv,
+    patchwork,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
