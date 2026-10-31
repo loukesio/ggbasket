@@ -128,6 +128,9 @@ plot_shot_curve <- function(curve, highlight = NULL, ref = NULL, ref_label = NUL
   pal <- stats::setNames(rep(ggbasket_colours$context, length(groups)), groups)
   hl_cols <- c(ggbasket_colours$highlight, "#1F5FA8", "#E07B00", "#2A9D8F", "#6A4C93", "#8D6E63")
   pal[highlight] <- rep_len(hl_cols, length(highlight))
+  # leagues keep their own colours
+  lg <- intersect(highlight, names(ggbasket_colours$league))
+  pal[lg] <- ggbasket_colours$league[lg]
   curve$.hl <- curve$.g %in% highlight
   ends <- curve |>
     dplyr::group_by(.data$.g) |>
@@ -160,7 +163,7 @@ plot_shot_curve <- function(curve, highlight = NULL, ref = NULL, ref_label = NUL
                        colour = ggbasket_colours$context, lineend = "round") +
     ggplot2::geom_line(data = curve[curve$.hl, ], ggplot2::aes(colour = .data$.g, linewidth = .data$density),
                        lineend = "round") +
-    ggrepel::geom_text_repel(data = ends[ends$.g %in% highlight, ],
+    ggrepel::geom_text_repel(family = gb_family(), data = ends[ends$.g %in% highlight, ],
                              ggplot2::aes(label = .data$.g, colour = .data$.g),
                              hjust = 0, nudge_x = diff(range(curve$x)) * 0.02, direction = "y",
                              segment.colour = NA, size = 3.5, fontface = "bold") +

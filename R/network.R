@@ -7,7 +7,11 @@
 #'
 #' @param pbp Play-by-play rows of one team.
 #' @return A list: `edges` (from, to, assists, points) and `nodes` (player,
-#'   assists, assisted_fgm, fgm, pct_assisted, points_created).
+#'   assists, assisted_fgm, fgm, pct_assisted, points_created, plus the
+#'   book's network-centrality measures: `partners` = teammates assisted,
+#'   `ast_share` = share of the team's assists, `ast_gini` / `recv_gini` =
+#'   how concentrated a player's assists made / received are across
+#'   teammates, from 0 = spread evenly to 1 = all to / from one player).
 #' @export
 assist_network <- function(pbp) {
   pbp <- as.data.frame(pbp)
@@ -30,7 +34,65 @@ assist_network <- function(pbp) {
                        dplyr::summarise(assisted_fgm = sum(.data$assists)), by = "player") |>
     dplyr::mutate(dplyr::across(c("fgm", "assists", "points_created", "assisted_fgm"), ~ dplyr::coalesce(.x, 0)),
                   pct_assisted = ifelse(.data$fgm > 0, .data$assisted_fgm / .data$fgm, NA_real_))
+  players <- nodes$player
+  conc <- function(p, from_col, to_col) {
+    e <- edges[edges[[from_col]] == p, ]
+    x <- e$assists[match(setdiff(players, p), e[[to_col]])]
+    x[is.na(x)] <- 0
+    if (sum(x) == 0) NA_real_ else gini(x)
+  }
+  nodes$partners <- vapply(nodes$player, function(p) sum(edges$from == p), integer(1))
+  nodes$ast_share <- nodes$assists / sum(nodes$assists)
+  nodes$ast_gini <- vapply(nodes$player, conc, numeric(1), from_col = "from", to_col = "to")
+  nodes$recv_gini <- vapply(nodes$player, conc, numeric(1), from_col = "to", to_col = "from")
   list(edges = tibble::as_tibble(edges), nodes = tibble::as_tibble(nodes))
+}
+
+#' Hubs and two-man games
+#'
+#' The book (Section 3.4) summarises an assist network by how *concentrated*
+#' each player's passes are (a Gini index over teammates). Here that becomes a
+#' map: x = share of the team's assists the player makes (how much of a hub),
+#' y = how evenly those assists are spread over teammates (1 - Gini), point
+#' size = assisted baskets received, colour = share of own baskets that were
+#' assisted. Top right: a hub who feeds everyone; top left: a connector with
+#' few assists; bottom: assists that go mostly to one partner.
+#'
+#' @inheritParams plot_assist_network
+#' @param min_assists Players with fewer assists made are dropped.
+#' @export
+plot_assist_roles <- function(net, min_assists = 30, title = NULL, subtitle = NULL, caption = NULL) {
+  n <- net$nodes[net$nodes$assists >= min_assists & !is.na(net$nodes$ast_gini), ]
+  n$spread <- 1 - n$ast_gini
+  ggplot2::ggplot(n, ggplot2::aes(.data$ast_share, .data$spread)) +
+    ggplot2::geom_hline(yintercept = stats::median(n$spread), colour = "grey60", linetype = "22",
+                        linewidth = 0.4) +
+    ggplot2::geom_point(ggplot2::aes(size = .data$assisted_fgm, fill = .data$pct_assisted), shape = 21,
+                        colour = ggbasket_colours$paper, stroke = 1) +
+    ggrepel::geom_text_repel(family = gb_family(), ggplot2::aes(label = sprintf("%s  %d ast \u00b7 %d partners", .data$player,
+                                                                as.integer(.data$assists), .data$partners)),
+                             size = 3, colour = "grey20", seed = 4, box.padding = 0.6,
+                             min.segment.length = 0.2, point.padding = 0.4) +
+    ggplot2::annotate("text", x = Inf, y = Inf, label = "Hub: feeds everyone", hjust = 1.05, vjust = 1.5,
+                      size = 3, colour = "grey45", fontface = "italic") +
+    ggplot2::annotate("text", x = Inf, y = -Inf, label = "Two-man game", hjust = 1.05, vjust = -1,
+                      size = 3, colour = "grey45", fontface = "italic") +
+    ggplot2::scale_x_continuous(labels = scales::label_percent(accuracy = 1),
+                                expand = ggplot2::expansion(mult = c(0.08, 0.12))) +
+    ggplot2::scale_y_continuous(labels = scales::label_number(accuracy = 0.01),
+                                expand = ggplot2::expansion(mult = 0.15)) +
+    ggplot2::scale_size_area(max_size = 12, name = "Assisted baskets received",
+                             guide = ggplot2::guide_legend(override.aes = list(fill = "grey65"))) +
+    scale_fill_vs_average(midpoint = 0.65, limits = c(0.3, 1), labels = scales::label_percent(),
+                          name = "Own baskets assisted",
+                          guide = ggplot2::guide_colourbar(barwidth = grid::unit(8, "lines"),
+                                                           barheight = grid::unit(0.5, "lines"),
+                                                           title.position = "top")) +
+    theme_ggbasket() +
+    ggplot2::labs(x = "Share of the team's assists \u2192 more of a hub",
+                  y = "How evenly assists are spread over teammates (1 \u2212 Gini)",
+                  title = title, caption = caption,
+                  subtitle = subtitle %||% "Book Section 3.4: concentration of each player's assists across teammates")
 }
 
 #' Assist network on a circle
@@ -76,7 +138,7 @@ plot_assist_network <- function(net, min_assists = 10, top_n = 10, title = NULL,
                         lineend = "round") +
     ggplot2::geom_point(data = nodes, ggplot2::aes(.data$x, .data$y, size = .data$assists,
                                                    fill = .data$pct_assisted),
-                        shape = 21, colour = "white", stroke = 1.2) +
+                        shape = 21, colour = ggbasket_colours$paper, stroke = 1.2) +
     ggplot2::geom_text(data = nodes, ggplot2::aes(.data$lx, .data$ly, label = .data$player, hjust = .data$hj),
                        size = 3.3, fontface = "bold", colour = "grey20") +
     ggplot2::geom_text(data = nodes, ggplot2::aes(.data$lx, .data$ly - 0.09, hjust = .data$hj,
@@ -117,13 +179,13 @@ plot_assist_matrix <- function(net, top_n = 10, title = NULL, subtitle = NULL, c
   cols <- names(sort(tapply(e$assists, e$to, sum), decreasing = TRUE))
   e$from <- factor(e$from, levels = rows); e$to <- factor(e$to, levels = cols)
   ggplot2::ggplot(e, ggplot2::aes(.data$to, .data$from)) +
-    ggplot2::geom_tile(ggplot2::aes(fill = .data$assists), colour = "white", linewidth = 0.8) +
+    ggplot2::geom_tile(ggplot2::aes(fill = .data$assists), colour = ggbasket_colours$paper, linewidth = 0.8) +
     ggplot2::geom_text(ggplot2::aes(label = ifelse(.data$assists > 0, .data$assists, ""),
                                     colour = .data$assists > stats::quantile(.data$assists, 0.85)), size = 3) +
     ggplot2::scale_fill_gradient(low = "#F4F1EC", high = "#6A1B4D", name = "Assists") +
     ggplot2::scale_colour_manual(values = c(`TRUE` = "white", `FALSE` = "grey25"), guide = "none") +
-    ggplot2::scale_x_discrete(position = "top") +
     theme_ggbasket(grid = "none") +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 40, hjust = 0)) +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 35, hjust = 1),
+                   legend.position = "bottom") +
     ggplot2::labs(x = "Scorer \u2192", y = "Passer", title = title, subtitle = subtitle, caption = caption)
 }

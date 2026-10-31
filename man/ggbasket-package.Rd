@@ -27,7 +27,7 @@ Main entry points:
 }
 }
 \author{
-\strong{Maintainer}: ggbasket authors \email{loukesio@gmail.com}
+\strong{Maintainer}: Loukas Theodosiou \email{loukesio@gmail.com}
 
 }
 \keyword{internal}

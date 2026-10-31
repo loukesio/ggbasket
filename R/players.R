@@ -59,7 +59,7 @@ plot_quadrant <- function(data, x, y, label = NULL, size = NULL, colour = NULL, 
     p <- p + ggplot2::geom_point(data = data[data$.hl, ], shape = 21, fill = NA, colour = "black",
                                  stroke = 0.8, size = if (is.null(size)) 2.6 else 4)
   }
-  p <- p + ggrepel::geom_text_repel(data = data[data$.show, ], ggplot2::aes(label = .data$.lab),
+  p <- p + ggrepel::geom_text_repel(family = gb_family(), data = data[data$.show, ], ggplot2::aes(label = .data$.lab),
                                     size = 3.1, colour = ifelse(data$.hl[data$.show], "black", "grey30"),
                                     fontface = ifelse(data$.hl[data$.show], "bold", "plain"),
                                     min.segment.length = 0.2, box.padding = 0.35, seed = 6,
@@ -138,7 +138,7 @@ plot_profile <- function(data, id, vars, subjects, group = NULL, reverse = NULL,
       ggplot2::geom_vline(xintercept = 50, colour = "grey60", linewidth = 0.4) +
       ggplot2::geom_segment(ggplot2::aes(x = 0, xend = .data$pct, yend = .data$var, colour = .data$pct),
                             linewidth = 1.6, lineend = "round") +
-      ggplot2::geom_point(ggplot2::aes(fill = .data$pct), shape = 21, size = 3.4, colour = "white", stroke = 0.8) +
+      ggplot2::geom_point(ggplot2::aes(fill = .data$pct), shape = 21, size = 3.4, colour = ggbasket_colours$paper, stroke = 0.8) +
       ggplot2::geom_text(ggplot2::aes(label = fmt(.data$value)), hjust = -0.6, size = 2.8, colour = "grey30") +
       ggplot2::scale_x_continuous(limits = c(0, 112), breaks = c(0, 25, 50, 75, 100),
                                   expand = ggplot2::expansion(0)) +
@@ -235,10 +235,10 @@ plot_spread <- function(data, made, attempts, labels = made, player = "player", 
     ggplot2::geom_segment(data = stats_df, ggplot2::aes(x = .data$lo, xend = .data$hi, yend = .data$var),
                           colour = "grey85", linewidth = 6, lineend = "round") +
     ggplot2::geom_point(ggplot2::aes(size = .data$att), shape = 21, fill = scales::alpha("#1F5FA8", 0.45),
-                        colour = "white", stroke = 0.6) +
+                        colour = ggbasket_colours$paper, stroke = 0.6) +
     ggplot2::geom_point(data = stats_df, ggplot2::aes(x = .data$team), shape = "|", size = 9,
                         colour = ggbasket_colours$highlight) +
-    ggrepel::geom_text_repel(data = tops, ggplot2::aes(label = .data$player), size = 2.8,
+    ggrepel::geom_text_repel(family = gb_family(), data = tops, ggplot2::aes(label = .data$player), size = 2.8,
                              nudge_y = 0.32, direction = "x", segment.colour = "grey60",
                              segment.size = 0.25, colour = "grey25", seed = 7) +
     ggplot2::scale_x_continuous(labels = scales::label_percent(accuracy = 1)) +

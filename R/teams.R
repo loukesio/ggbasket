@@ -47,7 +47,7 @@ plot_ratings <- function(ff, label = "team", highlight = NULL, colour = NULL, si
   if (!is.null(size)) pt_aes$size <- rlang::quo(.data[[size]]) else pt_args$size <- 2.6
   p <- p + do.call(ggplot2::geom_point, c(list(mapping = pt_aes), pt_args))
   p <- p +
-    ggrepel::geom_text_repel(ggplot2::aes(label = .data$.lab),
+    ggrepel::geom_text_repel(family = gb_family(), ggplot2::aes(label = .data$.lab),
                              size = ifelse(ff$.hl, 3.6, 2.9),
                              fontface = ifelse(ff$.hl, "bold", "plain"),
                              colour = ifelse(ff$.hl, "black", "grey35"),
@@ -107,7 +107,7 @@ plot_four_factors <- function(ff, teams, label = "team", scale = c("z", "raw"),
   p <- ggplot2::ggplot(long, ggplot2::aes(.data$xv, as.numeric(.data$side) + .data$jit)) +
     ggplot2::geom_point(data = long[!long$.hl, ], colour = "grey78", size = 1.6) +
     ggplot2::geom_point(data = long[long$.hl, ], ggplot2::aes(colour = .data$team), size = 3.2) +
-    ggrepel::geom_text_repel(data = long[long$.hl, ], ggplot2::aes(label = .data$team, colour = .data$team),
+    ggrepel::geom_text_repel(family = gb_family(), data = long[long$.hl, ], ggplot2::aes(label = .data$team, colour = .data$team),
                              size = 3, direction = "x", nudge_y = 0.32, segment.colour = NA,
                              fontface = "bold", seed = 4) +
     ggplot2::facet_wrap(~panel, ncol = 1, scales = if (scale == "raw") "free_x" else "fixed") +

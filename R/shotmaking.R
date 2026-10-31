@@ -114,7 +114,7 @@ plot_shot_making <- function(sm, label = "player", highlight = NULL, n_label = 8
     ggplot2::geom_point(ggplot2::aes(size = .data$attempts, colour = .data$league), alpha = 0.45) +
     ggplot2::geom_point(data = sm[sm$.hl, ], ggplot2::aes(size = .data$attempts),
                         shape = 21, fill = NA, colour = "black", stroke = 0.9, show.legend = FALSE) +
-    ggrepel::geom_text_repel(data = sm[sm$.show, ], ggplot2::aes(label = .data$.lab),
+    ggrepel::geom_text_repel(family = gb_family(), data = sm[sm$.show, ], ggplot2::aes(label = .data$.lab),
                              size = 3.2, min.segment.length = 0, box.padding = 0.4,
                              fontface = ifelse(sm$.hl[sm$.show], "bold", "plain"), seed = 1) +
     ggplot2::scale_x_reverse(labels = scales::label_percent(accuracy = 1)) +

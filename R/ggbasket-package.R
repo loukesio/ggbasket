@@ -20,3 +20,5 @@
 #' @keywords internal
 #' @importFrom rlang .data
 "_PACKAGE"
+
+utils::globalVariables(c("level", "w", "l", "pts", "o_pts"))

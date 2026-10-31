@@ -5,7 +5,7 @@
 \alias{ggbasket_colours}
 \title{Colours used across ggbasket}
 \format{
-An object of class \code{list} of length 8.
+An object of class \code{list} of length 10.
 }
 \usage{
 ggbasket_colours
@@ -13,7 +13,8 @@ ggbasket_colours
 \description{
 A named list: \code{league} (NBA / EuroLeague), \code{highlight} (one accent for the
 subject of a figure), \code{context} (grey for everyone else), \code{above}/\code{below}
-(the two ends of the diverging scale), and \code{court} (line and floor colours).
+(the two ends of the diverging scale), \code{ink}/\code{paper} (text and background) and
+\code{court_line}/\code{court_floor}.
 The diverging ends are taken from ColorBrewer RdBu, which is safe for
 red-green colour blindness (unlike the red-green ramps used in the book).
 }

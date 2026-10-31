@@ -5,14 +5,14 @@
 \alias{theme_court}
 \title{ggbasket theme and colours}
 \usage{
-theme_ggbasket(base_size = 11, base_family = "", grid = "xy")
+theme_ggbasket(base_size = 11.5, base_family = NULL, grid = "xy")
 
-theme_court(base_size = 11, base_family = "")
+theme_court(base_size = 11.5, base_family = NULL)
 }
 \arguments{
 \item{base_size}{Base font size.}
 
-\item{base_family}{Base font family.}
+\item{base_family}{Body font family. Default: picked by \code{\link[=ggbasket_fonts]{ggbasket_fonts()}}.}
 
 \item{grid}{Which major grid lines to keep: \code{"xy"}, \code{"x"}, \code{"y"} or \code{"none"}.}
 }
@@ -20,11 +20,25 @@ theme_court(base_size = 11, base_family = "")
 A \code{\link[ggplot2:theme]{ggplot2::theme()}}.
 }
 \description{
-\code{theme_ggbasket()} is a quiet, annotation-friendly theme: no minor grid,
-left-aligned bold titles, grey subtitles and captions, legend on top.
-\code{theme_court()} is the same look without axes, for shot charts.
+\code{theme_ggbasket()} is an editorial theme in the style of Cedric Scherer's
+graphics: warm paper background, bold left-aligned title, a subtitle that
+wraps by itself and renders markdown (so words can be coloured to replace
+a legend, see \code{\link[=colour_text]{colour_text()}}), a monospaced caption, and
+generous margins. Titles and subtitles wrap to the plot width by themselves. \code{theme_court()} is the same look without axes, for shot
+charts.
+}
+\details{
+Fonts: Fira Sans (titles), Fira Sans Condensed (text) and Roboto Mono
+(numbers), all free on Google Fonts. Missing fonts fall back to Roboto,
+Helvetica or the system sans. On the base \code{pdf()} / \code{postscript()} devices,
+which cannot use system fonts, the theme falls back to \code{"sans"}; use
+\code{ggsave(device = cairo_pdf)} or a PNG for the full look. Set
+\code{options(ggbasket.family = "sans")} to switch the custom fonts off.
 }
 \examples{
 library(ggplot2)
-ggplot(mtcars, aes(wt, mpg)) + geom_point() + theme_ggbasket()
+ggplot(mtcars, aes(wt, mpg)) + geom_point() +
+  labs(title = "Heavier cars burn more fuel",
+       subtitle = paste("Cars with", colour_text("more cylinders", "#D1495B"), "sit lower")) +
+  theme_ggbasket()
 }

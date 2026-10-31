@@ -2,7 +2,7 @@
 # Run from the package root: Rscript gallery/make_gallery.R
 suppressMessages({ devtools::load_all(quiet = TRUE); library(ggplot2); library(BasketballAnalyzeR) })
 out <- function(p, name, w = 8, h = 6, dir = "gallery/after") {
-  ggsave(file.path(dir, paste0(name, ".png")), p, width = w, height = h, dpi = 150, bg = "white")
+  ggsave(file.path(dir, paste0(name, ".png")), p, width = w, height = h, dpi = 150, bg = ggbasket_colours$paper)
 }
 before <- function(expr, name, w = 8, h = 6) {
   png(file.path("gallery/before", paste0(name, ".png")), width = w, height = h, units = "in", res = 110)
@@ -12,9 +12,9 @@ before <- function(expr, name, w = 8, h = 6) {
 }
 data(Tbox, Obox, Pbox, Tadd, PbP.BDB, package = "BasketballAnalyzeR")
 PbP <- suppressWarnings(PbPmanipulation(PbP.BDB))
-cap_book <- "Data: NBA 2017/18 regular season (BasketballAnalyzeR / BigDataBall)"
-cap_now <- "Data: 2024/25 regular season (NBA Stats, ESPN, EuroLeague API)"
-cap_el_rim <- paste(cap_now, "Note: EuroLeague operators record layups ~1 m from the hoop, so the EuroLeague curve starts late.", sep = "\n")
+cap_book <- ggbasket_caption("NBA 2017/18 regular season \u00b7 BasketballAnalyzeR / BigDataBall")
+cap_now <- ggbasket_caption("2024/25 regular season \u00b7 NBA Stats, ESPN, EuroLeague API")
+cap_el_rim <- paste(cap_now, "Note: EuroLeague operators record layups ~1 m from the hoop, so the EuroLeague curve starts late.", sep = "<br>")
 which_fig <- commandArgs(trailingOnly = TRUE)
 want <- function(x) length(which_fig) == 0 || x %in% which_fig
 
@@ -121,7 +121,7 @@ if (want("curve")) {
   out(plot_shot_curve(sc, vlines = c("FIBA 3pt 6.75 m" = 6.75, "NBA 3pt 7.24 m" = 7.24),
                       xlab = "Shot distance from the hoop (m)",
                       title = "Same mid-range desert, different oasis",
-                      subtitle = "Expected points per shot by distance, 2s and 3s smoothed separately. Line width = where shots are taken; band = 90% bootstrap.\nThe FIBA line is half a metre closer, so EuroLeague teams reach 1+ points per shot sooner",
+                      subtitle = paste("Expected points per shot by distance in the", colour_text("NBA", "NBA"), "and the", colour_text("EuroLeague", "EuroLeague"), "(2s and 3s smoothed separately). Both lose value between the rim and the arc, but the FIBA line is half a metre closer, so **EuroLeague shooters reach 1+ point per shot sooner**. Line width = where shots are taken; band = 90% bootstrap"),
                       caption = cap_el_rim), "11_curve_leagues", 9, 5.8)
   gs <- as_ggbasket_shots(subset(PbP, team == "GSW"))
   pl5 <- c("Stephen Curry", "Kevin Durant", "Klay Thompson", "Draymond Green")
@@ -134,7 +134,9 @@ if (want("making")) {
   sm <- shot_making(xs, prior_n = 150)
   out(plot_shot_making(subset(sm, league == "NBA"), min_attempts = 500,
                        highlight = c("Stephen Curry", "Nikola Jokic", "Shai Gilgeous-Alexander"),
-                       title = "Shot difficulty vs shot making, NBA 2024/25", caption = cap_now), "12_shot_making", 9, 7)
+                       title = "Jokic, Curry and SGA make hard shots look easy",
+                       subtitle = "NBA 2024/25. Each shot graded against a league model of make probability by location; players with 500+ attempts",
+                       caption = cap_now), "12_shot_making", 9, 7)
 }
 if (want("corr")) {
   Ps <- merge(Pbox, Tadd, by = "Team"); Ps <- subset(Ps, MIN >= 500)
@@ -175,5 +177,50 @@ if (want("network")) {
   out(plot_assist_network(net, min_assists = 20, top_n = 10,
                           title = "Golden State 2017/18: Draymond Green runs the offence", caption = cap_book), "17_network", 10, 8)
   out(plot_assist_matrix(net, top_n = 10, title = "Golden State 2017/18: passer to scorer", caption = cap_book), "17b_assist_matrix", 8.5, 7)
+  out(plot_assist_roles(net, min_assists = 30,
+                        title = "Green is the hub but feeds a few shooters; Durant spreads it around",
+                        caption = cap_book), "17c_assist_roles", 9, 6.5)
+}
+if (want("pressure") || want("association")) {
+  ps <- pressure_situations(PbP, orb_reset = 24)
+  ps <- expected_fg(ps)
+}
+if (want("association")) {
+  ps$dist <- sqrt(ps$x^2 + ps$y^2)
+  out(plot_association(association(ps, c(Made = "made", `Shot value` = "value", Distance = "dist",
+                                         `Shot clock` = "shot_clock_left", `End of period` = "period_end",
+                                         Score = "score_diff", `Last shot` = "prev_miss", Period = "period")),
+                       title = "Location matters; the situation barely registers",
+                       caption = cap_book), "18_association", 9, 8)
+}
+if (want("pressure")) {
+  out(plot_pressure(pressure_effects(ps),
+                    title = "The shot clock is the real pressure",
+                    subtitle = paste("Change in make probability against the situation's reference, after accounting for where the shot was taken.",
+                                     "Shots with **2 seconds or less** on the (estimated) shot clock go in about **8 points less often**, and the last 100 seconds of a period cost about 2. Score and hot or cold streaks barely matter.",
+                                     "Bars = 90% intervals"),
+                    caption = ggbasket_caption("NBA 2017/18, 82 games \u00b7 BasketballAnalyzeR / BigDataBall",
+                                               note = c("Shot clock estimated from play-by-play.", "Method: logistic regression with location-based expected FG% as offset (replaces the book's CART, Section 3.6)"))),
+      "20_pressure", 9, 8)
+}
+if (want("joint")) {
+  pr <- player_rates(player_seasons, team_seasons)
+  pr <- subset(pr, league == "NBA" & minutes >= 1500)
+  out(plot_joint(pr, "usg_pct", "ts_pct", label = "player",
+                 highlight = c("Shai Gilgeous-Alexander", "Nikola Jokic", "Giannis Antetokounmpo", "Stephen Curry",
+                               "Victor Wembanyama", "Anthony Edwards", "Luka Doncic", "Jayson Tatum"),
+                 xlab = "Usage rate (share of team plays used on the floor) \u2192",
+                 ylab = "True shooting % \u2192", x_labels = scales::label_percent(), y_labels = scales::label_percent(),
+                 title = "Stars bend the usage\u2013efficiency curve",
+                 subtitle = "Most NBA players with 1,500+ minutes sit in the purple cloud. The stars use a third of their team's plays and still score efficiently",
+                 caption = cap_now), "19_joint", 9, 8)
+}
+if (want("luck")) {
+  out(plot_luck(expected_wins(team_seasons), n = 6,
+                title = "The Lakers won six more games than their point margin says",
+                subtitle = paste("Open circle = wins expected from points scored and allowed; filled = actual wins.",
+                                 colour_text("Red", ggbasket_colours$above), "= luckier,",
+                                 colour_text("blue", ggbasket_colours$below), "= unluckier. Six luckiest and unluckiest per league"),
+                caption = cap_now), "21_luck", 10, 6)
 }
 cat("done\n")

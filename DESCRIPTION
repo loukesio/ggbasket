@@ -1,7 +1,7 @@
 Package: ggbasket
 Type: Package
 Title: Story-Driven 'ggplot2' Graphics and Metrics for Basketball Data
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: person("Loukas", "Theodosiou", email = "loukesio@gmail.com", role = c("aut", "cre"))
 Description: Tidy metrics (possessions, ratings, four factors, inequality,
     shrunken shooting rates, shot value over expected) and 'ggplot2' graphics
@@ -16,13 +16,17 @@ Encoding: UTF-8
 Depends: R (>= 4.1.0)
 Imports:
     dplyr (>= 1.1.0),
-    ggplot2 (>= 3.5.0),
+    ggplot2 (>= 4.0.0),
+    ggtext,
+    grDevices,
     ggrepel,
     rlang,
     scales,
     stats,
+    systemfonts,
     tibble,
-    tidyr
+    tidyr,
+    utils
 Suggests:
     BasketballAnalyzeR,
     cluster,

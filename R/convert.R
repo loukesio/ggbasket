@@ -31,6 +31,8 @@ as_ggbasket_teams <- function(Tbox, Obox, league = "NBA") {
   names(oo) <- paste0("o_", keep)
   out <- cbind(t[, setdiff(names(t), c("p2p", "p3p", "ftp"))], oo)
   out$team_name <- out$team
+  # ggbasket convention: min = total player minutes (BasketballAnalyzeR stores game minutes)
+  if ("min" %in% names(out)) out$min <- 5 * out$min
   out$league <- league
   tibble::as_tibble(out)
 }

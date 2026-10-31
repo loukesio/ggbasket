@@ -44,7 +44,7 @@ plot_corr_matrix <- function(data, vars, method = c("pearson", "spearman"), alph
   long$a <- factor(long$a, levels = rev(rownames(R)))
   long$b <- factor(long$b, levels = colnames(R))
   ggplot2::ggplot(long, ggplot2::aes(.data$b, .data$a)) +
-    ggplot2::geom_tile(ggplot2::aes(fill = .data$r, alpha = .data$sig), colour = "white", linewidth = 1) +
+    ggplot2::geom_tile(ggplot2::aes(fill = .data$r, alpha = .data$sig), colour = ggbasket_colours$paper, linewidth = 1) +
     ggplot2::geom_text(ggplot2::aes(label = sub("^(-?)0\\.", "\\1.", sprintf("%.2f", .data$r)),
                                     colour = abs(.data$r) > 0.6), size = 3.3) +
     scale_fill_vs_average(limits = c(-1, 1), name = sprintf("%s correlation", tools::toTitleCase(method)),
@@ -55,7 +55,7 @@ plot_corr_matrix <- function(data, vars, method = c("pearson", "spearman"), alph
     ggplot2::scale_colour_manual(values = c(`TRUE` = "white", `FALSE` = "grey20"), guide = "none") +
     ggplot2::coord_equal() +
     theme_ggbasket(grid = "none") +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 0)) +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 35, hjust = 1)) +
     ggplot2::labs(x = NULL, y = NULL, title = title, caption = caption,
                   subtitle = subtitle %||% sprintf("n = %d. Faded cells: not significant at %.0f%% after Holm correction", n, 100 * alpha))
 }
@@ -106,7 +106,7 @@ plot_fit <- function(data, x, y, label, method = c("lm", "loess", "gam"), n_labe
     ggplot2::geom_line(data = grid, ggplot2::aes(.data[[x]], .data$fit), inherit.aes = FALSE,
                        colour = "grey30", linewidth = 0.8) +
     ggplot2::geom_point(ggplot2::aes(colour = .data$.res), size = 2.2, alpha = 0.85) +
-    ggrepel::geom_text_repel(data = data[data$.show, ], ggplot2::aes(label = .data$.lab),
+    ggrepel::geom_text_repel(family = gb_family(), data = data[data$.show, ], ggplot2::aes(label = .data$.lab),
                              size = 3.1, min.segment.length = 0, box.padding = 0.4, seed = 8) +
     scale_colour_vs_average(limits = c(-lim, lim), reverse = !above_is_good, guide = "none") +
     theme_ggbasket() +
@@ -172,9 +172,9 @@ plot_similarity_map <- function(data, vars, label, method = c("pca", "mds"), col
     ggplot2::geom_segment(data = arrows, ggplot2::aes(x = 0, y = 0, xend = .data$x, yend = .data$y),
                           inherit.aes = FALSE, colour = "grey55",
                           arrow = grid::arrow(length = grid::unit(0.18, "cm"), type = "closed")) +
-    ggrepel::geom_label_repel(data = arrows, ggplot2::aes(x = .data$x, y = .data$y, label = .data$var),
+    ggrepel::geom_label_repel(family = gb_family(), data = arrows, ggplot2::aes(x = .data$x, y = .data$y, label = .data$var),
                               inherit.aes = FALSE, size = 3, colour = "grey25", label.size = 0,
-                              fill = scales::alpha("white", 0.85), fontface = "bold", seed = 10,
+                              fill = scales::alpha(ggbasket_colours$paper, 0.85), fontface = "bold", seed = 10,
                               min.segment.length = Inf, point.padding = 0.2)
   p <- p + if (is.null(colour)) ggplot2::geom_point(pt_aes, colour = ifelse(data$.hl, ggbasket_colours$highlight, "grey50"),
                                                     alpha = 0.7, size = 2) else
@@ -182,7 +182,7 @@ plot_similarity_map <- function(data, vars, label, method = c("pca", "mds"), col
   if (!is.null(colour) && !is.numeric(data[[colour]])) {
     p <- p + ggplot2::scale_colour_manual(values = categorical_palette(data[[colour]]), name = NULL)
   }
-  p + ggrepel::geom_text_repel(data = data[data$.show, ], ggplot2::aes(label = .data$.lab), size = 3,
+  p + ggrepel::geom_text_repel(family = gb_family(), data = data[data$.show, ], ggplot2::aes(label = .data$.lab), size = 3,
                                fontface = ifelse(data$.hl[data$.show], "bold", "plain"),
                                max.overlaps = 40, seed = 9) +
     ggplot2::coord_equal() +

@@ -191,7 +191,7 @@ plot_shot_hex <- function(shots, baseline = shots, facet = NULL, league = NULL,
   p <- ggplot2::ggplot(poly, ggplot2::aes(.data$x, .data$y)) +
     geom_court(league, coord = FALSE, floor = ggbasket_colours$court_floor) +
     ggplot2::geom_polygon(ggplot2::aes(group = .data$group, fill = .data$val),
-                          colour = "white", linewidth = 0.15) +
+                          colour = ggbasket_colours$paper, linewidth = 0.15) +
     annotate_court_lines(league, colour = scales::alpha(ggbasket_colours$court_line, 0.6)) +
     scale_fill_vs_average(
       name = lab, limits = c(-limit, limit),
@@ -248,7 +248,7 @@ plot_shot_zones <- function(shots, baseline = shots, league = NULL, detail = TRU
     ggplot2::geom_raster(ggplot2::aes(fill = .data$fg_vs_league), interpolate = FALSE) +
     annotate_court_lines(league) +
     ggplot2::geom_label(data = labs, ggplot2::aes(label = .data$label), size = 2.7,
-                        lineheight = 0.95, linewidth = 0, fill = scales::alpha("white", 0.75),
+                        lineheight = 0.95, linewidth = 0, fill = scales::alpha(ggbasket_colours$paper, 0.75),
                         label.padding = grid::unit(0.12, "lines"), colour = "grey15") +
     scale_fill_vs_average(name = "FG% vs league in the zone", limits = c(-limit, limit),
                           labels = function(v) sprintf("%+.0f pts", 100 * v),
@@ -259,7 +259,7 @@ plot_shot_zones <- function(shots, baseline = shots, league = NULL, detail = TRU
     ggplot2::coord_fixed(xlim = c(-7.75, 7.75), ylim = c(-1.75, 9.25), expand = FALSE) +
     theme_court() +
     ggplot2::labs(title = title, caption = caption,
-                  subtitle = subtitle %||% "Makes/attempts, FG% and share of shots per zone.\nColour = FG% compared with the league in the zone (shrunk for small samples)")
+                  subtitle = subtitle %||% "Makes/attempts, FG% and share of shots per zone. Colour = FG% compared with the league in the zone (shrunk for small samples)")
 }
 
 #' Shot density on the court

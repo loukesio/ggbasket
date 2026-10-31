@@ -11,7 +11,11 @@ assist_network(pbp)
 }
 \value{
 A list: \code{edges} (from, to, assists, points) and \code{nodes} (player,
-assists, assisted_fgm, fgm, pct_assisted, points_created).
+assists, assisted_fgm, fgm, pct_assisted, points_created, plus the
+book's network-centrality measures: \code{partners} = teammates assisted,
+\code{ast_share} = share of the team's assists, \code{ast_gini} / \code{recv_gini} =
+how concentrated a player's assists made / received are across
+teammates, from 0 = spread evenly to 1 = all to / from one player).
 }
 \description{
 Builds passer-to-scorer counts from play-by-play data with one row per

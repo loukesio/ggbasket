@@ -193,6 +193,15 @@ ggbasket uses lower-case columns, an `o_` prefix for opponents, metres from the 
 | `kclustering()`, `hclustering()` | `cluster_quality()`, `plot_cluster_quality()`, `plot_cluster_profiles()` | silhouette, one heatmap with typical members |
 | `assistnet()` | `assist_network()`, `plot_assist_network()`, `plot_assist_matrix()` | stable layout, matrix view |
 | `PbPmanipulation()` + manual rescaling | `as_ggbasket_teams/players/shots()` | converters into one convention |
+| Cramer's V, eta-squared (Sec. 3.1, no BAR function) | `association()`, `plot_association()` | all three indices on one 0-1 heatmap, index named in each cell |
+| Assist Gini per player (Sec. 3.4) | `assist_network()` (`ast_gini`, `recv_gini`, `partners`), `plot_assist_roles()` | hub vs two-man-game map |
+| Joint density (Sec. 3.5.3, `ggpairs`) | `plot_joint()` | filled 2-D density + marginals + labelled players |
+| High-pressure CART (Sec. 3.6) | `pressure_situations()`, `pressure_effects()`, `plot_pressure()` | logistic model with expected FG% offset, effects in percentage points with intervals; shot clock estimated from play-by-play |
+| *(not in the book)* | `player_rates()`, `expected_wins()`, `plot_luck()` | TS%, usage, AST%, rebound/steal/block/turnover rates; Pythagorean wins and luck |
+
+Not covered: the GPS/convex-hull spacing analysis of Section 5.3 (needs player-tracking data) and the
+self-organising-map / topological roles mentioned in Chapter 4 (a mixture model, Section 5 below, is the
+better tool).
 
 ---
 

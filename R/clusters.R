@@ -111,7 +111,7 @@ plot_cluster_profiles <- function(data, vars, cluster, label = NULL, n_examples 
   o <- stats::hclust(stats::dist(t(as.matrix(prof[, -1]))))$order
   long$var <- factor(long$var, levels = labs_v[o])
   ggplot2::ggplot(long, ggplot2::aes(.data$var, .data$row)) +
-    ggplot2::geom_tile(ggplot2::aes(fill = .data$z), colour = "white", linewidth = 1.2) +
+    ggplot2::geom_tile(ggplot2::aes(fill = .data$z), colour = ggbasket_colours$paper, linewidth = 1.2) +
     ggplot2::geom_text(ggplot2::aes(label = sprintf("%+.1f", .data$z), colour = abs(.data$z) > 1.2), size = 3) +
     scale_fill_vs_average(limits = c(-2, 2), name = "SD from average",
                           guide = ggplot2::guide_colourbar(barwidth = grid::unit(10, "lines"),
