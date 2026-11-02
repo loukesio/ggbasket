@@ -36,8 +36,8 @@ plot_joint(
 A patchwork object (needs the patchwork package).
 }
 \description{
-The book's Section 3.5.3 draws two-dimensional kernel densities to see
-where players concentrate. Here the density is drawn as soft filled
+Where do players concentrate on two statistics at once? The
+two-dimensional kernel density is drawn as soft filled
 contours behind the players, with the marginal distributions on the
 edges, a few highlighted players labelled, and optional groups coloured.
 }

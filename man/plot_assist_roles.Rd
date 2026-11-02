@@ -20,9 +20,8 @@ plot_assist_roles(
 \item{title, subtitle, caption}{Labels.}
 }
 \description{
-The book (Section 3.4) summarises an assist network by how \emph{concentrated}
-each player's passes are (a Gini index over teammates). Here that becomes a
-map: x = share of the team's assists the player makes (how much of a hub),
+An assist network can be summarised by how \emph{concentrated} each player's
+passes are (a Gini index over teammates). Here that becomes a map: x = share of the team's assists the player makes (how much of a hub),
 y = how evenly those assists are spread over teammates (1 - Gini), point
 size = assisted baskets received, colour = share of own baskets that were
 assisted. Top right: a hub who feeds everyone; top left: a connector with

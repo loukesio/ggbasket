@@ -33,7 +33,7 @@ closest to the cluster centre are listed.}
 Rows are clusters (labelled with size, heterogeneity index CHI and, if
 given, a few example members), columns are variables, cells are the
 cluster mean in standard deviations from the overall mean. One heatmap
-replaces the book's grid of radial plots and reads in both directions:
+shows every cluster at once and reads in both directions:
 across a row (what defines this group) and down a column (who is high on
 this stat).
 }

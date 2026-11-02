@@ -32,3 +32,14 @@
 #' @source NBA Stats shot chart detail (via hoopR) and the EuroLeague
 #'   `Points` API. Built by `data-raw/make_data.R`.
 "shots_2024"
+
+#' Two finals, play by play
+#'
+#' Every event of the 2025 NBA Finals Game 7 (Oklahoma City 103, Indiana 91)
+#' and the 2025 EuroLeague final, in the ggbasket play-by-play layout
+#' (see [pbp]), with the players on court.
+#'
+#' @format A tibble, one row per event; columns as described in [pbp].
+#' @source NBA: ESPN play-by-play via hoopR. EuroLeague: official live API
+#'   (`PlayByPlay` and `Points`). Built by `data-raw/make_pbp.R`.
+"pbp_games"

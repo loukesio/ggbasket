@@ -1,6 +1,6 @@
 #' Possessions
 #'
-#' Kubatko et al. (2007) estimate, as used in the book:
+#' The Kubatko et al. (2007) estimate:
 #' `FGA + ft_coef * FTA - ORB + TOV`. The 0.44 coefficient fits the NBA; FIBA
 #' studies often use 0.4 or 0.5, so it is an argument.
 #'
@@ -92,7 +92,7 @@ four_factor_info <- function() {
 #'
 #' How concentrated is a quantity (points, shots, assists) among the top `n`
 #' contributors? `lorenz()` returns the curve, `gini()` the coefficient in
-#' `[0, 1]`. Following the book, only the `n` largest values are used, because
+#' `[0, 1]`. Only the `n` largest values are used, because
 #' adding deep-bench players inflates inequality; compare teams with the same
 #' `n`. The Gini is the normalised area between the line of equality and the
 #' curve, so with `n` players its maximum is 1.
@@ -120,7 +120,7 @@ lorenz <- function(x, n = NULL) {
   k <- length(x)
   cum_share_people <- c(0, seq_len(k) / k)
   cum_share_value <- c(0, cumsum(x) / sum(x))
-  # Book definition: sum over i < k of (p_i - q_i) / sum over i < k of p_i
+  # definition: sum over i < k of (p_i - q_i) / sum over i < k of p_i
   g <- if (k > 1) sum(cum_share_people[2:k] - cum_share_value[2:k]) / sum(cum_share_people[2:k]) else 0
   out <- tibble::tibble(rank = 0:k, people = cum_share_people, value = cum_share_value)
   attr(out, "gini") <- g
@@ -135,7 +135,7 @@ lorenz <- function(x, n = NULL) {
 #' interval. A player who is 0/2 from three is pulled almost all the way to the
 #' average; a player who is 150/400 barely moves. This replaces raw
 #' percentages wherever small samples would otherwise dominate a figure (the
-#' book's 3P% variability example is driven by a 0/2 shooter).
+#' range of a team's 3P% is otherwise set by a 0/2 shooter).
 #'
 #' @param made,attempts Counts.
 #' @param group Optional grouping vector (e.g. league or zone): a separate

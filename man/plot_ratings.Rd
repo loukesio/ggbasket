@@ -39,8 +39,8 @@ own scales.}
 One point per team: points scored per 100 possessions (x) against points
 allowed (y, reversed so good defence is up). Diagonal lines are constant
 net rating, so "how good is this team overall" is read off the diagonals and
-"how do they get there" off the axes. Replaces the book's two side-by-side
-bar charts of ORtg and DRtg, where that trade-off is invisible.
+"how do they get there" off the axes, a trade-off that side-by-side bar
+charts of ORtg and DRtg hide.
 }
 \examples{
 ff <- four_factors(team_seasons)

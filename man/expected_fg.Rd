@@ -24,5 +24,5 @@ With \code{mgcv} installed this is a logistic GAM with a smooth of distance and
 angle per league and shot value; otherwise a binned average (0.5 m
 distance bands by zone). Extra context columns (shot clock, score margin)
 can be added as \code{extra} smooth terms, which is the regression version of
-the book's CART "high-pressure" model.
+a classification-tree "high-pressure" model (see \code{\link[=pressure_effects]{pressure_effects()}}).
 }

@@ -11,6 +11,7 @@ plot_spread(
   labels = made,
   player = "player",
   shrink = TRUE,
+  min_attempts = 1,
   label_top = 3,
   title = NULL,
   subtitle = NULL,
@@ -29,12 +30,15 @@ plot_spread(
 
 \item{shrink}{Shrink percentages.}
 
+\item{min_attempts}{Players with fewer attempts of a kind are left out of
+that row.}
+
 \item{label_top}{Number of highest-volume players to name per row.}
 
 \item{title, subtitle, caption}{Labels.}
 }
 \description{
-Replacement for the book's variability diagram. One row per variable,
+One row per variable,
 players as dots (size = volume, e.g. attempts), the team's weighted average
 as a line, and the coefficient of variation written at the end. Players
 named in \code{label_top} are labelled at their dots.
@@ -44,11 +48,7 @@ With \code{shrink = TRUE} and \code{made}/\code{attempts} pairs, percentages are
 (see \code{\link[=shrink_rate]{shrink_rate()}}) so a 0/2 shooter no longer defines the range.
 }
 \examples{
-# player_seasons has no makes; use the book's data
-if (requireNamespace("BasketballAnalyzeR", quietly = TRUE)) {
-  data(Pbox, package = "BasketballAnalyzeR")
-  okc <- as_ggbasket_players(subset(Pbox, Team == "Oklahoma City Thunder" & MIN >= 500))
-  plot_spread(okc, c("p2m", "p3m", "ftm"), c("p2a", "p3a", "fta"),
-              labels = c("2-point FG\%", "3-point FG\%", "Free throws"))
-}
+okc <- subset(box_score(pbp_games), team == "OKC" & min >= 10)
+plot_spread(okc, c("p2m", "p3m", "ftm"), c("p2a", "p3a", "fta"),
+            labels = c("2-point FG\%", "3-point FG\%", "Free throws"))
 }

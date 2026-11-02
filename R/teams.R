@@ -3,8 +3,8 @@
 #' One point per team: points scored per 100 possessions (x) against points
 #' allowed (y, reversed so good defence is up). Diagonal lines are constant
 #' net rating, so "how good is this team overall" is read off the diagonals and
-#' "how do they get there" off the axes. Replaces the book's two side-by-side
-#' bar charts of ORtg and DRtg, where that trade-off is invisible.
+#' "how do they get there" off the axes, a trade-off that side-by-side bar
+#' charts of ORtg and DRtg hide.
 #'
 #' @param ff Output of [four_factors()] (needs `ortg`, `drtg`).
 #' @param label Column used for labels.
@@ -71,9 +71,8 @@ plot_ratings <- function(ff, label = "team", highlight = NULL, colour = NULL, si
 #' team in the league is a grey dot; the teams in `teams` are coloured and
 #' labelled. Axes are oriented so that right is always better, and the facet
 #' strips carry Dean Oliver's weights, so it is clear that a big advantage in
-#' free-throw rate matters less than a small one in shooting. The book's
-#' version plots only differences from the average of the selected teams,
-#' which hides how they compare with everyone else.
+#' free-throw rate matters less than a small one in shooting. Values are
+#' against the whole league, not only the selected teams.
 #'
 #' @param ff Output of [four_factors()] for the whole league.
 #' @param teams Teams to highlight (values of `label`).

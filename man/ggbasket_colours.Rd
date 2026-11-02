@@ -16,6 +16,6 @@ subject of a figure), \code{context} (grey for everyone else), \code{above}/\cod
 (the two ends of the diverging scale), \code{ink}/\code{paper} (text and background) and
 \code{court_line}/\code{court_floor}.
 The diverging ends are taken from ColorBrewer RdBu, which is safe for
-red-green colour blindness (unlike the red-green ramps used in the book).
+red-green colour blindness.
 }
 \keyword{datasets}

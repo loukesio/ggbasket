@@ -1,7 +1,7 @@
 #' ggbasket theme and colours
 #'
 #' `theme_ggbasket()` is an editorial theme in the style of Cedric Scherer's
-#' graphics: warm paper background, bold left-aligned title, a subtitle that
+#' graphics: white background, bold left-aligned title, a subtitle that
 #' wraps by itself and renders markdown (so words can be coloured to replace
 #' a legend, see [colour_text()]), a monospaced caption, and
 #' generous margins. Titles and subtitles wrap to the plot width by themselves. `theme_court()` is the same look without axes, for shot
@@ -36,7 +36,7 @@ theme_ggbasket <- function(base_size = 11.5, base_family = NULL, grid = "xy") {
     ggplot2::theme(
       plot.background = ggplot2::element_rect(fill = ggbasket_colours$paper, colour = NA),
       panel.grid.minor = ggplot2::element_blank(),
-      panel.grid.major = ggplot2::element_line(colour = "#E6E2DA", linewidth = 0.35),
+      panel.grid.major = ggplot2::element_line(colour = "#E5E5E5", linewidth = 0.35),
       plot.title = ggtext::element_textbox_simple(family = title_family, face = "bold", colour = ink,
                                                   size = ggplot2::rel(1.65), lineheight = 1.1,
                                                   margin = ggplot2::margin(b = 8)),
@@ -147,19 +147,19 @@ ggbasket_caption <- function(data, graphic = "Loukas Theodosiou \u00b7 ggbasket"
 #' (the two ends of the diverging scale), `ink`/`paper` (text and background) and
 #' `court_line`/`court_floor`.
 #' The diverging ends are taken from ColorBrewer RdBu, which is safe for
-#' red-green colour blindness (unlike the red-green ramps used in the book).
+#' red-green colour blindness.
 #' @export
 ggbasket_colours <- list(
   league = c(NBA = "#1F5FA8", EuroLeague = "#E07B00", FIBA = "#E07B00"),
   highlight = "#D1495B",
   ink = "#1F1F1F",
-  paper = "#FAF8F4",
+  paper = "#FFFFFF",
   context = "grey72",
   above = "#B2182B",
   mid = "#F7F7F7",
   below = "#2166AC",
   court_line = "grey35",
-  court_floor = "#F3EDE2"
+  court_floor = "#F4F4F4"
 )
 
 #' Diverging and sequential scales

@@ -25,7 +25,7 @@ beta-binomial, and returns each row's posterior mean and a credible
 interval. A player who is 0/2 from three is pulled almost all the way to the
 average; a player who is 150/400 barely moves. This replaces raw
 percentages wherever small samples would otherwise dominate a figure (the
-book's 3P\% variability example is driven by a 0/2 shooter).
+range of a team's 3P\% is otherwise set by a 0/2 shooter).
 }
 \examples{
 shrink_rate(c(0, 150, 30), c(2, 400, 80))

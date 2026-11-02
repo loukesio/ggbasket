@@ -21,7 +21,7 @@ A \code{\link[ggplot2:theme]{ggplot2::theme()}}.
 }
 \description{
 \code{theme_ggbasket()} is an editorial theme in the style of Cedric Scherer's
-graphics: warm paper background, bold left-aligned title, a subtitle that
+graphics: white background, bold left-aligned title, a subtitle that
 wraps by itself and renders markdown (so words can be coloured to replace
 a legend, see \code{\link[=colour_text]{colour_text()}}), a monospaced caption, and
 generous margins. Titles and subtitles wrap to the plot width by themselves. \code{theme_court()} is the same look without axes, for shot

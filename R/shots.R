@@ -149,7 +149,7 @@ bin_shots_hex <- function(shots, by = NULL, baseline = shots, binwidth = 0.75, m
 #'
 #' Shot data needs `x`, `y` in metres from the hoop centre (y towards half
 #' court), `made`, and optionally `value` and `league`. See
-#' [as_ggbasket_shots()] to convert BasketballAnalyzeR play-by-play.
+#' [as_ggbasket_shots()] to take shots out of a play-by-play.
 #'
 #' @inheritParams bin_shots_hex
 #' @param facet Column to facet by (also used for binning).
@@ -212,8 +212,7 @@ plot_shot_hex <- function(shots, baseline = shots, facet = NULL, league = NULL,
 #'
 #' The court painted by zone. Fill is FG% versus the league in that zone
 #' (shrunk), and each zone is labelled with makes/attempts, FG% and its share
-#' of the player's shots. This is the book's "sectors" chart with real court
-#' zones instead of pie slices and a diverging rather than rainbow scale.
+#' of the player's shots: real court zones and a diverging scale.
 #'
 #' @inheritParams summarise_zones
 #' @inheritParams plot_shot_hex

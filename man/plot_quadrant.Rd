@@ -47,7 +47,7 @@ bottom-right.}
 \item{size_lab, colour_lab}{Legend titles.}
 }
 \description{
-One function for the book's \code{scatterplot()} and \code{bubbleplot()}: points
+Points
 (optionally sized and coloured by two more variables), dashed lines at the
 average of each axis, corner captions, and labels for highlighted and most
 extreme cases (repelled, so they never overlap).

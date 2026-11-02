@@ -35,9 +35,9 @@ plot_cluster_quality(cq, choose = NULL)
 }
 \description{
 For each k, the share of total variance explained by the clustering
-(between deviance / total deviance, the book's BD/TD) and its gain over
+(between deviance / total deviance) and its gain over
 k - 1. Variables are standardised. k-means uses \code{nstart} random starts
-(the book's \code{kclustering()} uses 10 runs); \code{"ward"} uses Ward hierarchical
+(more starts give a more stable answer); \code{"ward"} uses Ward hierarchical
 clustering. Also returns the average silhouette width (when the \code{cluster}
-package is available), a second opinion the book does not report.
+package is available) as a second opinion.
 }

@@ -1,6 +1,6 @@
 #' Quadrant scatter: two stats, an average cross and stories in the corners
 #'
-#' One function for the book's `scatterplot()` and `bubbleplot()`: points
+#' Points
 #' (optionally sized and coloured by two more variables), dashed lines at the
 #' average of each axis, corner captions, and labels for highlighted and most
 #' extreme cases (repelled, so they never overlap).
@@ -81,7 +81,7 @@ plot_quadrant <- function(data, x, y, label = NULL, size = NULL, colour = NULL, 
 #'
 #' Each variable becomes its percentile within a reference group (league,
 #' position, ...), so all axes share one meaningful 0-100 scale; this fixes the
-#' book's radial plots, whose common min-max axis squashed low-range
+#' problem of radial plots on a common min-max axis, which squash low-range
 #' variables like steals. `style = "bars"` (default) draws a lollipop per
 #' variable with the 50th percentile marked; `style = "radar"` keeps the
 #' radial look for those who like it, but on percentiles and with straight
@@ -185,7 +185,7 @@ plot_profile <- function(data, id, vars, subjects, group = NULL, reverse = NULL,
 
 #' Spread within a team: who carries each skill?
 #'
-#' Replacement for the book's variability diagram. One row per variable,
+#' One row per variable,
 #' players as dots (size = volume, e.g. attempts), the team's weighted average
 #' as a line, and the coefficient of variation written at the end. Players
 #' named in `label_top` are labelled at their dots.
@@ -199,26 +199,24 @@ plot_profile <- function(data, id, vars, subjects, group = NULL, reverse = NULL,
 #' @param labels Row labels.
 #' @param player Column with names.
 #' @param shrink Shrink percentages.
+#' @param min_attempts Players with fewer attempts of a kind are left out of
+#'   that row.
 #' @param label_top Number of highest-volume players to name per row.
 #' @param title,subtitle,caption Labels.
 #' @export
 #' @examples
-#' # player_seasons has no makes; use the book's data
-#' if (requireNamespace("BasketballAnalyzeR", quietly = TRUE)) {
-#'   data(Pbox, package = "BasketballAnalyzeR")
-#'   okc <- as_ggbasket_players(subset(Pbox, Team == "Oklahoma City Thunder" & MIN >= 500))
-#'   plot_spread(okc, c("p2m", "p3m", "ftm"), c("p2a", "p3a", "fta"),
-#'               labels = c("2-point FG%", "3-point FG%", "Free throws"))
-#' }
+#' okc <- subset(box_score(pbp_games), team == "OKC" & min >= 10)
+#' plot_spread(okc, c("p2m", "p3m", "ftm"), c("p2a", "p3a", "fta"),
+#'             labels = c("2-point FG%", "3-point FG%", "Free throws"))
 plot_spread <- function(data, made, attempts, labels = made, player = "player", shrink = TRUE,
-                        label_top = 3, title = NULL, subtitle = NULL, caption = NULL) {
+                        min_attempts = 1, label_top = 3, title = NULL, subtitle = NULL, caption = NULL) {
   long <- dplyr::bind_rows(lapply(seq_along(made), function(j) {
     m <- data[[made[j]]]; a <- data[[attempts[j]]]
     s <- if (shrink) shrink_rate(m, a)$shrunk else m / a
     tibble::tibble(player = as.character(data[[player]]), var = labels[j], made = m, att = a,
                    raw = m / a, pct = s)
   }))
-  long <- long[long$att > 0, ]
+  long <- long[long$att >= max(1, min_attempts), ]
   stats_df <- long |>
     dplyr::group_by(.data$var) |>
     dplyr::summarise(team = sum(.data$made) / sum(.data$att),
@@ -251,8 +249,8 @@ plot_spread <- function(data, made, attempts, labels = made, player = "player", 
 
 #' Ranked composition bars with a companion stat
 #'
-#' The book's bar-line plot draws bars and a line on two different y axes,
-#' which invites false comparisons between them. This version draws the
+#' Bars and a line on two different y axes invite false comparisons
+#' between them, so this draws the
 #' ranked (stacked) bars on the left and the companion variable as a dot
 #' column on the right, sharing the rows, each on its own honest axis.
 #'

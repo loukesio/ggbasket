@@ -23,7 +23,7 @@ A tibble: \code{situation}, \code{level}, \code{reference}, \code{effect}, \code
 \code{upper}, \code{n}.
 }
 \description{
-Replaces the book's classification tree with one logistic regression that
+One logistic regression (instead of a classification tree) that
 holds shot location fixed: the location-based expected FG\% from
 \code{\link[=expected_fg]{expected_fg()}} enters as an offset, so each coefficient is the effect of
 the situation \emph{on top of} where the shot was taken, adjusted for the other

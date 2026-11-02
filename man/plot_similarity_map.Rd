@@ -36,8 +36,7 @@ plot_similarity_map(
 }
 \description{
 Places subjects so that similar statistical profiles sit close together.
-Instead of the book's four separate "level plots" for interpreting the map,
-each variable is drawn as an arrow pointing in the direction in which it
+Each variable is drawn as an arrow pointing in the direction in which it
 increases (its correlation with the two map axes), so the whole map can be
 read at once.
 }

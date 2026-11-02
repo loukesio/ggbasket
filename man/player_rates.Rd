@@ -20,8 +20,8 @@ player_rates(players, teams, ft_coef = 0.44)
 \code{players} with the rate columns added.
 }
 \description{
-The rate statistics the book does not use but every modern analysis does,
-with Basketball-Reference definitions. They put players from teams (and
+The rate statistics of modern analysis, with Basketball-Reference
+definitions. They put players from teams (and
 leagues) with different pace and game length on the same footing:
 }
 \details{

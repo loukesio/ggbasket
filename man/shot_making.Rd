@@ -15,15 +15,15 @@ shot_making(shots, by = "player", prior_n = 100)
 \item{prior_n}{Shrinkage strength in attempts.}
 }
 \description{
-The book's FOCUS idea (Zuccolotto et al. 2018) of grading every shot by
+The idea of grading every shot by
 \code{made - P(make)}, so a difficult make is worth more than an easy one,
-turned into a per-player table:
+(Zuccolotto et al., 2018), turned into a per-player table:
 }
 \details{
 \itemize{
 \item \code{xfg}: average expected FG\% of the player's shots (shot difficulty; lower
 = harder diet);
-\item \code{fg_oe}: FG\% over expected, the book's \eqn{P_i}, shrunk towards 0 by
+\item \code{fg_oe}: FG\% over expected, shrunk towards 0 by
 \code{prior_n} pseudo-attempts so that low-volume players do not top the list;
 \item \code{pts_added}: points added over an average shooter taking the same shots.
 }

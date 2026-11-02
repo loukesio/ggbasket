@@ -7,8 +7,8 @@
 pressure_situations(pbp, league = "NBA", orb_reset = 14)
 }
 \arguments{
-\item{pbp}{Play-by-play in the BasketballAnalyzeR layout (after
-\code{PbPmanipulation()}), all teams of each game.}
+\item{pbp}{Play-by-play in the ggbasket layout (see \link{pbp}), all teams
+of each game.}
 
 \item{league}{League label for \code{\link[=expected_fg]{expected_fg()}}.}
 
@@ -21,20 +21,20 @@ The field-goal attempts as from \code{\link[=as_ggbasket_shots]{as_ggbasket_shot
 situation factors.
 }
 \description{
-Following the book's Section 3.6 (Zuccolotto et al., 2018), every field-goal
+Following Zuccolotto et al. (2018), every field-goal
 attempt in a play-by-play is tagged with five situations that may make a
-shot harder, using the book's cut-offs (Table 3.6):
+shot harder, with their cut-offs:
 }
 \details{
 \itemize{
 \item \code{shot_clock}: seconds left on the shot clock, in four bands
 (\code{"early"} > 17, \code{"early-middle"} 10-17, \code{"middle-end"} 2-10,
-\code{"time-end"} <= 2). BasketballAnalyzeR's play-by-play has no shot clock,
+\code{"time-end"} <= 2). Play-by-play feeds have no shot clock,
 so it is \emph{estimated} as 24 minus the seconds since the opponent's last
 action (shot, rebound, turnover), with a reset to \code{orb_reset} seconds
 after an offensive rebound.
 \item \code{period_end}: the last 100 seconds of a period.
-\item \code{score_diff}: shooting team's margin before the shot, in the book's five
+\item \code{score_diff}: shooting team's margin before the shot, in five
 bands.
 \item \code{team_misses}: share of the team's field goals missed so far in the game,
 split at its 25th and 75th percentiles.

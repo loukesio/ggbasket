@@ -1,24 +1,27 @@
-#' ggbasket: story-driven ggplot2 graphics for basketball data
+#' ggbasket: learn from basketball games, NBA and EuroLeague
 #'
-#' Metrics and redesigned graphics for the analyses in Zuccolotto & Manisera,
-#' *Basketball Data Science* (CRC, 2020), for NBA and FIBA/EuroLeague data.
+#' Tools to read play-by-play, box-score and shot data from the NBA and the
+#' EuroLeague, turn them into the measures analysts use, and draw each answer
+#' as a finished, story-first ggplot2 figure.
 #'
 #' Conventions: column names are lower case (`pts`, `p3a`, `orb`, `tov`,
 #' ...), opponent stats carry an `o_` prefix, shot coordinates are metres
-#' from the hoop centre with y pointing towards half court.
+#' from the hoop centre with y pointing towards half court, and
+#' play-by-play follows one layout for both leagues (see [pbp]).
 #'
 #' Main entry points:
-#' * Teams: [four_factors()], [plot_ratings()], [plot_four_factors()], [plot_lorenz()]
-#' * Players: [plot_profile()], [plot_quadrant()], [plot_spread()], [plot_ranked()]
-#' * Shots: [plot_shot_hex()], [plot_shot_zones()], [plot_shot_density()],
-#'   [shot_curve()], [plot_shot_curve()], [shot_making()], [plot_shot_making()]
-#' * Patterns: [plot_corr_matrix()], [plot_fit()], [plot_similarity_map()],
-#'   [cluster_quality()], [plot_cluster_profiles()]
-#' * Passing: [assist_network()], [plot_assist_network()], [plot_assist_matrix()]
-#' * Courts: [geom_court()], [shot_zone()], [court_spec()]
+#' * Data: [pbp_from_espn()], [fetch_euroleague_pbp()], [add_lineups()], [box_score()]
+#' * One game: [plot_game_flow()], [scoring_runs()], [win_probability()],
+#'   [plot_win_probability()], [game_factors()], [plot_game_factors()], [game_summary()]
+#' * A season of games: [on_off()], [lineups()], [plot_on_off()], [game_score()],
+#'   [plot_consistency()], [clutch_time()], [pressure_effects()], [assist_network()]
+#' * Teams: [four_factors()], [expected_wins()], [plot_ratings()], [plot_four_factors()], [plot_luck()]
+#' * Players: [player_rates()], [plot_profile()], [plot_quadrant()], [plot_joint()], [plot_spread()]
+#' * Shots: [plot_shot_hex()], [plot_shot_zones()], [shot_curve()], [shot_making()]
+#' * Courts and style: [geom_court()], [theme_ggbasket()], [colour_text()]
 #'
 #' @keywords internal
-#' @importFrom rlang .data
+#' @importFrom rlang .data %||%
 "_PACKAGE"
 
-utils::globalVariables(c("level", "w", "l", "pts", "o_pts"))
+utils::globalVariables(c("level", "w", "l", "pts", "o_pts", "margin", "d_efg", "d_tov", "d_orb", "d_ftr"))

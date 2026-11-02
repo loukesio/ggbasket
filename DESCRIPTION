@@ -1,16 +1,18 @@
 Package: ggbasket
 Type: Package
-Title: Story-Driven 'ggplot2' Graphics and Metrics for Basketball Data
-Version: 0.2.0
+Title: Learn from Basketball Games: NBA and EuroLeague Play-by-Play, Metrics and Graphics
+Version: 0.3.0
 Authors@R: person("Loukas", "Theodosiou", email = "loukesio@gmail.com", role = c("aut", "cre"))
-Description: Tidy metrics (possessions, ratings, four factors, inequality,
-    shrunken shooting rates, shot value over expected) and 'ggplot2' graphics
-    (NBA and FIBA/EuroLeague courts, hexagonal and zone shot charts, shooting
-    curves with uncertainty, percentile fingerprints, Lorenz curves, assist
-    networks, cluster profiles) for basketball box-score, shot and
-    play-by-play data. Inspired by, and a redesign of, the analyses in
-    Zuccolotto and Manisera (2020) "Basketball Data Science" and the
-    'BasketballAnalyzeR' package.
+Description: Reads NBA (ESPN, via 'hoopR') and EuroLeague (official live
+    API) play-by-play into one layout with the players on court, and turns
+    it into box scores, game flow and scoring runs, win probability,
+    four-factor explanations of a result, on/off and line-up ratings,
+    game-to-game consistency, clutch splits, assist networks and the effect
+    of pressure on shooting. Also provides team, player and shot metrics
+    (possessions, ratings, rate statistics, Pythagorean wins, shrunken
+    shooting rates, expected field-goal percentage) and story-first 'ggplot2'
+    graphics on NBA and FIBA courts. Started as a redesign of the analyses
+    in Zuccolotto and Manisera (2020) "Basketball Data Science".
 License: MIT + file LICENSE
 Encoding: UTF-8
 Depends: R (>= 4.1.0)
@@ -28,7 +30,10 @@ Imports:
     tidyr,
     utils
 Suggests:
+    arrow,
     BasketballAnalyzeR,
+    hoopR,
+    jsonlite,
     cluster,
     MASS,
     mgcv,

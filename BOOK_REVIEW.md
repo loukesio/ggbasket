@@ -1,6 +1,6 @@
 # *Basketball Data Science* (Zuccolotto & Manisera, CRC 2020): a close reading
 
-Reference for the ggbasket package. Covers what each chapter does, what holds up, and what to change.
+ggbasket started as a redesign of this book's analyses; this note records that starting point. Covers what each chapter does, what holds up, and what to change.
 Page numbers are the book's printed pages.
 
 ---
@@ -219,4 +219,27 @@ better tool).
    probability ("60% stretch big, 40% wing"), which is what the book's FOCUS on new roles wants.
 5. **Lead-lag style.** Combine `plot_profile()` percentiles with the RQ4 "ahead of their time" smoothed path.
 
-Before/after images for every redesign are in `gallery/` (`before/` = book package, `after/` = ggbasket).
+---
+
+## 6. Book figures next to their ggbasket counterparts
+
+The book's figures (`gallery/book/before/`, NBA 2017/18, drawn with BasketballAnalyzeR by
+`gallery/book/make_before.R`) next to the ggbasket figures that answer the same question on 2024/25 data.
+
+| Book (BasketballAnalyzeR) | ggbasket |
+|---|---|
+| ![](gallery/book/before/01_ratings.png) | ![](gallery/figures/13_ratings.png) |
+| ![](gallery/book/before/02_fourfactors.png) | ![](gallery/figures/14_four_factors.png) |
+| ![](gallery/book/before/03_lorenz.png) | ![](gallery/figures/16_lorenz.png) |
+| ![](gallery/book/before/04_profile.png) | ![](gallery/figures/17_profile.png) |
+| ![](gallery/book/before/05_quadrant.png) | ![](gallery/figures/19_quadrant.png) |
+| ![](gallery/book/before/06_spread.png) | ![](gallery/figures/22_spread.png) |
+| ![](gallery/book/before/07_ranked.png) | ![](gallery/figures/23_ranked.png) |
+| ![](gallery/book/before/08_shots.png) | ![](gallery/figures/28_shot_hex.png) ![](gallery/figures/29_shot_zones.png) |
+| ![](gallery/book/before/10_density.png) | ![](gallery/figures/31_density.png) |
+| ![](gallery/book/before/11_curve.png) | ![](gallery/figures/32_curve_leagues.png) ![](gallery/figures/12_shot_clock.png) |
+| ![](gallery/book/before/13_corr.png) | ![](gallery/figures/24_corr.png) ![](gallery/figures/21_fit.png) |
+| ![](gallery/book/before/15_map.png) | ![](gallery/figures/25_map.png) |
+| ![](gallery/book/before/16_clusters.png) | ![](gallery/figures/26_cluster_quality.png) ![](gallery/figures/27_cluster_profiles.png) |
+| ![](gallery/book/before/17_network.png) | ![](gallery/figures/07_assist_network.png) ![](gallery/figures/08_assist_matrix.png) ![](gallery/figures/09_assist_roles.png) |
+| *(CART tables, Section 3.6)* | ![](gallery/figures/10_pressure.png) ![](gallery/figures/11_association.png) |

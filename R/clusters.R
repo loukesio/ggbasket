@@ -1,11 +1,11 @@
 #' How many clusters? Explained variance by k
 #'
 #' For each k, the share of total variance explained by the clustering
-#' (between deviance / total deviance, the book's BD/TD) and its gain over
+#' (between deviance / total deviance) and its gain over
 #' k - 1. Variables are standardised. k-means uses `nstart` random starts
-#' (the book's `kclustering()` uses 10 runs); `"ward"` uses Ward hierarchical
+#' (more starts give a more stable answer); `"ward"` uses Ward hierarchical
 #' clustering. Also returns the average silhouette width (when the `cluster`
-#' package is available), a second opinion the book does not report.
+#' package is available) as a second opinion.
 #'
 #' @param data A data frame.
 #' @param vars Columns to cluster on.
@@ -68,7 +68,7 @@ plot_cluster_quality <- function(cq, choose = NULL) {
 #' Rows are clusters (labelled with size, heterogeneity index CHI and, if
 #' given, a few example members), columns are variables, cells are the
 #' cluster mean in standard deviations from the overall mean. One heatmap
-#' replaces the book's grid of radial plots and reads in both directions:
+#' shows every cluster at once and reads in both directions:
 #' across a row (what defines this group) and down a column (who is high on
 #' this stat).
 #'

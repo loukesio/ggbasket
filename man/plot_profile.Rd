@@ -43,7 +43,7 @@ percentiles are flipped so outward always means "better".}
 \description{
 Each variable becomes its percentile within a reference group (league,
 position, ...), so all axes share one meaningful 0-100 scale; this fixes the
-book's radial plots, whose common min-max axis squashed low-range
+problem of radial plots on a common min-max axis, which squash low-range
 variables like steals. \code{style = "bars"} (default) draws a lollipop per
 variable with the 50th percentile marked; \code{style = "radar"} keeps the
 radial look for those who like it, but on percentiles and with straight

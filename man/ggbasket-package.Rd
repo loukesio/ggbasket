@@ -4,26 +4,29 @@
 \name{ggbasket-package}
 \alias{ggbasket}
 \alias{ggbasket-package}
-\title{ggbasket: story-driven ggplot2 graphics for basketball data}
+\title{ggbasket: learn from basketball games, NBA and EuroLeague}
 \description{
-Metrics and redesigned graphics for the analyses in Zuccolotto & Manisera,
-\emph{Basketball Data Science} (CRC, 2020), for NBA and FIBA/EuroLeague data.
+Tools to read play-by-play, box-score and shot data from the NBA and the
+EuroLeague, turn them into the measures analysts use, and draw each answer
+as a finished, story-first ggplot2 figure.
 }
 \details{
 Conventions: column names are lower case (\code{pts}, \code{p3a}, \code{orb}, \code{tov},
 ...), opponent stats carry an \code{o_} prefix, shot coordinates are metres
-from the hoop centre with y pointing towards half court.
+from the hoop centre with y pointing towards half court, and
+play-by-play follows one layout for both leagues (see \link{pbp}).
 
 Main entry points:
 \itemize{
-\item Teams: \code{\link[=four_factors]{four_factors()}}, \code{\link[=plot_ratings]{plot_ratings()}}, \code{\link[=plot_four_factors]{plot_four_factors()}}, \code{\link[=plot_lorenz]{plot_lorenz()}}
-\item Players: \code{\link[=plot_profile]{plot_profile()}}, \code{\link[=plot_quadrant]{plot_quadrant()}}, \code{\link[=plot_spread]{plot_spread()}}, \code{\link[=plot_ranked]{plot_ranked()}}
-\item Shots: \code{\link[=plot_shot_hex]{plot_shot_hex()}}, \code{\link[=plot_shot_zones]{plot_shot_zones()}}, \code{\link[=plot_shot_density]{plot_shot_density()}},
-\code{\link[=shot_curve]{shot_curve()}}, \code{\link[=plot_shot_curve]{plot_shot_curve()}}, \code{\link[=shot_making]{shot_making()}}, \code{\link[=plot_shot_making]{plot_shot_making()}}
-\item Patterns: \code{\link[=plot_corr_matrix]{plot_corr_matrix()}}, \code{\link[=plot_fit]{plot_fit()}}, \code{\link[=plot_similarity_map]{plot_similarity_map()}},
-\code{\link[=cluster_quality]{cluster_quality()}}, \code{\link[=plot_cluster_profiles]{plot_cluster_profiles()}}
-\item Passing: \code{\link[=assist_network]{assist_network()}}, \code{\link[=plot_assist_network]{plot_assist_network()}}, \code{\link[=plot_assist_matrix]{plot_assist_matrix()}}
-\item Courts: \code{\link[=geom_court]{geom_court()}}, \code{\link[=shot_zone]{shot_zone()}}, \code{\link[=court_spec]{court_spec()}}
+\item Data: \code{\link[=pbp_from_espn]{pbp_from_espn()}}, \code{\link[=fetch_euroleague_pbp]{fetch_euroleague_pbp()}}, \code{\link[=add_lineups]{add_lineups()}}, \code{\link[=box_score]{box_score()}}
+\item One game: \code{\link[=plot_game_flow]{plot_game_flow()}}, \code{\link[=scoring_runs]{scoring_runs()}}, \code{\link[=win_probability]{win_probability()}},
+\code{\link[=plot_win_probability]{plot_win_probability()}}, \code{\link[=game_factors]{game_factors()}}, \code{\link[=plot_game_factors]{plot_game_factors()}}, \code{\link[=game_summary]{game_summary()}}
+\item A season of games: \code{\link[=on_off]{on_off()}}, \code{\link[=lineups]{lineups()}}, \code{\link[=plot_on_off]{plot_on_off()}}, \code{\link[=game_score]{game_score()}},
+\code{\link[=plot_consistency]{plot_consistency()}}, \code{\link[=clutch_time]{clutch_time()}}, \code{\link[=pressure_effects]{pressure_effects()}}, \code{\link[=assist_network]{assist_network()}}
+\item Teams: \code{\link[=four_factors]{four_factors()}}, \code{\link[=expected_wins]{expected_wins()}}, \code{\link[=plot_ratings]{plot_ratings()}}, \code{\link[=plot_four_factors]{plot_four_factors()}}, \code{\link[=plot_luck]{plot_luck()}}
+\item Players: \code{\link[=player_rates]{player_rates()}}, \code{\link[=plot_profile]{plot_profile()}}, \code{\link[=plot_quadrant]{plot_quadrant()}}, \code{\link[=plot_joint]{plot_joint()}}, \code{\link[=plot_spread]{plot_spread()}}
+\item Shots: \code{\link[=plot_shot_hex]{plot_shot_hex()}}, \code{\link[=plot_shot_zones]{plot_shot_zones()}}, \code{\link[=shot_curve]{shot_curve()}}, \code{\link[=shot_making]{shot_making()}}
+\item Courts and style: \code{\link[=geom_court]{geom_court()}}, \code{\link[=theme_ggbasket]{theme_ggbasket()}}, \code{\link[=colour_text]{colour_text()}}
 }
 }
 \author{

@@ -32,8 +32,8 @@ plot_ranked(
 \item{title, subtitle, caption}{Labels.}
 }
 \description{
-The book's bar-line plot draws bars and a line on two different y axes,
-which invites false comparisons between them. This version draws the
+Bars and a line on two different y axes invite false comparisons
+between them, so this draws the
 ranked (stacked) bars on the left and the companion variable as a dot
 column on the right, sharing the rows, each on its own honest axis.
 }

@@ -33,8 +33,7 @@ encoding.}
 \description{
 The court painted by zone. Fill is FG\% versus the league in that zone
 (shrunk), and each zone is labelled with makes/attempts, FG\% and its share
-of the player's shots. This is the book's "sectors" chart with real court
-zones instead of pie slices and a diverging rather than rainbow scale.
+of the player's shots: real court zones and a diverging scale.
 }
 \examples{
 plot_shot_zones(subset(shots_2024, player == "Nikola Jokic"),

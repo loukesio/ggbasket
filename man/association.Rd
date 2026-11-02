@@ -16,8 +16,8 @@ A tibble with \code{var1}, \code{var2}, \code{measure} (\code{"V"}, \code{"eta2"
 \code{"|r|"}), \code{value} and \code{p_value}.
 }
 \description{
-The book (Section 3.1) measures dependence with a different index for each
-pair of variable types: Cramer's V for two categorical variables, the
+Dependence is measured with the index suited to each pair of variable
+types (Zuccolotto & Manisera, 2020, Section 3.1): Cramer's V for two categorical variables, the
 correlation ratio eta-squared for a categorical and a numerical one, and
 Pearson's correlation for two numerical ones. \code{association()} does all
 three for every pair in \code{vars} and puts them on one 0-1 scale (|r| for

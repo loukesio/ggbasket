@@ -5,7 +5,7 @@
 #' angle per league and shot value; otherwise a binned average (0.5 m
 #' distance bands by zone). Extra context columns (shot clock, score margin)
 #' can be added as `extra` smooth terms, which is the regression version of
-#' the book's CART "high-pressure" model.
+#' a classification-tree "high-pressure" model (see [pressure_effects()]).
 #'
 #' @param shots Shots with `x`, `y`, `made` (and optionally `value`,
 #'   `league`).
@@ -46,13 +46,13 @@ expected_fg <- function(shots, extra = NULL, method = c("gam", "bins")) {
 
 #' Shot-making over expected
 #'
-#' The book's FOCUS idea (Zuccolotto et al. 2018) of grading every shot by
+#' The idea of grading every shot by
 #' `made - P(make)`, so a difficult make is worth more than an easy one,
-#' turned into a per-player table:
+#' (Zuccolotto et al., 2018), turned into a per-player table:
 #'
 #' * `xfg`: average expected FG% of the player's shots (shot difficulty; lower
 #'   = harder diet);
-#' * `fg_oe`: FG% over expected, the book's \eqn{P_i}, shrunk towards 0 by
+#' * `fg_oe`: FG% over expected, shrunk towards 0 by
 #'   `prior_n` pseudo-attempts so that low-volume players do not top the list;
 #' * `pts_added`: points added over an average shooter taking the same shots.
 #'

@@ -1,46 +1,158 @@
-# Book figure (BasketballAnalyzeR) vs ggbasket redesign.
-# Run from the package root: Rscript gallery/make_gallery.R
-suppressMessages({ devtools::load_all(quiet = TRUE); library(ggplot2); library(BasketballAnalyzeR) })
-out <- function(p, name, w = 8, h = 6, dir = "gallery/after") {
-  ggsave(file.path(dir, paste0(name, ".png")), p, width = w, height = h, dpi = 150, bg = ggbasket_colours$paper)
+# The ggbasket gallery: every figure drawn from real 2024/25 NBA and EuroLeague data.
+# Run from the package root: Rscript gallery/make_gallery.R [figure ...]
+# Season play-by-play comes from data-raw/make_pbp.R ($GGBASKET_PBP, default ../00_data/pbp_2024).
+suppressMessages({ devtools::load_all(quiet = TRUE); library(ggplot2); library(dplyr) })
+out <- function(p, name, w = 8, h = 6) {
+  ggsave(file.path("gallery/figures", paste0(name, ".png")), p, width = w, height = h, dpi = 150,
+         bg = ggbasket_colours$paper)
 }
-before <- function(expr, name, w = 8, h = 6) {
-  png(file.path("gallery/before", paste0(name, ".png")), width = w, height = h, units = "in", res = 110)
-  p <- expr
-  if (inherits(p, "gg") || inherits(p, "ggplot")) print(p)
-  dev.off()
-}
-data(Tbox, Obox, Pbox, Tadd, PbP.BDB, package = "BasketballAnalyzeR")
-PbP <- suppressWarnings(PbPmanipulation(PbP.BDB))
-cap_book <- ggbasket_caption("NBA 2017/18 regular season \u00b7 BasketballAnalyzeR / BigDataBall")
-cap_now <- ggbasket_caption("2024/25 regular season \u00b7 NBA Stats, ESPN, EuroLeague API")
-cap_el_rim <- paste(cap_now, "Note: EuroLeague operators record layups ~1 m from the hoop, so the EuroLeague curve starts late.", sep = "<br>")
 which_fig <- commandArgs(trailingOnly = TRUE)
 want <- function(x) length(which_fig) == 0 || x %in% which_fig
 
-ff <- four_factors(team_seasons)
-nba_sh <- subset(shots_2024, league == "NBA"); el_sh <- subset(shots_2024, league == "EuroLeague")
+P <- Sys.getenv("GGBASKET_PBP", "../00_data/pbp_2024")
+nba_pbp <- arrow::read_parquet(file.path(P, "nba_pbp_2024.parquet"))
+el_pbp <- arrow::read_parquet(file.path(P, "el_pbp_2024.parquet"))
+nba_reg <- filter(nba_pbp, phase == "regular"); el_reg <- filter(el_pbp, phase == "regular")
+cap_nba <- ggbasket_caption("NBA 2024/25 play-by-play · ESPN via hoopR")
+cap_el <- ggbasket_caption("EuroLeague 2024/25 play-by-play · EuroLeague live API")
+cap_both <- ggbasket_caption("2024/25 play-by-play · ESPN via hoopR, EuroLeague live API")
+cap_now <- ggbasket_caption("2024/25 regular season · NBA Stats, ESPN, EuroLeague API")
+okc <- "#007AC1"; ind <- "#FDBB30"
 
+# ---- One game ---------------------------------------------------------------------------------
+g7 <- "401766128"
+if (want("flow")) {
+  out(plot_game_flow(nba_pbp, g7, min_run = 7, colours = c(okc, "#B8860B"),
+                     title = "Game 7 was close for 27 minutes, then OKC ran away",
+                     subtitle = paste("2025 NBA Finals, Game 7. Lead of", colour_text("Oklahoma City", okc), "(up) or",
+                                      colour_text("Indiana", "#B8860B"), "(down). Tyrese Haliburton tore his Achilles in the first quarter; OKC broke the game open with a **13-0 run** in the third. Brackets = runs of 7+ unanswered points"),
+                     caption = cap_nba), "01_game_flow", 10, 5.5)
+  el_final <- "E2024_330"
+  f <- game_flow(filter(el_pbp, game_id == el_final)); last <- f[nrow(f), ]
+  half <- f[f$totalTime <= 1200, ]; half <- half[nrow(half), ]
+  out(plot_game_flow(el_pbp, el_final, min_run = 7, colours = c("#C8102E", "#1B2A4A"),
+                     title = sprintf("Monaco controlled the first half; Fenerbahce won the second %d-%d",
+                                     last$away_score - half$away_score, last$home_score - half$home_score),
+                     subtitle = sprintf("EuroLeague final 2025, %s %d-%d %s. Lead of %s (up) or %s (down); brackets = runs of 7+ unanswered points",
+                                        last$hometeam, last$home_score, last$away_score, last$awayteam,
+                                        colour_text("Monaco", "#C8102E"), colour_text("Fenerbahce", "#1B2A4A")),
+                     caption = cap_el), "02_game_flow_el", 10, 5.5)
+}
+if (want("wp")) {
+  gs <- game_summary(nba_reg)
+  top <- gs$game_id[which.max(gs$excitement)]
+  bx <- box_score(filter(nba_reg, game_id == top))
+  star <- bx[which.max(bx$pts), ]
+  wp <- win_probability(filter(nba_reg, game_id == top))
+  r <- gs[gs$game_id == top, ]
+  out(plot_win_probability(wp, top, n_key = 4, colours = c("#0E2240", "#78BE20"),
+                           title = sprintf("The season's wildest game: %s scored %d and %s lost by one", star$player,
+                                           as.integer(star$pts), star$team),
+                           subtitle = sprintf("%s after two overtimes, %d lead changes. Chance that %s (up) or %s (down) wins after every play, from a two-parameter score model fitted on the season.",
+                                              r$score, r$lead_changes, colour_text(r$hometeam, "#0E2240"),
+                                              colour_text(r$awayteam, "#5A9A12")),
+                           caption = cap_nba), "03_win_probability", 10, 6.3)
+}
+if (want("factors")) {
+  gf <- game_factors(box_score(filter(nba_pbp, phase %in% c("regular", "playoffs")), by = "team"))
+  out(plot_game_factors(gf, g7, team = "OKC",
+                        title = "Game 7 was won on turnovers, not shooting",
+                        subtitle = "OKC shot worse than Indiana but had 15 more chances: what each of the four factors was worth to OKC's 12-point win, from a regression of margin on four-factor differences over all 1,314 games of the season",
+                        caption = cap_nba), "04_game_factors", 9, 5)
+}
+
+# ---- A season of games ------------------------------------------------------------------------
+if (want("onoff")) {
+  oo <- on_off(nba_reg, team = "DEN", min_minutes = 500)
+  j <- oo[oo$player == "Nikola Jokic", ]
+  out(plot_on_off(oo, n = 11,
+                  title = sprintf("Denver were %+.0f with Jokic on the floor and %+.0f without him", j$on_net, j$off_net),
+                  subtitle = "Denver's net rating (points per 100 possessions) with each player on (filled) and off (open) the floor, 2024/25 regular season. On/off mixes a player's impact with that of their team-mates, so read it with minutes",
+                  caption = cap_nba), "05_on_off", 9, 6)
+}
+if (want("consistency")) {
+  bx <- game_score(box_score(nba_reg))
+  stars <- c("Nikola Jokic", "Shai Gilgeous-Alexander", "Giannis Antetokounmpo", "Luka Doncic", "Anthony Edwards",
+             "Jayson Tatum", "Stephen Curry", "Victor Wembanyama")
+  out(plot_consistency(bx, stars, min_minutes = 15,
+                       title = "Jokic's bad nights are other stars' good ones",
+                       subtitle = "Game Score in every game of 2024/25 (Hollinger's box-score summary, about 10 = an average game, 40 = outstanding). Grey box = middle half of games, black tick = median",
+                       caption = cap_nba), "06_consistency", 10, 7)
+}
+if (want("network")) {
+  net <- assist_network(filter(nba_reg, team == "DEN"))
+  out(plot_assist_network(net, min_assists = 25, top_n = 9,
+                          title = "Denver's offence runs through Jokic", caption = cap_nba), "07_assist_network", 10, 8)
+  out(plot_assist_matrix(net, top_n = 9, title = "Denver 2024/25: passer to scorer", caption = cap_nba),
+      "08_assist_matrix", 8.5, 7)
+  jk <- net$nodes[net$nodes$player == "Nikola Jokic", ]
+  out(plot_assist_roles(net, min_assists = 60,
+                        title = sprintf("Jokic is the hub: %d assists, %.0f%% of Denver's, %.1f times the next player",
+                                        as.integer(jk$assists), 100 * jk$ast_share,
+                                        jk$assists / sort(net$nodes$assists, decreasing = TRUE)[2]),
+                        caption = cap_nba), "09_assist_roles", 9, 6.5)
+}
+if (want("pressure") || want("association") || want("shotclock")) {
+  ps_nba <- expected_fg(pressure_situations(nba_reg, league = "NBA", orb_reset = 14))
+  ps_el <- expected_fg(pressure_situations(el_reg, league = "EuroLeague", orb_reset = 14))
+}
+if (want("pressure")) {
+  e_nba <- pressure_effects(ps_nba); e_el <- pressure_effects(ps_el)
+  te <- function(e) 100 * e$effect[e$situation == "shot_clock" & e$level == "time-end"]
+  out(plot_pressure(e_nba,
+                    title = "The shot clock is the real pressure",
+                    subtitle = sprintf("Change in make probability against each situation's reference, after accounting for where the shot was taken. In the NBA, shots with **2 seconds or less** on the (estimated) shot clock go in **%.1f points less often** (EuroLeague: %.1f); the score and hot or cold streaks barely matter. Bars = 90%% intervals",
+                                       abs(te(e_nba)), abs(te(e_el))),
+                    caption = ggbasket_caption("NBA 2024/25 regular season, every field-goal attempt · ESPN via hoopR",
+                                               note = "Shot clock estimated from play-by-play. Logistic regression with location-based expected FG% as offset")),
+      "10_pressure", 9, 8)
+}
+if (want("association")) {
+  ps_nba$dist <- sqrt(ps_nba$x^2 + ps_nba$y^2)
+  set.seed(1)
+  s <- ps_nba[sample(nrow(ps_nba), 40000), ]
+  out(plot_association(association(s, c(Made = "made", `Shot value` = "value", Distance = "dist",
+                                        `Shot clock` = "shot_clock_left", `End of period` = "period_end",
+                                        Score = "score_diff", `Last shot` = "prev_miss", Period = "period")),
+                       title = "Location matters; the situation barely registers",
+                       caption = cap_nba), "11_association", 9, 8)
+}
+if (want("shotclock")) {
+  both <- bind_rows(ps_nba, ps_el)
+  sc <- shot_curve(both, "shot_clock_left", by = "league", outcome = "points", n_boot = 100, bw = 1.2)
+  out(plot_shot_curve(sc, xlab = "Seconds left on the shot clock (estimated)",
+                      title = "As the shot clock runs down, so does the value of a shot",
+                      subtitle = paste0("Expected points per field-goal attempt by time left on the shot clock, in the ",
+                                        colour_text("NBA", "NBA"), " and the ", colour_text("EuroLeague", "EuroLeague"),
+                                        ". Early shots (mostly transition) are worth 1.25-1.35 points; with 2 seconds left, under 1. EuroLeague attempts are worth more at almost every clock reading. Line width = where shots are taken; band = 90% bootstrap"),
+                      caption = cap_both) + scale_x_reverse(), "12_shot_clock", 9, 5.8)
+}
+
+# ---- Teams --------------------------------------------------------------------------------------
+ff <- four_factors(team_seasons)
 if (want("ratings")) {
-  before(grid::grid.draw(gridExtra::arrangeGrob(grobs = plot(fourfactors(Tbox, Obox))[1:2], ncol = 1)), "01_ratings", 8, 9)
   out(plot_ratings(ff, facet = "league", highlight = c("OKC", "CLE", "BOS", "HOU", "OLY", "ULK", "PAN", "MCO", "WAS", "ALB"),
-                   title = "Two leagues, one map: how teams win",
-                   caption = cap_now), "01_ratings", 11, 6)
+                   title = "Two leagues, one map: how teams win", caption = cap_now), "13_ratings", 11, 6)
 }
 if (want("fourfactors")) {
-  tm <- c("BOS", "CLE", "GSW", "HOU")
-  before(grid::grid.draw(gridExtra::arrangeGrob(grobs = plot(fourfactors(Tbox[Tadd$team %in% tm, ], Obox[Tadd$team %in% tm, ]))[3:4], ncol = 1)), "02_fourfactors", 8, 8)
   out(plot_four_factors(subset(ff, league == "EuroLeague"), teams = c("ULK", "PAN", "OLY", "MCO"),
                         title = "EuroLeague Final Four 2025: four roads to Abu Dhabi", caption = cap_now),
-      "02_fourfactors", 9, 9)
+      "14_four_factors", 9, 9)
+}
+if (want("luck")) {
+  out(plot_luck(expected_wins(team_seasons), n = 6,
+                title = "The Lakers won six more games than their point margin says",
+                subtitle = paste("Open circle = wins expected from points scored and allowed; filled = actual wins.",
+                                 colour_text("Red", ggbasket_colours$above), "= luckier,",
+                                 colour_text("blue", ggbasket_colours$below), "= unluckier. Six luckiest and unluckiest per league"),
+                caption = cap_now), "15_luck", 10, 6)
 }
 if (want("lorenz")) {
-  before(gridExtra::grid.arrange(plot(inequality(subset(Pbox, Team == "Brooklyn Nets")$PTS, nplayers = 8), title = "Brooklyn Nets"),
-                                 plot(inequality(subset(Pbox, Team == "Milwaukee Bucks")$PTS, nplayers = 8), title = "Milwaukee Bucks"), nrow = 1), "03_lorenz", 10, 5)
-  out(plot_lorenz(subset(player_seasons, league == "NBA"), "pts", "team", n = 8,
-                  value_label = "points",
-                  title = "Who depends on a few scorers?", caption = cap_now), "03_lorenz", 7.5, 7.5)
+  out(plot_lorenz(subset(player_seasons, league == "NBA"), "pts", "team", n = 8, value_label = "points",
+                  title = "Who depends on a few scorers?", caption = cap_now), "16_lorenz", 7.5, 7.5)
 }
+
+# ---- Players ------------------------------------------------------------------------------------
 pl <- subset(player_seasons, minutes >= 1000)
 pl <- transform(pl, pts36 = 36 * pts / minutes, ast36 = 36 * ast / minutes, reb36 = 36 * (orb + drb) / minutes,
                 stl36 = 36 * stl / minutes, blk36 = 36 * blk / minutes, tov36 = 36 * tov / minutes,
@@ -49,71 +161,93 @@ stat_vars <- c(Points = "pts36", Assists = "ast36", Rebounds = "reb36", Steals =
                Turnovers = "tov36", `3PA share` = "three_rate", `Rim share` = "rim_rate", `FT rate` = "ft_rate")
 prof_vars <- c(Points = "pts36", Assists = "ast36", Rebounds = "reb36", Steals = "stl36", Blocks = "blk36",
                `Ball security` = "tov36", `3PA share` = "three_rate", `Rim share` = "rim_rate", `FT rate` = "ft_rate")
+mvps <- c("Nikola Jokic", "Shai Gilgeous-Alexander", "Victor Wembanyama", "Stephen Curry")
 if (want("profile")) {
-  sel <- c("Russell Westbrook", "Stephen Curry", "Chris Paul", "Kyrie Irving", "Damian Lillard", "Kyle Lowry", "John Wall", "Rajon Rondo", "Kemba Walker")
-  Pg <- subset(Pbox, Player %in% sel)
-  X <- with(Pg, data.frame(P2M, P3M, FTM, REB = OREB + DREB, AST, STL, BLK) / MIN)
-  before(radialprofile(data = X, title = Pg$Player, std = FALSE), "04_profile", 9, 9)
   nba <- subset(pl, league == "NBA")
-  out(plot_profile(nba, "player", prof_vars, reverse = "tov36",
-                   subjects = c("Nikola Jokic", "Shai Gilgeous-Alexander", "Victor Wembanyama", "Stephen Curry"),
-                   ncol = 2, title = "Four MVP-level fingerprints",
+  out(plot_profile(nba, "player", prof_vars, reverse = "tov36", subjects = mvps, ncol = 2,
+                   title = "Four MVP-level fingerprints",
                    subtitle = "Percentile among NBA players with 1,000+ minutes (per 36 minutes; shaded = middle half)",
-                   caption = cap_now), "04_profile", 9, 7)
-  out(plot_profile(nba, "player", prof_vars, reverse = "tov36", style = "radar",
-                   subjects = c("Nikola Jokic", "Shai Gilgeous-Alexander", "Victor Wembanyama", "Stephen Curry"),
-                   ncol = 4, title = "The same fingerprints as radars, on percentiles", caption = cap_now), "04b_profile_radar", 13, 4.2)
+                   caption = cap_now), "17_profile", 9, 7)
+  out(plot_profile(nba, "player", prof_vars, reverse = "tov36", style = "radar", subjects = mvps, ncol = 4,
+                   title = "The same fingerprints as radars, on percentiles", caption = cap_now), "18_profile_radar", 13, 4.2)
 }
 if (want("quadrant")) {
-  Ps <- subset(Pbox, MIN >= 500)
-  X <- data.frame(AST = Ps$AST, TOV = Ps$TOV, PTS = Ps$PTS) / Ps$MIN
-  before(scatterplot(X, data.var = c("AST", "TOV"), z.var = "PTS", labels = 1:nrow(X),
-                     palette = colorRampPalette(c("blue", "yellow", "red"))), "05_quadrant")
   out(plot_quadrant(subset(pl, minutes >= 1500), "ast36", "tov36", label = "player", colour = "league",
                     size = "pts36", highlight = c("Nikola Jokic", "Trae Young", "Kendrick Nunn", "Facundo Campazzo", "Tyrese Haliburton"),
                     corners = c("Turnover-prone", "High-load creators", "Off-ball roles", "Careful creators"),
                     xlab = "Assists per 36 minutes", ylab = "Turnovers per 36 minutes", size_lab = "Points per 36",
-                    title = "Creating costs turnovers - but not equally", caption = cap_now), "05_quadrant", 9, 7)
+                    title = "Creating costs turnovers - but not equally", caption = cap_now), "19_quadrant", 9, 7)
+}
+if (want("joint")) {
+  pr <- subset(player_rates(player_seasons, team_seasons), league == "NBA" & minutes >= 1500)
+  out(plot_joint(pr, "usg_pct", "ts_pct", label = "player",
+                 highlight = c("Shai Gilgeous-Alexander", "Nikola Jokic", "Giannis Antetokounmpo", "Stephen Curry",
+                               "Victor Wembanyama", "Anthony Edwards", "Luka Doncic", "Jayson Tatum"),
+                 xlab = "Usage rate (share of team plays used on the floor) →",
+                 ylab = "True shooting % →", x_labels = scales::label_percent(), y_labels = scales::label_percent(),
+                 title = "Stars bend the usage–efficiency curve",
+                 subtitle = "Most NBA players with 1,500+ minutes sit in the purple cloud. The stars use a third of their team's plays and still score efficiently",
+                 caption = cap_now), "20_joint", 9, 8)
+}
+if (want("fit")) {
+  out(plot_fit(subset(pl, league == "NBA"), "ast36", "tov36", label = "player", above_is_good = FALSE,
+               xlab = "Assists per 36", ylab = "Turnovers per 36",
+               title = "For their assist load, who protects the ball?", caption = cap_now), "21_fit", 9, 6.5)
+}
+if (want("spread") || want("ranked")) {
+  okc_box <- subset(box_score(nba_reg, total = TRUE), team == "OKC" & min >= 600)
 }
 if (want("spread")) {
-  okc <- subset(Pbox, Team == "Oklahoma City Thunder" & MIN >= 500)
-  before(plot(variability(data = okc, data.var = c("P2p", "P3p", "FTp"), size.var = c("P2A", "P3A", "FTA"), weight = TRUE), title = "Variability diagram - OKC"), "06_spread")
-  out(plot_spread(as_ggbasket_players(okc), c("p2m", "p3m", "ftm"), c("p2a", "p3a", "fta"),
-                  labels = c("2-point shots", "3-point shots", "Free throws"),
-                  title = "OKC 2017/18: who carries the shooting?", caption = cap_book), "06_spread", 9, 5)
+  out(plot_spread(okc_box, c("p2m", "p3m", "ftm"), c("p2a", "p3a", "fta"),
+                  labels = c("2-point shots", "3-point shots", "Free throws"), shrink = FALSE, min_attempts = 50, label_top = 2,
+                  title = "OKC 2024/25: who carries the shooting?",
+                  subtitle = "Season percentages of every player with 600+ minutes and 50+ attempts of that kind (size = attempts); red tick = team average; CV = weighted coefficient of variation",
+                  caption = cap_nba), "22_spread", 9, 5)
 }
 if (want("ranked")) {
-  hr <- subset(Pbox, Team == "Houston Rockets" & MIN >= 500)
-  before(barline(data = hr, id = "Player", bars = c("P2p", "P3p", "FTp"), line = "MIN", order.by = "PM",
-                 labels.bars = c("2P%", "3P%", "FT%"), title = "Houston Rockets"), "07_ranked")
-  out(plot_ranked(as_ggbasket_players(hr), "player", c(`2PA` = "p2a", `3PA` = "p3a", FTA = "fta"), line = "pm",
+  out(plot_ranked(okc_box, "player", c(`2PA` = "p2a", `3PA` = "p3a", FTA = "fta"), line = "pm",
                   order_by = "pm", line_label = "Plus-minus",
-                  title = "Houston 2017/18: shot diet, ordered by plus-minus", caption = cap_book), "07_ranked", 9, 6)
+                  title = "OKC 2024/25: shot diet, ordered by plus-minus", caption = cap_nba), "23_ranked", 9, 6)
 }
+if (want("corr")) {
+  out(plot_corr_matrix(pl, c(Points = "pts36", Assists = "ast36", Turnovers = "tov36", Rebounds = "reb36",
+                             Blocks = "blk36", Steals = "stl36", `3PA share` = "three_rate",
+                             `Rim share` = "rim_rate", `FT rate` = "ft_rate"),
+                       title = "What goes together in a stat line", caption = cap_now), "24_corr", 8, 7)
+}
+if (want("map")) {
+  big <- subset(pl, league == "NBA" & minutes >= 1500)
+  out(plot_similarity_map(big, stat_vars, label = "player", colour = "position",
+                          highlight = c("Nikola Jokic", "Victor Wembanyama", "Stephen Curry"),
+                          title = "The NBA in two dimensions", caption = cap_now), "25_map", 10, 8)
+}
+if (want("clusters")) {
+  big <- subset(pl, league == "NBA" & minutes >= 1500)
+  cq <- cluster_quality(big, unname(stat_vars), k = 2:12)
+  out(plot_cluster_quality(cq, choose = 7), "26_cluster_quality", 8, 5)
+  set.seed(1); km <- kmeans(scale(big[, unname(stat_vars)]), 7, nstart = 50)
+  out(plot_cluster_profiles(big, stat_vars, km$cluster, label = "player",
+                            title = "Seven kinds of NBA player", caption = cap_now), "27_cluster_profiles", 11, 7)
+}
+
+# ---- Shots --------------------------------------------------------------------------------------
+nba_sh <- subset(shots_2024, league == "NBA"); el_sh <- subset(shots_2024, league == "EuroLeague")
 if (want("hex")) {
-  kd <- subset(PbP, player == "Kevin Durant"); kd$xx <- kd$original_x / 10; kd$yy <- kd$original_y / 10 - 41.75
-  before(shotchart(data = kd, x = "xx", y = "yy", z = "playlength", num.sect = 5, type = "sectors", scatter = TRUE), "08_shots")
-  four <- subset(nba_sh, player %in% c("Stephen Curry", "Nikola Jokic", "Shai Gilgeous-Alexander", "Victor Wembanyama"))
-  out(plot_shot_hex(four, baseline = nba_sh, facet = "player",
-                    title = "Four stars, four shot diets", caption = cap_now), "08_shot_hex", 10, 9)
+  out(plot_shot_hex(subset(nba_sh, player %in% mvps), baseline = nba_sh, facet = "player",
+                    title = "Four stars, four shot diets", caption = cap_now), "28_shot_hex", 10, 9)
 }
 if (want("zones")) {
   out(plot_shot_zones(subset(nba_sh, player == "Nikola Jokic"), baseline = nba_sh,
-                      title = "Nikola Jokic, 2024/25: elite from everywhere inside the arc", caption = cap_now), "09_shot_zones", 8, 6.5)
+                      title = "Nikola Jokic, 2024/25: elite from everywhere inside the arc", caption = cap_now), "29_shot_zones", 8, 6.5)
   out(plot_shot_zones(subset(el_sh, player == "Sasha Vezenkov"), baseline = el_sh, league = "EuroLeague",
-                      title = "Sasha Vezenkov, EuroLeague 2024/25 (FIBA court)", caption = cap_now), "09b_shot_zones_el", 8, 6.5)
+                      title = "Sasha Vezenkov, EuroLeague 2024/25 (FIBA court)", caption = cap_now), "30_shot_zones_el", 8, 6.5)
 }
 if (want("density")) {
-  kt <- subset(PbP, player == "Klay Thompson"); kt$xx <- kt$original_x / 10; kt$yy <- kt$original_y / 10 - 41.75
-  before(shotchart(data = kt, x = "xx", y = "yy", type = "density-polygons"), "10_density")
   out(plot_shot_density(subset(nba_sh, player %in% c("Stephen Curry", "Giannis Antetokounmpo")), compare = nba_sh,
                         facet = "player", title = "Shot diet compared with the average NBA player",
-                        caption = cap_now), "10_density", 11, 5.5)
+                        caption = cap_now), "31_density", 11, 5.5)
 }
 if (want("curve")) {
-  GSW <- subset(PbP, team == "GSW")
-  before(expectedpts(data = GSW, players = c("Stephen Curry", "Kevin Durant"), col.team = "gray",
-                     palette = colorRampPalette(c("red", "green")), col.hline = "gray"), "11_curve")
   both <- shots_2024
   both$dist <- sqrt(both$x^2 + both$y^2)
   both <- subset(both, dist < 9)
@@ -122,105 +256,15 @@ if (want("curve")) {
                       xlab = "Shot distance from the hoop (m)",
                       title = "Same mid-range desert, different oasis",
                       subtitle = paste("Expected points per shot by distance in the", colour_text("NBA", "NBA"), "and the", colour_text("EuroLeague", "EuroLeague"), "(2s and 3s smoothed separately). Both lose value between the rim and the arc, but the FIBA line is half a metre closer, so **EuroLeague shooters reach 1+ point per shot sooner**. Line width = where shots are taken; band = 90% bootstrap"),
-                      caption = cap_el_rim), "11_curve_leagues", 9, 5.8)
-  gs <- as_ggbasket_shots(subset(PbP, team == "GSW"))
-  pl5 <- c("Stephen Curry", "Kevin Durant", "Klay Thompson", "Draymond Green")
-  sc2 <- shot_curve(subset(gs, player %in% pl5), "playlength", by = "player", outcome = "points", n_boot = 100, bw = 2)
-  out(plot_shot_curve(sc2, ref = mean(gs$pts), ref_label = "GSW average", xlab = "Seconds since the previous event",
-                      title = "Who to give the ball to late in the clock?", caption = cap_book), "11b_curve_playlength", 9, 5.5)
+                      caption = paste(cap_now, "Note: EuroLeague operators record layups ~1 m from the hoop, so the EuroLeague curve starts late.", sep = "<br>")),
+      "32_curve_leagues", 9, 5.8)
 }
 if (want("making")) {
-  xs <- expected_fg(shots_2024)
-  sm <- shot_making(xs, prior_n = 150)
+  sm <- shot_making(expected_fg(shots_2024), prior_n = 150)
   out(plot_shot_making(subset(sm, league == "NBA"), min_attempts = 500,
                        highlight = c("Stephen Curry", "Nikola Jokic", "Shai Gilgeous-Alexander"),
                        title = "Jokic, Curry and SGA make hard shots look easy",
                        subtitle = "NBA 2024/25. Each shot graded against a league model of make probability by location; players with 500+ attempts",
-                       caption = cap_now), "12_shot_making", 9, 7)
-}
-if (want("corr")) {
-  Ps <- merge(Pbox, Tadd, by = "Team"); Ps <- subset(Ps, MIN >= 500)
-  X <- with(Ps, data.frame(PTS, P3M, P2M, REB = OREB + DREB, AST, TOV, STL, BLK) / MIN)
-  before(plot(corranalysis(X, threshold = 0.5)), "13_corr", 11, 5.5)
-  out(plot_corr_matrix(pl, c(Points = "pts36", Assists = "ast36", Turnovers = "tov36", Rebounds = "reb36",
-                             Blocks = "blk36", Steals = "stl36", `3PA share` = "three_rate",
-                             `Rim share` = "rim_rate", `FT rate` = "ft_rate"),
-                       title = "What goes together in a stat line", caption = cap_now), "13_corr", 8, 7)
-}
-if (want("fit")) {
-  out(plot_fit(subset(pl, league == "NBA"), "ast36", "tov36", label = "player", above_is_good = FALSE,
-               xlab = "Assists per 36", ylab = "Turnovers per 36",
-               title = "For their assist load, who protects the ball?", caption = cap_now), "14_fit", 9, 6.5)
-}
-if (want("map")) {
-  big <- subset(pl, league == "NBA" & minutes >= 1500)
-  before(plot(MDSmap(with(subset(Pbox, MIN >= 1500), data.frame(PTS, P3M, P2M, REB = OREB + DREB, AST, TOV, STL, BLK))),
-              labels = subset(Pbox, MIN >= 1500)$Player), "15_map", 9, 7)
-  out(plot_similarity_map(big, stat_vars, label = "player", colour = "position",
-                          highlight = c("Nikola Jokic", "Victor Wembanyama", "Stephen Curry"),
-                          title = "The NBA in two dimensions", caption = cap_now), "15_map", 10, 8)
-}
-if (want("clusters")) {
-  big <- subset(pl, league == "NBA" & minutes >= 1500)
-  v <- stat_vars
-  cq <- cluster_quality(big, unname(v), k = 2:12)
-  before(plot(kclustering(with(subset(Pbox, MIN >= 1500), data.frame(PTS, P3M, REB = OREB + DREB, AST, TOV, STL, BLK, PF)))), "16_clusters")
-  out(plot_cluster_quality(cq, choose = 7), "16_cluster_quality", 8, 5)
-  set.seed(1); km <- kmeans(scale(big[, unname(v)]), 7, nstart = 50)
-  out(plot_cluster_profiles(big, v, km$cluster, label = "player",
-                            title = "Seven kinds of NBA player", caption = cap_now), "16b_cluster_profiles", 11, 7)
-}
-if (want("network")) {
-  GSW <- subset(PbP, team == "GSW")
-  set.seed(7); before(plot(assistnet(GSW), layout = "circle", edge.thr = 20), "17_network", 9, 8)
-  net <- assist_network(GSW)
-  out(plot_assist_network(net, min_assists = 20, top_n = 10,
-                          title = "Golden State 2017/18: Draymond Green runs the offence", caption = cap_book), "17_network", 10, 8)
-  out(plot_assist_matrix(net, top_n = 10, title = "Golden State 2017/18: passer to scorer", caption = cap_book), "17b_assist_matrix", 8.5, 7)
-  out(plot_assist_roles(net, min_assists = 30,
-                        title = "Green is the hub but feeds a few shooters; Durant spreads it around",
-                        caption = cap_book), "17c_assist_roles", 9, 6.5)
-}
-if (want("pressure") || want("association")) {
-  ps <- pressure_situations(PbP, orb_reset = 24)
-  ps <- expected_fg(ps)
-}
-if (want("association")) {
-  ps$dist <- sqrt(ps$x^2 + ps$y^2)
-  out(plot_association(association(ps, c(Made = "made", `Shot value` = "value", Distance = "dist",
-                                         `Shot clock` = "shot_clock_left", `End of period` = "period_end",
-                                         Score = "score_diff", `Last shot` = "prev_miss", Period = "period")),
-                       title = "Location matters; the situation barely registers",
-                       caption = cap_book), "18_association", 9, 8)
-}
-if (want("pressure")) {
-  out(plot_pressure(pressure_effects(ps),
-                    title = "The shot clock is the real pressure",
-                    subtitle = paste("Change in make probability against the situation's reference, after accounting for where the shot was taken.",
-                                     "Shots with **2 seconds or less** on the (estimated) shot clock go in about **8 points less often**, and the last 100 seconds of a period cost about 2. Score and hot or cold streaks barely matter.",
-                                     "Bars = 90% intervals"),
-                    caption = ggbasket_caption("NBA 2017/18, 82 games \u00b7 BasketballAnalyzeR / BigDataBall",
-                                               note = c("Shot clock estimated from play-by-play.", "Method: logistic regression with location-based expected FG% as offset (replaces the book's CART, Section 3.6)"))),
-      "20_pressure", 9, 8)
-}
-if (want("joint")) {
-  pr <- player_rates(player_seasons, team_seasons)
-  pr <- subset(pr, league == "NBA" & minutes >= 1500)
-  out(plot_joint(pr, "usg_pct", "ts_pct", label = "player",
-                 highlight = c("Shai Gilgeous-Alexander", "Nikola Jokic", "Giannis Antetokounmpo", "Stephen Curry",
-                               "Victor Wembanyama", "Anthony Edwards", "Luka Doncic", "Jayson Tatum"),
-                 xlab = "Usage rate (share of team plays used on the floor) \u2192",
-                 ylab = "True shooting % \u2192", x_labels = scales::label_percent(), y_labels = scales::label_percent(),
-                 title = "Stars bend the usage\u2013efficiency curve",
-                 subtitle = "Most NBA players with 1,500+ minutes sit in the purple cloud. The stars use a third of their team's plays and still score efficiently",
-                 caption = cap_now), "19_joint", 9, 8)
-}
-if (want("luck")) {
-  out(plot_luck(expected_wins(team_seasons), n = 6,
-                title = "The Lakers won six more games than their point margin says",
-                subtitle = paste("Open circle = wins expected from points scored and allowed; filled = actual wins.",
-                                 colour_text("Red", ggbasket_colours$above), "= luckier,",
-                                 colour_text("blue", ggbasket_colours$below), "= unluckier. Six luckiest and unluckiest per league"),
-                caption = cap_now), "21_luck", 10, 6)
+                       caption = cap_now), "33_shot_making", 9, 7)
 }
 cat("done\n")

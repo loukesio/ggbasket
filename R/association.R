@@ -1,7 +1,7 @@
 #' Strength of association between any two variables
 #'
-#' The book (Section 3.1) measures dependence with a different index for each
-#' pair of variable types: Cramer's V for two categorical variables, the
+#' Dependence is measured with the index suited to each pair of variable
+#' types (Zuccolotto & Manisera, 2020, Section 3.1): Cramer's V for two categorical variables, the
 #' correlation ratio eta-squared for a categorical and a numerical one, and
 #' Pearson's correlation for two numerical ones. `association()` does all
 #' three for every pair in `vars` and puts them on one 0-1 scale (|r| for
@@ -102,8 +102,8 @@ plot_association <- function(assoc, title = NULL, subtitle = NULL, caption = NUL
 
 #' Joint distribution of two statistics
 #'
-#' The book's Section 3.5.3 draws two-dimensional kernel densities to see
-#' where players concentrate. Here the density is drawn as soft filled
+#' Where do players concentrate on two statistics at once? The
+#' two-dimensional kernel density is drawn as soft filled
 #' contours behind the players, with the marginal distributions on the
 #' edges, a few highlighted players labelled, and optional groups coloured.
 #'

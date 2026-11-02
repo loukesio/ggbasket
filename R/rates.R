@@ -1,7 +1,7 @@
 #' Possession-based player rates
 #'
-#' The rate statistics the book does not use but every modern analysis does,
-#' with Basketball-Reference definitions. They put players from teams (and
+#' The rate statistics of modern analysis, with Basketball-Reference
+#' definitions. They put players from teams (and
 #' leagues) with different pace and game length on the same footing:
 #'
 #' * `ts_pct`: true shooting, points per shooting possession,

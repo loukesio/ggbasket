@@ -17,7 +17,7 @@ lorenz(x, n = NULL)
 \description{
 How concentrated is a quantity (points, shots, assists) among the top \code{n}
 contributors? \code{lorenz()} returns the curve, \code{gini()} the coefficient in
-\verb{[0, 1]}. Following the book, only the \code{n} largest values are used, because
+\verb{[0, 1]}. Only the \code{n} largest values are used, because
 adding deep-bench players inflates inequality; compare teams with the same
 \code{n}. The Gini is the normalised area between the line of equality and the
 curve, so with \code{n} players its maximum is 1.

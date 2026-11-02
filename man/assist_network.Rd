@@ -12,7 +12,7 @@ assist_network(pbp)
 \value{
 A list: \code{edges} (from, to, assists, points) and \code{nodes} (player,
 assists, assisted_fgm, fgm, pct_assisted, points_created, plus the
-book's network-centrality measures: \code{partners} = teammates assisted,
+network-centrality measures: \code{partners} = teammates assisted,
 \code{ast_share} = share of the team's assists, \code{ast_gini} / \code{recv_gini} =
 how concentrated a player's assists made / received are across
 teammates, from 0 = spread evenly to 1 = all to / from one player).
@@ -20,6 +20,6 @@ teammates, from 0 = spread evenly to 1 = all to / from one player).
 \description{
 Builds passer-to-scorer counts from play-by-play data with one row per
 event and columns \code{player} (scorer), \code{assist} (passer, empty when
-unassisted), \code{result} (\code{"made"}/\code{"missed"}) and \code{points} -- the layout of
-BasketballAnalyzeR's \code{PbP} data (see \code{\link[=as_ggbasket_shots]{as_ggbasket_shots()}}).
+unassisted), \code{result} (\code{"made"}/\code{"missed"}) and \code{points}: the ggbasket
+play-by-play layout (see \link{pbp}).
 }

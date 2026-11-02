@@ -31,9 +31,8 @@ For each of the eight factors (four on offence, four on defence), every
 team in the league is a grey dot; the teams in \code{teams} are coloured and
 labelled. Axes are oriented so that right is always better, and the facet
 strips carry Dean Oliver's weights, so it is clear that a big advantage in
-free-throw rate matters less than a small one in shooting. The book's
-version plots only differences from the average of the selected teams,
-which hides how they compare with everyone else.
+free-throw rate matters less than a small one in shooting. Values are
+against the whole league, not only the selected teams.
 }
 \examples{
 ff <- four_factors(subset(team_seasons, league == "EuroLeague"))

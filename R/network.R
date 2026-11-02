@@ -2,21 +2,21 @@
 #'
 #' Builds passer-to-scorer counts from play-by-play data with one row per
 #' event and columns `player` (scorer), `assist` (passer, empty when
-#' unassisted), `result` (`"made"`/`"missed"`) and `points` -- the layout of
-#' BasketballAnalyzeR's `PbP` data (see [as_ggbasket_shots()]).
+#' unassisted), `result` (`"made"`/`"missed"`) and `points`: the ggbasket
+#' play-by-play layout (see [pbp]).
 #'
 #' @param pbp Play-by-play rows of one team.
 #' @return A list: `edges` (from, to, assists, points) and `nodes` (player,
 #'   assists, assisted_fgm, fgm, pct_assisted, points_created, plus the
-#'   book's network-centrality measures: `partners` = teammates assisted,
+#'   network-centrality measures: `partners` = teammates assisted,
 #'   `ast_share` = share of the team's assists, `ast_gini` / `recv_gini` =
 #'   how concentrated a player's assists made / received are across
 #'   teammates, from 0 = spread evenly to 1 = all to / from one player).
 #' @export
 assist_network <- function(pbp) {
   pbp <- as.data.frame(pbp)
-  made <- pbp[!is.na(pbp$result) & pbp$result == "made" & !is.na(pbp$player) & pbp$player != "" &
-                (is.na(pbp$type) | !grepl("free throw", pbp$type, ignore.case = TRUE)), ]
+  ft <- if ("type" %in% names(pbp)) grepl("free throw", pbp$type, ignore.case = TRUE) else FALSE
+  made <- pbp[!is.na(pbp$result) & pbp$result == "made" & !is.na(pbp$player) & pbp$player != "" & !ft, ]
   if ("ShotType" %in% names(made)) made <- made[made$ShotType %in% c("2P", "3P"), ]
   made$assist <- as.character(made$assist)
   ast <- made[!is.na(made$assist) & made$assist != "", ]
@@ -50,9 +50,8 @@ assist_network <- function(pbp) {
 
 #' Hubs and two-man games
 #'
-#' The book (Section 3.4) summarises an assist network by how *concentrated*
-#' each player's passes are (a Gini index over teammates). Here that becomes a
-#' map: x = share of the team's assists the player makes (how much of a hub),
+#' An assist network can be summarised by how *concentrated* each player's
+#' passes are (a Gini index over teammates). Here that becomes a map: x = share of the team's assists the player makes (how much of a hub),
 #' y = how evenly those assists are spread over teammates (1 - Gini), point
 #' size = assisted baskets received, colour = share of own baskets that were
 #' assisted. Top right: a hub who feeds everyone; top left: a connector with
@@ -92,7 +91,7 @@ plot_assist_roles <- function(net, min_assists = 30, title = NULL, subtitle = NU
     ggplot2::labs(x = "Share of the team's assists \u2192 more of a hub",
                   y = "How evenly assists are spread over teammates (1 \u2212 Gini)",
                   title = title, caption = caption,
-                  subtitle = subtitle %||% "Book Section 3.4: concentration of each player's assists across teammates")
+                  subtitle = subtitle %||% "Share of the team's assists against how evenly they are spread over team-mates (1 - Gini)")
 }
 
 #' Assist network on a circle

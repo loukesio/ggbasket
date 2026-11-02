@@ -52,7 +52,7 @@ from the same spot (shrunk, so tiny samples stay near white). Faceting by
 \details{
 Shot data needs \code{x}, \code{y} in metres from the hoop centre (y towards half
 court), \code{made}, and optionally \code{value} and \code{league}. See
-\code{\link[=as_ggbasket_shots]{as_ggbasket_shots()}} to convert BasketballAnalyzeR play-by-play.
+\code{\link[=as_ggbasket_shots]{as_ggbasket_shots()}} to take shots out of a play-by-play.
 }
 \examples{
 curry <- subset(shots_2024, player == "Stephen Curry")

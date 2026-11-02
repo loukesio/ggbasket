@@ -52,8 +52,8 @@ A tibble with \code{x}, \code{estimate}, \code{lower}, \code{upper}, \code{densi
 grouping column.
 }
 \description{
-Nadaraya-Watson Gaussian kernel smoothing (as in the book's
-\code{scoringprob()} / \code{expectedpts()}), plus two things the book leaves out:
+Nadaraya-Watson Gaussian kernel smoothing, with two additions that make
+the curve readable:
 a bootstrap confidence band, so a wiggle can be told apart from noise, and
 the density of attempts, so the curve can be drawn thick where shots
 actually happen and thin where it rests on a handful of attempts.

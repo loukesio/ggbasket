@@ -14,7 +14,7 @@ possessions(fga, fta, orb, tov, ft_coef = 0.44)
 \item{ft_coef}{Weight of a free-throw attempt.}
 }
 \description{
-Kubatko et al. (2007) estimate, as used in the book:
+The Kubatko et al. (2007) estimate:
 \code{FGA + ft_coef * FTA - ORB + TOV}. The 0.44 coefficient fits the NBA; FIBA
 studies often use 0.4 or 0.5, so it is an argument.
 }
