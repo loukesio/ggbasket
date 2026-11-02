@@ -7,41 +7,59 @@
 \usage{
 geom_court(
   league = "NBA",
-  colour = ggbasket_colours$court_line,
-  linewidth = 0.4,
-  floor = ggbasket_colours$court_floor,
+  style = getOption("ggbasket.court", "painted"),
+  colour = NULL,
+  linewidth = NULL,
+  floor = NULL,
   ylim = c(-1.75, 9.25),
   coord = TRUE
 )
 
 annotate_court_lines(
   league = "NBA",
-  colour = ggbasket_colours$court_line,
-  linewidth = 0.4
+  colour = NULL,
+  linewidth = NULL,
+  style = getOption("ggbasket.court", "painted"),
+  alpha = 1
 )
 }
 \arguments{
 \item{league}{\code{"NBA"}, \code{"FIBA"} or \code{"EuroLeague"}.}
 
-\item{colour, linewidth}{Line colour and width.}
+\item{style}{\code{"painted"}, \code{"arena"} or \code{"minimal"}.}
 
-\item{floor}{Floor colour, or \code{NA} for none.}
+\item{colour, linewidth}{Line colour and width (default: from \code{style}).}
+
+\item{floor}{Floor colour (default: from \code{style}), or \code{NA} for none.}
 
 \item{ylim}{Visible depth of the court in metres from the hoop. The default
-stops just past the top of the arc, where almost all shots are.}
+stops just past the top of the arc, where almost all shots are; use
+\code{c(-1.75, 12.6)} for the whole half court.}
 
 \item{coord}{Add \code{\link[ggplot2:coord_fixed]{ggplot2::coord_fixed()}} with court limits.}
+
+\item{alpha}{Line opacity (lower it when lines are drawn over data).}
 }
 \value{
 A list of ggplot2 layers.
 }
 \description{
-Adds court lines (and optionally a floor) to a plot, plus a fixed-ratio
-coordinate system cropped to the half court. Put it first so data layers
-are drawn on top, or use \code{lines_on_top = TRUE} via \code{\link[=annotate_court_lines]{annotate_court_lines()}}
-after the data layers.
+Adds the floor, the painted key, the court lines and the rim to a plot,
+plus a fixed-ratio coordinate system cropped to the half court. Put it
+first so data layers are drawn on top, then add \code{\link[=annotate_court_lines]{annotate_court_lines()}}
+after the data layers to keep the lines visible.
+}
+\details{
+Three looks, set per call or for the session with
+\code{options(ggbasket.court = "...")}:
+\itemize{
+\item \code{"painted"} (default): light cool-grey floor, blue-grey key, dark lines, orange rim;
+\item \code{"arena"}: darker floor with white lines, like a broadcast graphic;
+\item \code{"minimal"}: lines only, on a near-white floor.
+}
 }
 \examples{
 library(ggplot2)
 ggplot() + geom_court("NBA") + theme_court()
+ggplot() + geom_court("EuroLeague", style = "arena", ylim = c(-1.75, 12.6)) + theme_court()
 }

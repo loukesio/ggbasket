@@ -6,12 +6,14 @@ court_specs <- list(
   NBA = list(
     half_length = 14.325, width = 15.24, hoop_baseline = 1.600,
     arc_r = 7.24, corner_x = 6.71, lane_w = 4.88, ft_line = 5.79,
-    restricted_r = 1.22, board_baseline = 1.22, board_w = 1.83, circle_r = 1.83
+    restricted_r = 1.22, board_baseline = 1.22, board_w = 1.83, circle_r = 1.83,
+    hash = c(2.13, 3.05, 3.96, 4.88)
   ),
   FIBA = list(
     half_length = 14.000, width = 15.00, hoop_baseline = 1.575,
     arc_r = 6.75, corner_x = 6.60, lane_w = 4.90, ft_line = 5.80,
-    restricted_r = 1.25, board_baseline = 1.20, board_w = 1.80, circle_r = 1.80
+    restricted_r = 1.25, board_baseline = 1.20, board_w = 1.80, circle_r = 1.80,
+    hash = c(1.75, 2.85, 3.70, 4.55)
   )
 )
 for (.lg in names(court_specs)) {
@@ -78,6 +80,13 @@ court_lines <- function(league = "NBA") {
                        y = rep(k$board_baseline - k$hoop_baseline, 2)),
     centre = arc_pts(k$circle_r, pi, 2 * pi, y0 = top)
   )
+  # lane-space marks along both sides of the key
+  for (i in seq_along(k$hash)) {
+    for (sgn in c(-1, 1)) {
+      pieces[[sprintf("hash_%d_%d", i, sgn)]] <-
+        data.frame(x = sgn * (k$lane_w / 2 + c(0, 0.2)), y = rep(k$hash[i] - k$hoop_baseline, 2))
+    }
+  }
   out <- dplyr::bind_rows(pieces, .id = "piece")
   out$dashed <- out$piece == "ft_circle_back"
   tibble::as_tibble(out)
@@ -85,32 +94,47 @@ court_lines <- function(league = "NBA") {
 
 #' Draw a half court
 #'
-#' Adds court lines (and optionally a floor) to a plot, plus a fixed-ratio
-#' coordinate system cropped to the half court. Put it first so data layers
-#' are drawn on top, or use `lines_on_top = TRUE` via [annotate_court_lines()]
-#' after the data layers.
+#' Adds the floor, the painted key, the court lines and the rim to a plot,
+#' plus a fixed-ratio coordinate system cropped to the half court. Put it
+#' first so data layers are drawn on top, then add [annotate_court_lines()]
+#' after the data layers to keep the lines visible.
+#'
+#' Three looks, set per call or for the session with
+#' `options(ggbasket.court = "...")`:
+#' * `"painted"` (default): light cool-grey floor, blue-grey key, dark lines, orange rim;
+#' * `"arena"`: darker floor with white lines, like a broadcast graphic;
+#' * `"minimal"`: lines only, on a near-white floor.
 #'
 #' @inheritParams court_spec
-#' @param colour,linewidth Line colour and width.
-#' @param floor Floor colour, or `NA` for none.
+#' @param style `"painted"`, `"arena"` or `"minimal"`.
+#' @param colour,linewidth Line colour and width (default: from `style`).
+#' @param floor Floor colour (default: from `style`), or `NA` for none.
 #' @param ylim Visible depth of the court in metres from the hoop. The default
-#'   stops just past the top of the arc, where almost all shots are.
+#'   stops just past the top of the arc, where almost all shots are; use
+#'   `c(-1.75, 12.6)` for the whole half court.
 #' @param coord Add [ggplot2::coord_fixed()] with court limits.
 #' @return A list of ggplot2 layers.
 #' @export
 #' @examples
 #' library(ggplot2)
 #' ggplot() + geom_court("NBA") + theme_court()
-geom_court <- function(league = "NBA", colour = ggbasket_colours$court_line, linewidth = 0.4,
-                       floor = ggbasket_colours$court_floor, ylim = c(-1.75, 9.25), coord = TRUE) {
+#' ggplot() + geom_court("EuroLeague", style = "arena", ylim = c(-1.75, 12.6)) + theme_court()
+geom_court <- function(league = "NBA", style = getOption("ggbasket.court", "painted"), colour = NULL,
+                       linewidth = NULL, floor = NULL, ylim = c(-1.75, 9.25), coord = TRUE) {
+  st <- court_style(style)
   k <- court_spec(league)
   w2 <- k$width / 2
+  floor <- floor %||% st$floor
   out <- list()
   if (!is.na(floor)) {
     out <- c(out, ggplot2::annotate("rect", xmin = -w2, xmax = w2, ymin = -k$hoop_baseline,
-                                    ymax = ylim[2] + 2, fill = floor, colour = NA))
+                                    ymax = k$half_length - k$hoop_baseline, fill = floor, colour = NA))
   }
-  out <- c(out, annotate_court_lines(league, colour, linewidth))
+  if (!is.na(st$key)) {
+    out <- c(out, ggplot2::annotate("rect", xmin = -k$lane_w / 2, xmax = k$lane_w / 2, ymin = -k$hoop_baseline,
+                                    ymax = k$ft_line - k$hoop_baseline, fill = st$key, colour = NA))
+  }
+  out <- c(out, annotate_court_lines(league, colour, linewidth, style = style))
   if (coord) {
     out <- c(out, ggplot2::coord_fixed(xlim = c(-w2, w2) + c(-0.15, 0.15), ylim = ylim,
                                        expand = FALSE, clip = "on"))
@@ -119,17 +143,35 @@ geom_court <- function(league = "NBA", colour = ggbasket_colours$court_line, lin
 }
 
 #' @rdname geom_court
+#' @param alpha Line opacity (lower it when lines are drawn over data).
 #' @export
-annotate_court_lines <- function(league = "NBA", colour = ggbasket_colours$court_line,
-                                 linewidth = 0.4) {
+annotate_court_lines <- function(league = "NBA", colour = NULL, linewidth = NULL,
+                                 style = getOption("ggbasket.court", "painted"), alpha = 1) {
+  st <- court_style(style)
+  colour <- scales::alpha(colour %||% st$line, alpha)
+  linewidth <- linewidth %||% st$linewidth
   d <- court_lines(league)
+  hoop <- d$piece == "hoop"
+  board <- d$piece == "board"
   list(
-    ggplot2::geom_path(data = d[!d$dashed, ], ggplot2::aes(.data$x, .data$y, group = .data$piece),
-                       colour = colour, linewidth = linewidth, inherit.aes = FALSE),
+    ggplot2::geom_path(data = d[!d$dashed & !hoop & !board, ], ggplot2::aes(.data$x, .data$y, group = .data$piece),
+                       colour = colour, linewidth = linewidth, inherit.aes = FALSE, lineend = "square"),
     ggplot2::geom_path(data = d[d$dashed, ], ggplot2::aes(.data$x, .data$y, group = .data$piece),
                        colour = colour, linewidth = linewidth * 0.8, linetype = "22",
-                       inherit.aes = FALSE)
+                       inherit.aes = FALSE),
+    ggplot2::geom_path(data = d[board, ], ggplot2::aes(.data$x, .data$y, group = .data$piece),
+                       colour = colour, linewidth = linewidth * 2.6, inherit.aes = FALSE),
+    ggplot2::geom_path(data = d[hoop, ], ggplot2::aes(.data$x, .data$y, group = .data$piece),
+                       colour = scales::alpha(st$rim, alpha), linewidth = linewidth * 1.8, inherit.aes = FALSE)
   )
+}
+
+court_style <- function(style = "painted") {
+  style <- match.arg(style, c("painted", "arena", "minimal"))
+  switch(style,
+         painted = list(floor = "#F1F3F5", key = "#DCE4EC", line = "#3A3F45", linewidth = 0.5, rim = "#E8743B"),
+         arena = list(floor = "#DDE2E7", key = "#C5CED8", line = "#FFFFFF", linewidth = 0.7, rim = "#E8743B"),
+         minimal = list(floor = "#F7F7F7", key = NA, line = "grey35", linewidth = 0.4, rim = "grey35"))
 }
 
 #' Classify shots into court zones

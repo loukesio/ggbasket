@@ -54,3 +54,12 @@ test_that("theme helpers degrade gracefully", {
   expect_match(colour_text("NBA", "NBA"), "#1F5FA8")
   expect_match(ggbasket_caption("x", note = "y"), "<br>y$")
 })
+
+test_that("court styles draw and include lane marks", {
+  library(ggplot2)
+  for (st in c("painted", "arena", "minimal")) {
+    expect_s3_class(ggplot() + geom_court("EuroLeague", style = st) + theme_court(), "ggplot")
+  }
+  expect_true(any(grepl("^hash", court_lines("NBA")$piece)))
+  expect_error(court_style("beige"))
+})

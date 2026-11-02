@@ -267,4 +267,27 @@ if (want("making")) {
                        subtitle = "NBA 2024/25. Each shot graded against a league model of make probability by location; players with 500+ attempts",
                        caption = cap_now), "33_shot_making", 9, 7)
 }
+if (want("courts")) {
+  el_stars <- c("Carsen Edwards", "Kendrick Nunn", "Mike James", "Sasha Vezenkov")
+  out(plot_shot_hex(subset(el_sh, player %in% el_stars), baseline = el_sh, facet = "player", league = "EuroLeague",
+                    title = "Four EuroLeague scorers, four shot diets", caption = cap_now), "34_hex_el", 10, 9)
+  out(plot_shot_density(el_sh, compare = nba_sh, league = "EuroLeague",
+                        title = "A shorter three-point line pulls EuroLeague shots inwards",
+                        subtitle = paste("Where", colour_text("EuroLeague", "EuroLeague"), "teams shoot from, compared with the",
+                                         colour_text("NBA", "NBA"), "(metres from the hoop, FIBA court drawn). Red = a bigger share of shots from there than in the NBA; blue = smaller. The FIBA arc is 0.5 m closer, so EuroLeague threes sit just inside the NBA arc"),
+                        caption = paste(cap_now, "Note: EuroLeague operators record layups about 1 m from the hoop, so the blue at the rim and the red ring around it are partly a recording artefact.", sep = "<br>")),
+      "35_density_leagues", 8, 7.2)
+  op <- subset(el_sh, team %in% c("OLY", "PAN"))
+  op$team <- c(OLY = "Olympiacos", PAN = "Panathinaikos")[op$team]
+  out(plot_shot_density(op, compare = el_sh, facet = "team", league = "EuroLeague",
+                        title = "Olympiacos and Panathinaikos: two ways to attack",
+                        subtitle = "Each team's shot locations compared with the average EuroLeague team, 2024/25 regular season. Red = shoots there more, blue = less",
+                        caption = cap_now), "36_density_teams", 11, 5.6)
+  fin <- as_ggbasket_shots(filter(el_pbp, game_id == "E2024_330"), league = "EuroLeague")
+  fin$team <- c(ULK = "Fenerbahce", MCO = "Monaco")[fin$team]
+  out(plot_shot_density(fin, facet = "team", points = TRUE, league = "EuroLeague",
+                        title = "The 2025 EuroLeague final, every shot",
+                        subtitle = "Where each team shot from in the final (Fenerbahce 81, Monaco 70): heat = shot density, dots = made, crosses = missed",
+                        caption = cap_el), "37_game_shots", 11, 5.8)
+}
 cat("done\n")

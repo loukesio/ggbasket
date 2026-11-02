@@ -189,10 +189,10 @@ plot_shot_hex <- function(shots, baseline = shots, facet = NULL, league = NULL,
   poly$group <- paste(poly$id)
   lab <- if (fill == "fg") "FG% vs league from the same spot" else "Points per shot vs league"
   p <- ggplot2::ggplot(poly, ggplot2::aes(.data$x, .data$y)) +
-    geom_court(league, coord = FALSE, floor = ggbasket_colours$court_floor) +
+    geom_court(league, coord = FALSE) +
     ggplot2::geom_polygon(ggplot2::aes(group = .data$group, fill = .data$val),
                           colour = ggbasket_colours$paper, linewidth = 0.15) +
-    annotate_court_lines(league, colour = scales::alpha(ggbasket_colours$court_line, 0.6)) +
+    annotate_court_lines(league, alpha = 0.7) +
     scale_fill_vs_average(
       name = lab, limits = c(-limit, limit),
       labels = if (fill == "fg") function(v) sprintf("%+.0f pts", 100 * v) else scales::label_number(accuracy = 0.1, style_positive = "plus"),
