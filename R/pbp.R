@@ -309,7 +309,14 @@ euroleague_name <- function(x) {
   el <- !is.na(x) & grepl(",", x)
   x[el] <- sub("^(.*?)\\s*,\\s*(.*)$", "\\2 \\1", x[el])
   x[el] <- gsub("(^|[ '-])([a-z])", "\\1\\U\\2", tolower(x[el]), perl = TRUE)
-  x
+  tidy_name(x)
+}
+
+# fix casing that title case gets wrong: initials ("Rj" -> "RJ") and Mc names ("Mcintyre" -> "McIntyre")
+tidy_name <- function(x) {
+  x <- gsub("\\b([BCDFGHJKLMNPQRSTVWXZ])([bcdfghjklmnpqrstvwxz])\\b", "\\1\\U\\2", x, perl = TRUE)
+  x <- gsub("\\bMc([a-z])", "Mc\\U\\1", x, perl = TRUE)
+  sub("^([a-z])", "\\U\\1", x, perl = TRUE)
 }
 
 fill_down <- function(v) {

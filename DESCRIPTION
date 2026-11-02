@@ -13,6 +13,8 @@ Description: Reads NBA (ESPN, via 'hoopR') and EuroLeague (official live
     shooting rates, expected field-goal percentage) and story-first 'ggplot2'
     graphics on NBA and FIBA courts. Started as a redesign of the analyses
     in Zuccolotto and Manisera (2020) "Basketball Data Science".
+URL: https://loukesio.github.io/ggbasket/, https://github.com/loukesio/ggbasket
+BugReports: https://github.com/loukesio/ggbasket/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 Depends: R (>= 4.1.0)
@@ -21,6 +23,7 @@ Imports:
     ggplot2 (>= 4.0.0),
     ggtext,
     grDevices,
+    ltc,
     ggrepel,
     rlang,
     scales,

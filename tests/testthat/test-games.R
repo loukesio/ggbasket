@@ -89,8 +89,8 @@ test_that("assist network and pressure run on the ggbasket layout", {
 })
 
 test_that("EuroLeague names are tidied", {
-  expect_equal(euroleague_name(c("MCDOWELL-WHITE, WILL", "O'NEALE, ROYCE", "Doe")),
-               c("Will Mcdowell-White", "Royce O'Neale", "Doe"))
+  expect_equal(euroleague_name(c("MCDOWELL-WHITE, WILL", "O'NEALE, ROYCE", "Doe", "COLE, RJ", "MILLER-MCINTYRE, CODI")),
+               c("Will McDowell-White", "Royce O'Neale", "Doe", "RJ Cole", "Codi Miller-McIntyre"))
 })
 
 test_that("literature measures behave", {

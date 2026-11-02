@@ -223,23 +223,23 @@ better tool).
 
 ## 6. Book figures next to their ggbasket counterparts
 
-The book's figures (`gallery/book/before/`, NBA 2017/18, drawn with BasketballAnalyzeR by
+The book's figures (`man/figures/book/`, NBA 2017/18, drawn with BasketballAnalyzeR by
 `gallery/book/make_before.R`) next to the ggbasket figures that answer the same question on 2024/25 data.
 
 | Book (BasketballAnalyzeR) | ggbasket |
 |---|---|
-| ![](gallery/book/before/01_ratings.png) | ![](gallery/figures/13_ratings.png) |
-| ![](gallery/book/before/02_fourfactors.png) | ![](gallery/figures/14_four_factors.png) |
-| ![](gallery/book/before/03_lorenz.png) | ![](gallery/figures/16_lorenz.png) |
-| ![](gallery/book/before/04_profile.png) | ![](gallery/figures/17_profile.png) |
-| ![](gallery/book/before/05_quadrant.png) | ![](gallery/figures/19_quadrant.png) |
-| ![](gallery/book/before/06_spread.png) | ![](gallery/figures/22_spread.png) |
-| ![](gallery/book/before/07_ranked.png) | ![](gallery/figures/23_ranked.png) |
-| ![](gallery/book/before/08_shots.png) | ![](gallery/figures/28_shot_hex.png) ![](gallery/figures/29_shot_zones.png) |
-| ![](gallery/book/before/10_density.png) | ![](gallery/figures/31_density.png) |
-| ![](gallery/book/before/11_curve.png) | ![](gallery/figures/32_curve_leagues.png) ![](gallery/figures/12_shot_clock.png) |
-| ![](gallery/book/before/13_corr.png) | ![](gallery/figures/24_corr.png) ![](gallery/figures/21_fit.png) |
-| ![](gallery/book/before/15_map.png) | ![](gallery/figures/25_map.png) |
-| ![](gallery/book/before/16_clusters.png) | ![](gallery/figures/26_cluster_quality.png) ![](gallery/figures/27_cluster_profiles.png) |
-| ![](gallery/book/before/17_network.png) | ![](gallery/figures/07_assist_network.png) ![](gallery/figures/08_assist_matrix.png) ![](gallery/figures/09_assist_roles.png) |
-| *(CART tables, Section 3.6)* | ![](gallery/figures/10_pressure.png) ![](gallery/figures/11_association.png) |
+| ![book figure: ratings](man/figures/book/01_ratings.png) | ![gallery figure: ratings](man/figures/gallery/13_ratings.png) |
+| ![book figure: fourfactors](man/figures/book/02_fourfactors.png) | ![gallery figure: four factors](man/figures/gallery/14_four_factors.png) |
+| ![book figure: lorenz](man/figures/book/03_lorenz.png) | ![gallery figure: lorenz](man/figures/gallery/16_lorenz.png) |
+| ![book figure: profile](man/figures/book/04_profile.png) | ![gallery figure: profile](man/figures/gallery/17_profile.png) |
+| ![book figure: quadrant](man/figures/book/05_quadrant.png) | ![gallery figure: quadrant](man/figures/gallery/19_quadrant.png) |
+| ![book figure: spread](man/figures/book/06_spread.png) | ![gallery figure: spread](man/figures/gallery/22_spread.png) |
+| ![book figure: ranked](man/figures/book/07_ranked.png) | ![gallery figure: ranked](man/figures/gallery/23_ranked.png) |
+| ![book figure: shots](man/figures/book/08_shots.png) | ![gallery figure: shot hex](man/figures/gallery/28_shot_hex.png) ![gallery figure: shot zones](man/figures/gallery/29_shot_zones.png) |
+| ![book figure: density](man/figures/book/10_density.png) | ![gallery figure: density](man/figures/gallery/31_density.png) |
+| ![book figure: curve](man/figures/book/11_curve.png) | ![gallery figure: curve leagues](man/figures/gallery/32_curve_leagues.png) ![gallery figure: shot clock](man/figures/gallery/12_shot_clock.png) |
+| ![book figure: corr](man/figures/book/13_corr.png) | ![gallery figure: corr](man/figures/gallery/24_corr.png) ![gallery figure: fit](man/figures/gallery/21_fit.png) |
+| ![book figure: map](man/figures/book/15_map.png) | ![gallery figure: map](man/figures/gallery/25_map.png) |
+| ![book figure: clusters](man/figures/book/16_clusters.png) | ![gallery figure: cluster quality](man/figures/gallery/26_cluster_quality.png) ![gallery figure: cluster profiles](man/figures/gallery/27_cluster_profiles.png) |
+| ![book figure: network](man/figures/book/17_network.png) | ![gallery figure: assist network](man/figures/gallery/07_assist_network.png) ![gallery figure: assist matrix](man/figures/gallery/08_assist_matrix.png) ![gallery figure: assist roles](man/figures/gallery/09_assist_roles.png) |
+| *(CART tables, Section 3.6)* | ![gallery figure: pressure](man/figures/gallery/10_pressure.png) ![gallery figure: association](man/figures/gallery/11_association.png) |

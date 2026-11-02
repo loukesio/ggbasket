@@ -99,8 +99,7 @@ plot_four_factors <- function(ff, teams, label = "team", scale = c("z", "raw"),
   long$side <- factor(long$side, levels = c("Defence", "Offence"))
   long$.hl <- long$team %in% teams
   long$xv <- if (scale == "z") long$z else long$raw
-  pal <- stats::setNames(rep_len(c(ggbasket_colours$highlight, "#1F5FA8", "#E07B00", "#2A9D8F",
-                                   "#6A4C93", "#8D6E63"), length(teams)), teams)
+  pal <- stats::setNames(rep_len(c(ggbasket_colours$highlight, ggbasket_colours$categorical[-2]), length(teams)), teams)
   set.seed(3)
   long$jit <- stats::runif(nrow(long), -0.18, 0.18)
   p <- ggplot2::ggplot(long, ggplot2::aes(.data$xv, as.numeric(.data$side) + .data$jit)) +
@@ -155,8 +154,7 @@ plot_lorenz <- function(data, value, group, n = 8, highlight = NULL, value_label
     highlight <- if (length(g) <= 4) names(g) else names(sort(g))[c(1, length(g) - 1, length(g))]
   }
   cur$.hl <- cur$group %in% highlight
-  pal <- stats::setNames(rep_len(c(ggbasket_colours$highlight, "#1F5FA8", "#E07B00", "#2A9D8F",
-                                   "#6A4C93"), length(highlight)), highlight)
+  pal <- stats::setNames(rep_len(c(ggbasket_colours$highlight, ggbasket_colours$categorical[-2]), length(highlight)), highlight)
   # a coloured key in the empty lower-right triangle, ordered by Gini
   labs <- cur[cur$.hl, ] |>
     dplyr::distinct(.data$group, .data$gini) |>
@@ -227,7 +225,7 @@ plot_net_rating <- function(ff, league = NULL, highlight = NULL, title = NULL, s
     x
   }))
   long$y <- as.numeric(long$team)
-  cols <- c(Offence = "#E07B00", Defence = "#1F5FA8")
+  cols <- c(Offence = ggbasket_colours$offence, Defence = ggbasket_colours$defence)
   d$y <- as.numeric(d$team)
   d$face <- ifelse(d$team %in% highlight, "bold", "plain")
   band <- d[d$team %in% highlight, ]
@@ -268,14 +266,14 @@ plot_factor_ranks <- function(ff, teams, title = NULL, subtitle = NULL, caption 
   d <- as.data.frame(ff)
   spec <- tibble::tribble(
     ~col, ~side, ~factor, ~high_good,
-    "efg", "Offence", "Shooting\neFG%  (40%)", TRUE,
-    "tov_pct", "Offence", "Turnovers\nTOV%  (25%)", FALSE,
-    "orb_pct", "Offence", "Off. rebounds\nORB%  (20%)", TRUE,
-    "ft_rate", "Offence", "Free throws\nFT/FGA  (15%)", TRUE,
-    "o_efg", "Defence", "Shooting\nopp. eFG%  (40%)", FALSE,
-    "o_tov_pct", "Defence", "Turnovers\nforced  (25%)", TRUE,
-    "drb_pct", "Defence", "Def. rebounds\nDRB%  (20%)", TRUE,
-    "o_ft_rate", "Defence", "Free throws\nopp. FT/FGA  (15%)", FALSE)
+    "efg", "Offence", "Shooting\neFG%\n40%", TRUE,
+    "tov_pct", "Offence", "Turnovers\nTOV%\n25%", FALSE,
+    "orb_pct", "Offence", "Off. reb.\nORB%\n20%", TRUE,
+    "ft_rate", "Offence", "Free thr.\nFT/FGA\n15%", TRUE,
+    "o_efg", "Defence", "Shooting\nopp. eFG%\n40%", FALSE,
+    "o_tov_pct", "Defence", "Turnovers\nforced\n25%", TRUE,
+    "drb_pct", "Defence", "Def. reb.\nDRB%\n20%", TRUE,
+    "o_ft_rate", "Defence", "Free thr.\nopp. FT/FGA\n15%", FALSE)
   lg <- unique(d$league[d$team %in% teams])
   long <- dplyr::bind_rows(lapply(seq_len(nrow(spec)), function(i) {
     s <- spec[i, ]
@@ -291,25 +289,28 @@ plot_factor_ranks <- function(ff, teams, title = NULL, subtitle = NULL, caption 
   long$label <- sprintf("%s\n%s", ifelse(long$factor %in% spec$factor[spec$col %in% c("ft_rate", "o_ft_rate")],
                                          sprintf("%.2f", long$value), sprintf("%.1f%%", 100 * long$value)),
                         ord(long$rank))
-  long$factor <- factor(long$factor, levels = spec$factor)
-  long$side <- factor(long$side, levels = c("Offence", "Defence"))
+  long$x <- match(long$factor, spec$factor) + ifelse(long$side == "Defence", 0.4, 0)
   long$team <- factor(long$team, levels = rev(teams))
-  ggplot2::ggplot(long, ggplot2::aes(.data$factor, .data$team)) +
-    ggplot2::geom_tile(ggplot2::aes(fill = .data$score), colour = ggbasket_colours$paper, linewidth = 1.2) +
+  long$y <- as.numeric(long$team)
+  heads <- tibble::tibble(x = c(2.5, 6.9), y = length(teams) + 1.4, label = c("Offence", "Defence"))
+  cols <- tibble::tibble(x = unique(long$x), label = spec$factor)
+  ggplot2::ggplot(long, ggplot2::aes(.data$x, .data$y)) +
+    ggplot2::geom_tile(ggplot2::aes(fill = .data$score), colour = ggbasket_colours$paper, linewidth = 1.2,
+                       width = 1, height = 1) +
     ggplot2::geom_text(ggplot2::aes(label = .data$label, colour = abs(.data$score - 0.5) > 0.35),
                        size = 3.1, lineheight = 0.9) +
-    ggplot2::scale_fill_gradientn(colours = c(ggbasket_colours$below, "#9DB9D8", "#F3F3F5", "#E4A0A0", ggbasket_colours$above),
-                                  limits = c(0, 1), guide = "none") +
+    ggplot2::geom_text(data = cols, ggplot2::aes(x = .data$x, y = length(teams) + 0.62, label = .data$label),
+                       size = 2.7, lineheight = 0.9, vjust = 0, colour = "grey30") +
+    ggplot2::geom_text(data = heads, ggplot2::aes(label = .data$label), fontface = "bold", size = 4.2,
+                       colour = ggbasket_colours$ink, vjust = 0) +
+    ggplot2::scale_fill_gradientn(colours = ggbasket_colours$diverging, limits = c(0, 1), guide = "none") +
     ggplot2::scale_colour_manual(values = c(`TRUE` = "white", `FALSE` = "grey15"), guide = "none") +
-    ggplot2::scale_x_discrete(position = "top") +
-    ggplot2::facet_grid(~side, scales = "free_x", space = "free_x") +
-    ggplot2::coord_cartesian(expand = FALSE) +
+    ggplot2::scale_y_continuous(breaks = seq_along(teams), labels = rev(teams)) +
+    ggplot2::coord_equal(ylim = c(0.5, length(teams) + 1.75), clip = "off") +
     theme_ggbasket(grid = "none") +
-    ggplot2::theme(strip.text = ggplot2::element_text(face = "bold", size = ggplot2::rel(1.05)),
-                   axis.text.x.top = ggplot2::element_text(size = ggplot2::rel(0.82), lineheight = 0.95),
-                   axis.text.y = ggplot2::element_text(face = "bold", size = ggplot2::rel(1.1)),
-                   panel.spacing.x = grid::unit(1.2, "lines")) +
+    ggplot2::theme(axis.text.x = ggplot2::element_blank(),
+                   axis.text.y = ggplot2::element_text(face = "bold", size = ggplot2::rel(1.1))) +
     ggplot2::labs(x = NULL, y = NULL, title = title, caption = caption,
                   subtitle = subtitle %||% paste0("Value and rank among the league's ", long$n[1],
-                                                  " teams; red = near the top, blue = near the bottom. Weights in brackets (Dean Oliver)"))
+                                                  " teams; red = near the top, blue = near the bottom. Percentages under each factor = Dean Oliver's weights"))
 }

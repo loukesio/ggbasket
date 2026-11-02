@@ -3,3 +3,10 @@
 ^.*\.Rproj$
 ^gallery$
 ^BOOK_REVIEW\.md$
+^man/figures/gallery$
+^man/figures/case$
+^man/figures/book$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^vignettes/articles$

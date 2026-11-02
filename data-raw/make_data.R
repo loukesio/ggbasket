@@ -6,7 +6,10 @@ P <- file.path(P, "processed")
 nice_player <- function(x) {
   el <- grepl(",", x)
   x[el] <- tools::toTitleCase(tolower(sub("^(.*), (.*)$", "\\2 \\1", x[el])))
-  x
+  # initials ("Tj" -> "TJ") and Mc names ("Mcintyre" -> "McIntyre")
+  x <- gsub("\\b([BCDFGHJKLMNPQRSTVWXZ])([bcdfghjklmnpqrstvwxz])\\b", "\\1\\U\\2", x, perl = TRUE)
+  x <- gsub("\\bMc([a-z])", "Mc\\U\\1", x, perl = TRUE)
+  sub("^([a-z])", "\\U\\1", x, perl = TRUE)
 }
 
 tg <- arrow::read_parquet(file.path(P, "team_games.parquet")) |>

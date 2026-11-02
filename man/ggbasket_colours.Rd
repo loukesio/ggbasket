@@ -5,7 +5,7 @@
 \alias{ggbasket_colours}
 \title{Colours used across ggbasket}
 \format{
-An object of class \code{list} of length 10.
+An object of class \code{list} of length 14.
 }
 \usage{
 ggbasket_colours
@@ -13,9 +13,13 @@ ggbasket_colours
 \description{
 A named list: \code{league} (NBA / EuroLeague), \code{highlight} (one accent for the
 subject of a figure), \code{context} (grey for everyone else), \code{above}/\code{below}
-(the two ends of the diverging scale), \code{ink}/\code{paper} (text and background) and
-\code{court_line}/\code{court_floor}.
-The diverging ends are taken from ColorBrewer RdBu, which is safe for
+(the two ends of the diverging better/worse scale), \code{diverging} (the full
+five-step scale), \code{offence}/\code{defence}, \code{categorical} (groups),
+\code{ink}/\code{paper} (text and background) and \code{court_line}/\code{court_floor}.
+}
+\details{
+The diverging scale is the \code{heatmap1} palette and the categorical colours
+the \code{minou} palette of the 'ltc' package (Theodosiou), both readable with
 red-green colour blindness.
 }
 \keyword{datasets}

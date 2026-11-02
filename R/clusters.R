@@ -118,6 +118,7 @@ plot_cluster_profiles <- function(data, vars, cluster, label = NULL, n_examples 
                                                            barheight = grid::unit(0.5, "lines"))) +
     ggplot2::scale_colour_manual(values = c(`TRUE` = "white", `FALSE` = "grey20"), guide = "none") +
     ggplot2::scale_x_discrete(position = "top") +
+    ggplot2::coord_equal() +
     theme_ggbasket(grid = "none") +
     ggplot2::theme(axis.text.y = ggplot2::element_text(hjust = 0, lineheight = 0.95, colour = "grey20"),
                    axis.text.x = ggplot2::element_text(face = "bold", colour = "grey20")) +

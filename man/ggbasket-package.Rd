@@ -29,6 +29,15 @@ Main entry points:
 \item Courts and style: \code{\link[=geom_court]{geom_court()}}, \code{\link[=theme_ggbasket]{theme_ggbasket()}}, \code{\link[=colour_text]{colour_text()}}
 }
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://loukesio.github.io/ggbasket/}
+  \item \url{https://github.com/loukesio/ggbasket}
+  \item Report bugs at \url{https://github.com/loukesio/ggbasket/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Loukas Theodosiou \email{loukesio@gmail.com}
 

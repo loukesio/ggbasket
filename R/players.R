@@ -278,7 +278,7 @@ plot_ranked <- function(data, id, bars, line = NULL, order_by = NULL, line_label
   }))
   long$id <- factor(long$id, levels = lev)
   long$var <- factor(long$var, levels = rev(labs_b))
-  cols <- stats::setNames(rep_len(c("#1F5FA8", "#E07B00", "#2A9D8F", "#6A4C93", "#D1495B", "#8D6E63"),
+  cols <- stats::setNames(rep_len(ggbasket_colours$categorical,
                                   length(labs_b)), labs_b)
   p1 <- ggplot2::ggplot(long, ggplot2::aes(.data$value, .data$id, fill = .data$var)) +
     ggplot2::geom_col(width = 0.72) +

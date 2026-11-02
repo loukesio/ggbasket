@@ -3,7 +3,7 @@
 # Season play-by-play comes from data-raw/make_pbp.R ($GGBASKET_PBP, default ../00_data/pbp_2024).
 suppressMessages({ devtools::load_all(quiet = TRUE); library(ggplot2); library(dplyr) })
 out <- function(p, name, w = 8, h = 6) {
-  ggsave(file.path("gallery/figures", paste0(name, ".png")), p, width = w, height = h, dpi = 150,
+  ggsave(file.path("man/figures/gallery", paste0(name, ".png")), p, width = w, height = h, dpi = 150,
          bg = ggbasket_colours$paper)
 }
 which_fig <- commandArgs(trailingOnly = TRUE)
@@ -134,13 +134,17 @@ if (want("ratings")) {
   el_ff <- subset(ff, league == "EuroLeague")
   out(plot_net_rating(ff, "EuroLeague", highlight = c("OLY", "PAN", "ULK", "MCO"),
                       title = "Panathinaikos and Olympiacos won with offence, Fenerbahce and Real Madrid with defence",
-                      subtitle = paste("EuroLeague 2024/25. Net rating (black dot and number) =", colour_text("offence", "#E07B00"),
-                                       "(points scored above average) +", colour_text("defence", "#1F5FA8"),
+                      subtitle = paste("EuroLeague 2024/25. Net rating (black dot and number) =", colour_text("offence", ggbasket_colours$offence),
+                                       "(points scored above average) +", colour_text("defence", ggbasket_colours$defence),
                                        "(points allowed below average), per 100 possessions. Grey band = the Final Four"),
                       caption = cap_now), "13_ratings", 9, 7)
   out(plot_net_rating(ff, "NBA", highlight = c("OKC", "CLE", "BOS", "HOU"),
                       title = "OKC's net rating was built on the league's best defence",
                       caption = cap_now), "13b_ratings_nba", 9, 9.5)
+  out(plot_ratings(ff, facet = "league", highlight = c("OKC", "CLE", "BOS", "HOU", "OLY", "ULK", "PAN", "MCO"),
+                   title = "Offence against defence: OKC sit alone in the top-right corner",
+                   subtitle = "Each dot is a team: right = scores more per 100 possessions, up = allows fewer. Grey diagonals mark equal net rating (5-point steps), so teams on the same diagonal are equally good overall",
+                   caption = cap_now), "13c_ratings_map", 11, 6)
 }
 if (want("fourfactors")) {
   ff4 <- ff
@@ -148,7 +152,11 @@ if (want("fourfactors")) {
   ff4$team[ff4$team %in% names(nm)] <- nm[ff4$team[ff4$team %in% names(nm)]]
   out(plot_factor_ranks(ff4, unname(nm),
                         title = "Panathinaikos shot best, Fenerbahce defended best, Monaco looked after the ball, Olympiacos lived at the line",
-                        caption = cap_now), "14_four_factors", 11.5, 4.8)
+                        caption = cap_now), "14_four_factors", 10, 7)
+  out(plot_four_factors(subset(ff, league == "EuroLeague"), teams = c("ULK", "PAN", "OLY", "MCO"),
+                        title = "The same four factors against every EuroLeague team (grey)",
+                        subtitle = "Standard deviations from the league average, right = better for the team. Offence = the team's own numbers, defence = what opponents managed against it",
+                        caption = cap_now), "14b_four_factors_spread", 9, 9)
 }
 if (want("luck")) {
   out(plot_luck(expected_wins(team_seasons), n = 6,
@@ -269,6 +277,17 @@ if (want("curve")) {
                       subtitle = paste("Expected points per shot by distance in the", colour_text("NBA", "NBA"), "and the", colour_text("EuroLeague", "EuroLeague"), "(2s and 3s smoothed separately). Both lose value between the rim and the arc, but the FIBA line is half a metre closer, so **EuroLeague shooters reach 1+ point per shot sooner**. Line width = where shots are taken; band = 90% bootstrap"),
                       caption = paste(cap_now, "Note: EuroLeague operators record layups ~1 m from the hoop, so the EuroLeague curve starts late.", sep = "<br>")),
       "32_curve_leagues", 9, 5.8)
+}
+if (want("playlength")) {
+  okc_sh <- as_ggbasket_shots(filter(nba_reg, team == "OKC"))
+  pl4 <- c("Shai Gilgeous-Alexander", "Jalen Williams", "Chet Holmgren", "Luguentz Dort")
+  sc2 <- shot_curve(subset(okc_sh, player %in% pl4 & playlength <= 24), "playlength", by = "player",
+                    outcome = "points", n_boot = 100, bw = 2)
+  out(plot_shot_curve(sc2, ref = mean(okc_sh$pts), ref_label = "OKC average",
+                      xlab = "Seconds since the previous event (how long the play has run)",
+                      title = "No OKC scorer is clearly better late in a play: the bands overlap",
+                      subtitle = "Expected points per shot by how long the play has run, OKC 2024/25. Line width = how often each player shoots at that moment; band = 90% bootstrap",
+                      caption = cap_nba), "32b_curve_playlength", 9, 5.5)
 }
 if (want("making")) {
   sm <- shot_making(expected_fg(shots_2024), prior_n = 150)

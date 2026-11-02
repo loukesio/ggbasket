@@ -1,3 +1,6 @@
+# colours of an 'ltc' palette as a plain character vector
+ltc_colours <- function(name) as.character(unclass(ltc::ltc(name)))
+
 #' ggbasket theme and colours
 #'
 #' `theme_ggbasket()` is an editorial theme in the style of Cedric Scherer's
@@ -144,20 +147,27 @@ ggbasket_caption <- function(data, graphic = "Loukas Theodosiou \u00b7 ggbasket"
 #'
 #' A named list: `league` (NBA / EuroLeague), `highlight` (one accent for the
 #' subject of a figure), `context` (grey for everyone else), `above`/`below`
-#' (the two ends of the diverging scale), `ink`/`paper` (text and background) and
-#' `court_line`/`court_floor`.
-#' The diverging ends are taken from ColorBrewer RdBu, which is safe for
+#' (the two ends of the diverging better/worse scale), `diverging` (the full
+#' five-step scale), `offence`/`defence`, `categorical` (groups),
+#' `ink`/`paper` (text and background) and `court_line`/`court_floor`.
+#'
+#' The diverging scale is the `heatmap1` palette and the categorical colours
+#' the `minou` palette of the 'ltc' package (Theodosiou), both readable with
 #' red-green colour blindness.
 #' @export
 ggbasket_colours <- list(
   league = c(NBA = "#1F5FA8", EuroLeague = "#E07B00", FIBA = "#E07B00"),
-  highlight = "#D1495B",
+  highlight = ltc_colours("minou")[2],
   ink = "#1F1F1F",
   paper = "#FFFFFF",
   context = "grey72",
-  above = "#B2182B",
-  mid = "#F7F7F7",
-  below = "#2166AC",
+  above = ltc_colours("heatmap1")[5],
+  mid = "#F5F5F7",
+  below = ltc_colours("heatmap1")[1],
+  diverging = c(ltc_colours("heatmap1")[1:2], "#F5F5F7", ltc_colours("heatmap1")[4:5]),
+  offence = ltc_colours("minou")[3],
+  defence = ltc_colours("minou")[1],
+  categorical = ltc_colours("minou"),
   court_line = "grey35",
   court_floor = "#F4F4F4"
 )
@@ -209,6 +219,6 @@ scale_fill_league <- function(...) {
 # Muted, colour-blind-friendlier categorical palette (Okabe-Ito order, no yellow).
 categorical_palette <- function(x) {
   lev <- if (is.factor(x)) levels(x) else sort(unique(as.character(x)))
-  cols <- c("#0072B2", "#E69F00", "#009E73", "#CC79A7", "#D55E00", "#56B4E9", "#7F7F7F", "#000000")
-  stats::setNames(rep_len(cols, length(lev)), lev)
+  stats::setNames(rep_len(ggbasket_colours$categorical, length(lev)), lev)
 }
+

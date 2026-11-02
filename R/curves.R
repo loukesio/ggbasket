@@ -126,7 +126,7 @@ plot_shot_curve <- function(curve, highlight = NULL, ref = NULL, ref_label = NUL
   groups <- unique(curve$.g)
   highlight <- highlight %||% groups
   pal <- stats::setNames(rep(ggbasket_colours$context, length(groups)), groups)
-  hl_cols <- c(ggbasket_colours$highlight, "#1F5FA8", "#E07B00", "#2A9D8F", "#6A4C93", "#8D6E63")
+  hl_cols <- c(ggbasket_colours$highlight, ggbasket_colours$categorical[-2])
   pal[highlight] <- rep_len(hl_cols, length(highlight))
   # leagues keep their own colours
   lg <- intersect(highlight, names(ggbasket_colours$league))

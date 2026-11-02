@@ -1,0 +1,39 @@
+url: https://loukesio.github.io/ggbasket/
+template:
+  bootstrap: 5
+  bslib:
+    bg: "#FFFFFF"
+    fg: "#1F1F1F"
+    primary: "#00798c"
+    base_font: {google: "Fira Sans"}
+    heading_font: {google: "Fira Sans"}
+    code_font: {google: "Roboto Mono"}
+navbar:
+  structure:
+    left: [intro, reference, news]
+    right: [search, github]
+  components:
+    github:
+      icon: fa-github
+      href: https://github.com/loukesio/ggbasket
+      aria-label: GitHub
+home:
+  title: "ggbasket: learn from basketball games, NBA and EuroLeague"
+  description: "Play-by-play, metrics and story-first ggplot2 graphics for the NBA and the EuroLeague."
+reference:
+- title: Get the data
+  contents: [pbp, add_lineups, box_score, starts_with("as_ggbasket"), pbp_games, team_seasons, player_seasons, shots_2024]
+- title: One game
+  contents: [game_flow, scoring_runs, plot_game_flow, win_probability, plot_win_probability, game_factors, plot_game_factors, game_summary, clutch_time, win_probability_added, plot_wpa]
+- title: Many games and player impact
+  contents: [stints, on_off, lineups, plot_on_off, plot_lineups, rapm, plot_rapm, game_score, plot_consistency, assist_network, plot_assist_network, plot_assist_matrix, plot_assist_roles, pressure_situations, pressure_effects, plot_pressure]
+- title: Teams
+  contents: [possessions, four_factors, four_factor_info, plot_net_rating, plot_factor_ranks, plot_ratings, plot_four_factors, team_ratings, plot_team_ratings, team_shot_profile, expected_wins, plot_luck, gini, lorenz, plot_lorenz]
+- title: Players
+  contents: [player_rates, percentile_rank, shrink_rate, plot_profile, plot_quadrant, plot_joint, plot_fit, plot_spread, plot_ranked]
+- title: Shots
+  contents: [shot_zone, shot_zone_levels, court_zone_grid, summarise_zones, bin_shots_hex, plot_shot_hex, plot_shot_zones, plot_shot_density, shot_curve, plot_shot_curve, expected_fg, shot_making, plot_shot_making]
+- title: Patterns
+  contents: [association, plot_association, plot_corr_matrix, plot_similarity_map, cluster_quality, plot_cluster_quality, plot_cluster_profiles]
+- title: Courts and style
+  contents: [court_spec, court_lines, geom_court, annotate_court_lines, theme_ggbasket, theme_court, ggbasket_fonts, ggbasket_colours, colour_text, ggbasket_caption, starts_with("scale_")]

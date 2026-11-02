@@ -3,7 +3,7 @@
 #   Rscript gallery/book/make_before.R
 suppressMessages({ library(ggplot2); library(BasketballAnalyzeR) })
 before <- function(expr, name, w = 8, h = 6) {
-  png(file.path("gallery/book/before", paste0(name, ".png")), width = w, height = h, units = "in", res = 110)
+  png(file.path("man/figures/book", paste0(name, ".png")), width = w, height = h, units = "in", res = 110)
   p <- expr
   if (inherits(p, "gg") || inherits(p, "ggplot")) print(p)
   dev.off()
