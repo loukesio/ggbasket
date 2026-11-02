@@ -92,3 +92,21 @@ test_that("EuroLeague names are tidied", {
   expect_equal(euroleague_name(c("MCDOWELL-WHITE, WILL", "O'NEALE, ROYCE", "Doe")),
                c("Will Mcdowell-White", "Royce O'Neale", "Doe"))
 })
+
+test_that("literature measures behave", {
+  tb <- box_score(pbp_games, by = "team")
+  wpa <- win_probability_added(win_probability(pbp_games))
+  # offence and defence credit cancel within each game
+  expect_equal(as.numeric(tapply(wpa$wpa, wpa$game_id, sum)), c(0, 0), tolerance = 1e-8)
+  expect_s3_class(plot_wpa(wpa, "401766128"), "ggplot")
+  rp <- rapm(pbp_games[pbp_games$league == "NBA", ], lambda = 500, min_poss = 10)
+  expect_true(all(is.finite(rp$rapm)))
+  expect_s3_class(plot_rapm(rp, n = 3), "ggplot")
+  expect_s3_class(plot_lineups(lineups(pbp_games, team = "OKC", min_minutes = 1), n = 2), "ggplot")
+  ff <- four_factors(team_seasons)
+  expect_s3_class(plot_net_rating(ff, "EuroLeague"), "ggplot")
+  expect_s3_class(plot_factor_ranks(ff, c("OLY", "PAN")), "ggplot")
+  ps <- expected_fg(pressure_situations(pbp_games[pbp_games$league == "NBA", ], orb_reset = 14))
+  tp <- team_shot_profile(ps)
+  expect_true(all(tp$early_share >= 0 & tp$early_share <= 1))
+})

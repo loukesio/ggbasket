@@ -46,7 +46,8 @@ on_off(el, team = "PAN")
 
 | Topic | Metrics | Plots |
 |---|---|---|
-| Teams | `possessions()`, `four_factors()`, `expected_wins()`, `gini()`, `lorenz()` | `plot_ratings()`, `plot_four_factors()`, `plot_luck()`, `plot_lorenz()` |
+| Teams | `possessions()`, `four_factors()`, `team_ratings()`, `team_shot_profile()`, `expected_wins()`, `gini()`, `lorenz()` | `plot_net_rating()`, `plot_factor_ranks()`, `plot_team_ratings()`, `plot_luck()`, `plot_lorenz()`, `plot_ratings()`, `plot_four_factors()` |
+| Player impact | `rapm()`, `win_probability_added()`, `on_off()`, `lineups()` | `plot_rapm()`, `plot_wpa()`, `plot_on_off()`, `plot_lineups()` |
 | Players | `player_rates()` (TS%, usage, AST%, rebound, steal, block and turnover rates), `percentile_rank()`, `shrink_rate()` | `plot_profile()`, `plot_quadrant()`, `plot_joint()`, `plot_fit()`, `plot_spread()`, `plot_ranked()` |
 | Shots | `shot_zone()`, `summarise_zones()`, `bin_shots_hex()`, `expected_fg()`, `shot_making()` | `plot_shot_hex()`, `plot_shot_zones()`, `plot_shot_density()`, `plot_shot_making()` |
 | Patterns | `association()`, `cluster_quality()` | `plot_association()`, `plot_corr_matrix()`, `plot_similarity_map()`, `plot_cluster_quality()`, `plot_cluster_profiles()` |
@@ -100,10 +101,23 @@ them all.
 
 | | |
 |---|---|
-| **Ratings map.** Offence against defence, both leagues. `plot_ratings()` | **Four factors.** The 2025 EuroLeague Final Four. `plot_four_factors()` |
-| ![](gallery/figures/13_ratings.png) | ![](gallery/figures/14_four_factors.png) |
+| **Where net rating comes from.** EuroLeague teams split into offence and defence. `plot_net_rating()` | **The same for the NBA.** OKC's defence was the league's best. `plot_net_rating()` |
+| ![](gallery/figures/13_ratings.png) | ![](gallery/figures/13b_ratings_nba.png) |
+| **Four factors as a ranking table.** The 2025 EuroLeague Final Four. `plot_factor_ranks()` | **Schedule-adjusted ratings.** Simple Rating System with home advantage, both leagues. `team_ratings()`, `plot_team_ratings()` |
+| ![](gallery/figures/14_four_factors.png) | ![](gallery/figures/38_team_ratings.png) |
+| **Transition.** How often teams run, and how well. `team_shot_profile()` + `plot_quadrant()` | **Shot quality.** Expected value of shots taken and allowed (EuroLeague). `team_shot_profile()` |
+| ![](gallery/figures/43_transition.png) | ![](gallery/figures/44_shot_quality.png) |
 | **Luck.** Actual against Pythagorean wins. `plot_luck()` | **Scoring concentration.** Lorenz curves per team. `plot_lorenz()` |
 | ![](gallery/figures/15_luck.png) | ![](gallery/figures/16_lorenz.png) |
+
+### Player impact
+
+| | |
+|---|---|
+| **Adjusted plus-minus, NBA.** Ridge regression on every line-up stint. `rapm()`, `plot_rapm()` | **Adjusted plus-minus, EuroLeague.** `rapm()`, `plot_rapm()` |
+| ![](gallery/figures/39_rapm.png) | ![](gallery/figures/40_rapm_el.png) |
+| **Win probability added.** Who moved Game 7, defence included. `win_probability_added()`, `plot_wpa()` | **Line-ups.** OKC's five-player units by net rating. `lineups()`, `plot_lineups()` |
+| ![](gallery/figures/41_wpa.png) | ![](gallery/figures/42_lineups.png) |
 
 ### Players
 

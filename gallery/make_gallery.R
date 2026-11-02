@@ -131,13 +131,24 @@ if (want("shotclock")) {
 # ---- Teams --------------------------------------------------------------------------------------
 ff <- four_factors(team_seasons)
 if (want("ratings")) {
-  out(plot_ratings(ff, facet = "league", highlight = c("OKC", "CLE", "BOS", "HOU", "OLY", "ULK", "PAN", "MCO", "WAS", "ALB"),
-                   title = "Two leagues, one map: how teams win", caption = cap_now), "13_ratings", 11, 6)
+  el_ff <- subset(ff, league == "EuroLeague")
+  out(plot_net_rating(ff, "EuroLeague", highlight = c("OLY", "PAN", "ULK", "MCO"),
+                      title = "Panathinaikos and Olympiacos won with offence, Fenerbahce and Real Madrid with defence",
+                      subtitle = paste("EuroLeague 2024/25. Net rating (black dot and number) =", colour_text("offence", "#E07B00"),
+                                       "(points scored above average) +", colour_text("defence", "#1F5FA8"),
+                                       "(points allowed below average), per 100 possessions. Grey band = the Final Four"),
+                      caption = cap_now), "13_ratings", 9, 7)
+  out(plot_net_rating(ff, "NBA", highlight = c("OKC", "CLE", "BOS", "HOU"),
+                      title = "OKC's net rating was built on the league's best defence",
+                      caption = cap_now), "13b_ratings_nba", 9, 9.5)
 }
 if (want("fourfactors")) {
-  out(plot_four_factors(subset(ff, league == "EuroLeague"), teams = c("ULK", "PAN", "OLY", "MCO"),
-                        title = "EuroLeague Final Four 2025: four roads to Abu Dhabi", caption = cap_now),
-      "14_four_factors", 9, 9)
+  ff4 <- ff
+  nm <- c(OLY = "Olympiacos", PAN = "Panathinaikos", ULK = "Fenerbahce", MCO = "Monaco")
+  ff4$team[ff4$team %in% names(nm)] <- nm[ff4$team[ff4$team %in% names(nm)]]
+  out(plot_factor_ranks(ff4, unname(nm),
+                        title = "Panathinaikos shot best, Fenerbahce defended best, Monaco looked after the ball, Olympiacos lived at the line",
+                        caption = cap_now), "14_four_factors", 11.5, 4.8)
 }
 if (want("luck")) {
   out(plot_luck(expected_wins(team_seasons), n = 6,
@@ -289,5 +300,48 @@ if (want("courts")) {
                         title = "The 2025 EuroLeague final, every shot",
                         subtitle = "Where each team shot from in the final (Fenerbahce 81, Monaco 70): heat = shot density, dots = made, crosses = missed",
                         caption = cap_el), "37_game_shots", 11, 5.8)
+}
+if (want("literature")) {
+  tr <- team_ratings(bind_rows(box_score(nba_reg, by = "team"), box_score(el_reg, by = "team")))
+  out(plot_team_ratings(tr, title = "Once the schedule is accounted for, OKC were 12.7 points better than an average team",
+                        caption = cap_both), "38_team_ratings", 11, 9)
+  rp <- rapm(nba_reg, lambda = 3000, min_poss = 1000)
+  out(plot_rapm(rp, n = 12, highlight = c("Shai Gilgeous-Alexander", "Nikola Jokic"),
+                title = "Separated from their team-mates, SGA and Jokic still add the most",
+                caption = ggbasket_caption("NBA 2024/25 regular season, every line-up stint · ESPN via hoopR",
+                                           note = "Players with 1,000+ possessions; ridge penalty 3,000 possessions")), "39_rapm", 11, 7)
+  rpe <- rapm(el_reg, lambda = 1500, min_poss = 500)
+  out(plot_rapm(rpe, n = 10, highlight = c("Sasha Vezenkov", "Walter Tavares"),
+                title = "EuroLeague adjusted plus-minus: Jantunen, Weiler-Babb and Tavares lead",
+                caption = ggbasket_caption("EuroLeague 2024/25 regular season, every line-up stint · EuroLeague live API",
+                                           note = "Players with 500+ possessions; ridge penalty 1,500 possessions. One season of a 34-game league: treat as a rough guide")), "40_rapm_el", 11, 6.5)
+  wpa <- win_probability_added(win_probability(filter(nba_pbp, game_id == g7)))
+  out(plot_wpa(wpa, g7, colours = c(OKC = okc, IND = "#B8860B"),
+               title = "Game 7: Gilgeous-Alexander's plays moved the needle most",
+               caption = cap_nba), "41_wpa", 9, 6)
+  lu <- lineups(nba_reg, team = "OKC", min_minutes = 30)
+  out(plot_lineups(lu, n = 6, title = "OKC's best units all start with Gilgeous-Alexander, Williams and Dort",
+                   subtitle = sprintf("OKC's %d five-player units with 30+ minutes together, 2024/25 regular season, by net rating; dot size = minutes. %d of them outscored opponents",
+                                      nrow(lu), sum(lu$net > 0)),
+                   caption = cap_nba), "42_lineups", 10, 6.5)
+  ps_all <- bind_rows(expected_fg(pressure_situations(nba_reg, "NBA", 14)), expected_fg(pressure_situations(el_reg, "EuroLeague", 14)))
+  tp <- team_shot_profile(ps_all)
+  lg <- tp |> group_by(league) |> summarise(s = weighted.mean(early_share, fga), p = weighted.mean(pps_early, fga * early_share))
+  out(plot_quadrant(tp, "early_share", "pps_early", label = "team", colour = "league", highlight = c("ATL", "DEN", "MEM", "OKC", "OLY", "PAN", "BAS"),
+                    corners = c("Rarely, but deadly", "Often and well", "Rarely and poorly", "Often, often wasted"),
+                    xlab = "Share of shots taken early in the clock (17+ seconds left)", ylab = "Points per early shot",
+                    title = "EuroLeague teams run less but score more when they do",
+                    subtitle = sprintf("%s teams take %.0f%% of their shots early in the clock and score %.2f points per early shot; %s teams %.0f%% and %.2f. Olympiacos and Baskonia ran rarely but scored about 1.4 points a time",
+                                       colour_text("NBA", "NBA"), 100 * lg$s[lg$league == "NBA"], lg$p[lg$league == "NBA"],
+                                       colour_text("EuroLeague", "EuroLeague"), 100 * lg$s[lg$league == "EuroLeague"], lg$p[lg$league == "EuroLeague"]),
+                    caption = cap_both) + ggplot2::scale_x_continuous(labels = scales::label_percent()), "43_transition", 9, 7)
+  tpe <- subset(tp, league == "EuroLeague"); tpe$net <- tpe$xpps - tpe$o_xpps
+  best <- tpe$team[which.max(tpe$net)]
+  out(plot_quadrant(tpe, "xpps", "o_xpps", label = "team", highlight = c(best, "OLY", "PAN", "ULK", "MCO"),
+                    corners = c("Losing the shot battle", "Good shots both ways", "Defence first", "Winning the shot battle"),
+                    xlab = "Expected points per shot taken (from location) \u2192 better shots", ylab = "Expected points per shot allowed \u2192 easier shots for opponents",
+                    title = sprintf("%s won the EuroLeague's shot-quality battle by the most", best),
+                    subtitle = "Each team's shots and its opponents' shots, valued by a EuroLeague model of make probability by location, 2024/25 regular season. Bottom right is best: good shots taken, poor shots allowed",
+                    caption = cap_el), "44_shot_quality", 9, 7)
 }
 cat("done\n")

@@ -173,18 +173,22 @@ plot_assist_matrix <- function(net, top_n = 10, title = NULL, subtitle = NULL, c
   keep <- nodes$player[order(-nodes$involve)][seq_len(min(top_n, nrow(nodes)))]
   e <- net$edges[net$edges$from %in% keep & net$edges$to %in% keep, ]
   e <- tidyr::complete(e, from = keep, to = keep, fill = list(assists = 0, points = 0))
+  self <- e[e$from == e$to, ]
   e <- e[e$from != e$to, ]
   rows <- names(sort(tapply(e$assists, e$from, sum)))
   cols <- names(sort(tapply(e$assists, e$to, sum), decreasing = TRUE))
   e$from <- factor(e$from, levels = rows); e$to <- factor(e$to, levels = cols)
+  self$from <- factor(self$from, levels = rows); self$to <- factor(self$to, levels = cols)
   ggplot2::ggplot(e, ggplot2::aes(.data$to, .data$from)) +
+    ggplot2::geom_tile(data = self, fill = "grey92", colour = ggbasket_colours$paper, linewidth = 0.8) +
     ggplot2::geom_tile(ggplot2::aes(fill = .data$assists), colour = ggbasket_colours$paper, linewidth = 0.8) +
     ggplot2::geom_text(ggplot2::aes(label = ifelse(.data$assists > 0, .data$assists, ""),
                                     colour = .data$assists > stats::quantile(.data$assists, 0.85)), size = 3) +
-    ggplot2::scale_fill_gradient(low = "#F4F1EC", high = "#6A1B4D", name = "Assists") +
+    ggplot2::scale_fill_gradient(low = "#F3F3F5", high = "#6A1B4D", name = "Assists") +
+    ggplot2::coord_equal() +
     ggplot2::scale_colour_manual(values = c(`TRUE` = "white", `FALSE` = "grey25"), guide = "none") +
     theme_ggbasket(grid = "none") +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 35, hjust = 1),
-                   legend.position = "bottom") +
+                   legend.position = "right") +
     ggplot2::labs(x = "Scorer \u2192", y = "Passer", title = title, subtitle = subtitle, caption = caption)
 }

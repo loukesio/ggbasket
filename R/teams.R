@@ -191,3 +191,125 @@ plot_lorenz <- function(data, value, group, n = 8, highlight = NULL, value_label
                   y = sprintf("Share of the team's %s", value_label %||% value), title = title, caption = caption,
                   subtitle = subtitle %||% "The further a curve sags below the diagonal, the more the team relies on a few players")
 }
+
+#' Where each team's net rating comes from
+#'
+#' Net rating split into its two halves against the league average: offence
+#' (points scored per 100 possessions above average) and defence (points
+#' allowed below average). One row per team, sorted by net rating, so the
+#' ranking and the way each team gets there read together.
+#'
+#' @param ff Output of [four_factors()], one league (or use `league`).
+#' @param league League to show (default: the first in `ff`).
+#' @param highlight Teams to mark with a light band.
+#' @param title,subtitle,caption Labels.
+#' @export
+#' @examples
+#' plot_net_rating(four_factors(team_seasons), "EuroLeague")
+plot_net_rating <- function(ff, league = NULL, highlight = NULL, title = NULL, subtitle = NULL, caption = NULL) {
+  d <- as.data.frame(ff)
+  league <- league %||% d$league[1]
+  d <- d[d$league == league, ]
+  avg <- 100 * sum(d$pts) / sum(d$poss)
+  d$off <- d$ortg - avg
+  d$def <- avg - d$drtg
+  d$net <- d$off + d$def
+  d$team <- factor(d$team, levels = d$team[order(d$net)])
+  long <- rbind(data.frame(team = d$team, part = "Offence", value = d$off),
+                data.frame(team = d$team, part = "Defence", value = d$def))
+  # stack positives right and negatives left of zero
+  long <- long[order(long$team, long$part), ]
+  long <- do.call(rbind, lapply(split(long, long$team), function(x) {
+    pos <- x$value >= 0
+    x$xmin <- x$xmax <- 0
+    x$xmax[pos] <- cumsum(x$value[pos]); x$xmin[pos] <- x$xmax[pos] - x$value[pos]
+    x$xmin[!pos] <- cumsum(x$value[!pos]); x$xmax[!pos] <- x$xmin[!pos] - x$value[!pos]
+    x
+  }))
+  long$y <- as.numeric(long$team)
+  cols <- c(Offence = "#E07B00", Defence = "#1F5FA8")
+  d$y <- as.numeric(d$team)
+  d$face <- ifelse(d$team %in% highlight, "bold", "plain")
+  band <- d[d$team %in% highlight, ]
+  ggplot2::ggplot() +
+    ggplot2::geom_rect(data = band, ggplot2::aes(ymin = .data$y - 0.5, ymax = .data$y + 0.5), xmin = -Inf, xmax = Inf,
+                       fill = "grey93") +
+    ggplot2::geom_vline(xintercept = 0, colour = "grey55", linewidth = 0.4) +
+    ggplot2::geom_rect(data = long, ggplot2::aes(xmin = .data$xmin, xmax = .data$xmax, ymin = .data$y - 0.36,
+                                                 ymax = .data$y + 0.36, fill = .data$part)) +
+    ggplot2::geom_point(data = d, ggplot2::aes(.data$net, .data$y), shape = 21, size = 2.6,
+                        fill = ggbasket_colours$ink, colour = ggbasket_colours$paper, stroke = 0.6) +
+    ggplot2::geom_text(data = d, ggplot2::aes(x = pmax(.data$net, 0, .data$off, .data$def) + 0.5, y = .data$y,
+                                              label = sprintf("%+.1f", .data$net), fontface = .data$face),
+                       hjust = 0, size = 3, colour = ggbasket_colours$ink) +
+    ggplot2::scale_fill_manual(values = cols, guide = "none") +
+    ggplot2::scale_y_continuous(breaks = d$y, labels = as.character(d$team), expand = ggplot2::expansion(add = 0.6)) +
+    ggplot2::scale_x_continuous(labels = function(x) sprintf("%+.0f", x), expand = ggplot2::expansion(c(0.04, 0.1))) +
+    theme_ggbasket(grid = "x") +
+    ggplot2::labs(x = "Points per 100 possessions against the league average", y = NULL, title = title, caption = caption,
+                  subtitle = subtitle %||% paste0(
+                    "Net rating (black dot and number) = ", colour_text("offence", cols[["Offence"]]),
+                    " (points scored above average) + ", colour_text("defence", cols[["Defence"]]),
+                    " (points allowed below average), per 100 possessions"))
+}
+
+#' Four factors as a ranking table
+#'
+#' One row per chosen team, one column per factor on offence and defence.
+#' Each cell shows the team's value and its rank in the league, coloured
+#' from best (red) to worst (blue), so strengths and weaknesses read at a
+#' glance. Columns carry Dean Oliver's weights.
+#'
+#' @param ff Output of [four_factors()].
+#' @param teams Teams to show (ranks are within their league).
+#' @param title,subtitle,caption Labels.
+#' @export
+plot_factor_ranks <- function(ff, teams, title = NULL, subtitle = NULL, caption = NULL) {
+  d <- as.data.frame(ff)
+  spec <- tibble::tribble(
+    ~col, ~side, ~factor, ~high_good,
+    "efg", "Offence", "Shooting\neFG%  (40%)", TRUE,
+    "tov_pct", "Offence", "Turnovers\nTOV%  (25%)", FALSE,
+    "orb_pct", "Offence", "Off. rebounds\nORB%  (20%)", TRUE,
+    "ft_rate", "Offence", "Free throws\nFT/FGA  (15%)", TRUE,
+    "o_efg", "Defence", "Shooting\nopp. eFG%  (40%)", FALSE,
+    "o_tov_pct", "Defence", "Turnovers\nforced  (25%)", TRUE,
+    "drb_pct", "Defence", "Def. rebounds\nDRB%  (20%)", TRUE,
+    "o_ft_rate", "Defence", "Free throws\nopp. FT/FGA  (15%)", FALSE)
+  lg <- unique(d$league[d$team %in% teams])
+  long <- dplyr::bind_rows(lapply(seq_len(nrow(spec)), function(i) {
+    s <- spec[i, ]
+    x <- d[d$league %in% lg, ]
+    v <- x[[s$col]]
+    r <- rank(if (s$high_good) -v else v, ties.method = "min")
+    tibble::tibble(team = x$team, league = x$league, n = nrow(x), side = s$side, factor = s$factor,
+                   value = v, rank = r)
+  }))
+  long <- long[long$team %in% teams, ]
+  long$score <- 1 - (long$rank - 1) / (long$n - 1)
+  ord <- function(r) paste0(r, ifelse(r %% 100 %in% 11:13, "th", c("th", "st", "nd", "rd", rep("th", 6))[r %% 10 + 1]))
+  long$label <- sprintf("%s\n%s", ifelse(long$factor %in% spec$factor[spec$col %in% c("ft_rate", "o_ft_rate")],
+                                         sprintf("%.2f", long$value), sprintf("%.1f%%", 100 * long$value)),
+                        ord(long$rank))
+  long$factor <- factor(long$factor, levels = spec$factor)
+  long$side <- factor(long$side, levels = c("Offence", "Defence"))
+  long$team <- factor(long$team, levels = rev(teams))
+  ggplot2::ggplot(long, ggplot2::aes(.data$factor, .data$team)) +
+    ggplot2::geom_tile(ggplot2::aes(fill = .data$score), colour = ggbasket_colours$paper, linewidth = 1.2) +
+    ggplot2::geom_text(ggplot2::aes(label = .data$label, colour = abs(.data$score - 0.5) > 0.35),
+                       size = 3.1, lineheight = 0.9) +
+    ggplot2::scale_fill_gradientn(colours = c(ggbasket_colours$below, "#9DB9D8", "#F3F3F5", "#E4A0A0", ggbasket_colours$above),
+                                  limits = c(0, 1), guide = "none") +
+    ggplot2::scale_colour_manual(values = c(`TRUE` = "white", `FALSE` = "grey15"), guide = "none") +
+    ggplot2::scale_x_discrete(position = "top") +
+    ggplot2::facet_grid(~side, scales = "free_x", space = "free_x") +
+    ggplot2::coord_cartesian(expand = FALSE) +
+    theme_ggbasket(grid = "none") +
+    ggplot2::theme(strip.text = ggplot2::element_text(face = "bold", size = ggplot2::rel(1.05)),
+                   axis.text.x.top = ggplot2::element_text(size = ggplot2::rel(0.82), lineheight = 0.95),
+                   axis.text.y = ggplot2::element_text(face = "bold", size = ggplot2::rel(1.1)),
+                   panel.spacing.x = grid::unit(1.2, "lines")) +
+    ggplot2::labs(x = NULL, y = NULL, title = title, caption = caption,
+                  subtitle = subtitle %||% paste0("Value and rank among the league's ", long$n[1],
+                                                  " teams; red = near the top, blue = near the bottom. Weights in brackets (Dean Oliver)"))
+}

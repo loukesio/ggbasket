@@ -86,7 +86,7 @@ plot_association <- function(assoc, title = NULL, subtitle = NULL, caption = NUL
     ggplot2::geom_tile(ggplot2::aes(fill = .data$value), colour = ggbasket_colours$paper, linewidth = 1.2) +
     ggplot2::geom_text(ggplot2::aes(label = .data$lab, colour = .data$value > 0.45), size = 3,
                        lineheight = 0.9) +
-    ggplot2::scale_fill_gradient(low = "#F1ECE4", high = "#6A1B4D", limits = c(0, 1),
+    ggplot2::scale_fill_gradient(low = "#F3F3F5", high = "#6A1B4D", limits = c(0, 1),
                                  name = "Strength of association (0 = none, 1 = perfect)",
                                  guide = ggplot2::guide_colourbar(barwidth = grid::unit(12, "lines"),
                                                                   barheight = grid::unit(0.5, "lines"),
