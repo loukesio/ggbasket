@@ -137,6 +137,8 @@ match_story <- function(pbp, names = NULL) {
 #'   `c(OLY = "Olympiacos", MIL = "Olimpia Milano")` (default: the full
 #'   names that come with the play-by-play).
 #' @param colours Two team colours, home first.
+#' @param interactive Make the game-flow chart interactive (hover for the
+#'   players on the floor and for why each run happened); needs ggiraph.
 #' @param open Open the report when done.
 #' @return The path of the report, invisibly.
 #' @export
@@ -147,7 +149,8 @@ match_story <- function(pbp, names = NULL) {
 #' match_report(pbp = subset(pbp_games, game_id == "401766128"), context = FALSE)
 #' }
 match_report <- function(game = NULL, league = c("EuroLeague", "NBA"), season = NULL, pbp = NULL, file = NULL,
-                         context = FALSE, names = NULL, colours = NULL, open = interactive()) {
+                         context = FALSE, names = NULL, colours = NULL, interactive = TRUE,
+                         open = base::interactive()) {
   rlang::check_installed("rmarkdown", "to write the report")
   league <- match.arg(league)
   if (is.null(pbp)) pbp <- fetch_game(game, league, season)
@@ -182,7 +185,8 @@ match_report <- function(game = NULL, league = c("EuroLeague", "NBA"), season = 
   file.copy(tmpl, file.path(work, "match_report.Rmd"))
   rmarkdown::render(file.path(work, "match_report.Rmd"), output_file = basename(file), output_dir = dirname(file),
                     params = list(pbp = pbp, season_pbp = season_pbp, names = names, colours = colours, date = date,
-                                  title_text = title_text),
+                                  title_text = title_text,
+                                  interactive = interactive && requireNamespace("ggiraph", quietly = TRUE)),
                     envir = new.env(parent = globalenv()), quiet = TRUE)
   if (open) utils::browseURL(file)
   invisible(file)

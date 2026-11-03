@@ -14,6 +14,7 @@ params:
   colours: NULL
   date: ""
   title_text: "Match report"
+  interactive: FALSE
 ---
 
 ```{r setup, include = FALSE}
@@ -64,11 +65,28 @@ cat(paste0("- ", match_story(g, names = nm), collapse = "\n"))
 ## How the game unfolded
 
 ```{r flow, fig.width = 10, fig.height = 5.4}
-plot_game_flow(g, colours = unname(cols), min_run = 6,
-               title = sprintf("%s %d-%d %s", nm[[home]], s$home_pts, s$away_pts, nm[[away]]),
-               subtitle = paste("Lead of", ct(home), "(up) or", ct(away), "(down); brackets = runs of 6+ unanswered points"),
-               caption = cap)
+flow_title <- sprintf("%s %d-%d %s", nm[[home]], s$home_pts, s$away_pts, nm[[away]])
+if (isTRUE(params$interactive)) {
+  plot_game_flow_interactive(g, colours = unname(cols), min_run = 6, names = nm, title = flow_title,
+                             subtitle = paste("Lead of", ct(home), "(up) or", ct(away), "(down); brackets = runs of 6+ unanswered points. Hover for the players on the floor; hover a bracket for why the run happened"),
+                             caption = cap)
+} else {
+  plot_game_flow(g, colours = unname(cols), min_run = 6, title = flow_title,
+                 subtitle = paste("Lead of", ct(home), "(up) or", ct(away), "(down); brackets = runs of 6+ unanswered points"),
+                 caption = cap)
+}
 ```
+
+## Why the runs happened
+
+```{r runs, results = "asis"}
+er <- explain_runs(g, min_points = 6, names = nm)
+if (nrow(er)) {
+  cat(paste0("- ", er$story, collapse = "\n"), "\n")
+} else cat("Neither team had a run of 6 or more unanswered points.\n")
+```
+
+<p class="note">Off turnovers / second-chance = the possession began with the opponent's turnover / included an offensive rebound. On the break = scored within 7 seconds of the turnover or defensive rebound. At the rim = a two from 8 feet or less. Players named on the bench are the opponent's three most-used players who sat most of the run.</p>
 
 ## The plays that decided it
 

@@ -13,7 +13,8 @@ match_report(
   context = FALSE,
   names = NULL,
   colours = NULL,
-  open = interactive()
+  interactive = TRUE,
+  open = base::interactive()
 )
 }
 \arguments{
@@ -36,6 +37,9 @@ working directory).}
 names that come with the play-by-play).}
 
 \item{colours}{Two team colours, home first.}
+
+\item{interactive}{Make the game-flow chart interactive (hover for the
+players on the floor and for why each run happened); needs ggiraph.}
 
 \item{open}{Open the report when done.}
 }
