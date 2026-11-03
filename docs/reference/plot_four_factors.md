@@ -26,7 +26,7 @@ plot_four_factors(
 - ff:
 
   Output of
-  [`four_factors()`](https://loukesio.github.io/ggbasket-site/reference/four_factors.md)
+  [`four_factors()`](https://loukesio.github.io/ggbasket/reference/four_factors.md)
   for the whole league.
 
 - teams:

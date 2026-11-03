@@ -16,7 +16,7 @@ plot_factor_ranks(ff, teams, title = NULL, subtitle = NULL, caption = NULL)
 - ff:
 
   Output of
-  [`four_factors()`](https://loukesio.github.io/ggbasket-site/reference/four_factors.md).
+  [`four_factors()`](https://loukesio.github.io/ggbasket/reference/four_factors.md).
 
 - teams:
 

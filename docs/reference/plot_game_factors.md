@@ -21,7 +21,7 @@ plot_game_factors(
 - gf:
 
   Output of
-  [`game_factors()`](https://loukesio.github.io/ggbasket-site/reference/game_factors.md).
+  [`game_factors()`](https://loukesio.github.io/ggbasket/reference/game_factors.md).
 
 - game:
 

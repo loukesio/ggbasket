@@ -31,7 +31,7 @@ plot_ratings(
 - ff:
 
   Output of
-  [`four_factors()`](https://loukesio.github.io/ggbasket-site/reference/four_factors.md)
+  [`four_factors()`](https://loukesio.github.io/ggbasket/reference/four_factors.md)
   (needs `ortg`, `drtg`, `pts`, `poss`).
 
 - label:

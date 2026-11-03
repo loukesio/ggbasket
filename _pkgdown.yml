@@ -1,4 +1,4 @@
-url: https://loukesio.github.io/ggbasket-site/
+url: https://loukesio.github.io/ggbasket/
 template:
   bootstrap: 5
   bslib:
@@ -11,7 +11,12 @@ template:
 navbar:
   structure:
     left: [intro, reference, news]
-    right: [search]
+    right: [search, github]
+  components:
+    github:
+      icon: fa-github
+      href: https://github.com/loukesio/ggbasket
+      aria-label: GitHub
 home:
   title: "ggbasket: learn from basketball games, NBA and EuroLeague"
   description: "Play-by-play, metrics and story-first ggplot2 graphics for the NBA and the EuroLeague."

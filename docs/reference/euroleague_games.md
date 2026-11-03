@@ -2,9 +2,9 @@
 
 `euroleague_games()` lists a EuroLeague season's games with the game
 code that
-[`fetch_game()`](https://loukesio.github.io/ggbasket-site/reference/fetch_game.md)
+[`fetch_game()`](https://loukesio.github.io/ggbasket/reference/fetch_game.md)
 and
-[`match_report()`](https://loukesio.github.io/ggbasket-site/reference/match_report.md)
+[`match_report()`](https://loukesio.github.io/ggbasket/reference/match_report.md)
 need. `nba_games()` lists the NBA games on a date with ESPN's game id.
 
 ## Usage

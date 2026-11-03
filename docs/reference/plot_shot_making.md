@@ -26,7 +26,7 @@ plot_shot_making(
 - sm:
 
   Output of
-  [`shot_making()`](https://loukesio.github.io/ggbasket-site/reference/shot_making.md).
+  [`shot_making()`](https://loukesio.github.io/ggbasket/reference/shot_making.md).
 
 - label:
 

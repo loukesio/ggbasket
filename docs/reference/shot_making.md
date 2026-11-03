@@ -15,9 +15,9 @@ shot_making(shots, by = "player", prior_n = 100)
 - shots:
 
   Shots with an `xfg` column (see
-  [`expected_fg()`](https://loukesio.github.io/ggbasket-site/reference/expected_fg.md)),
+  [`expected_fg()`](https://loukesio.github.io/ggbasket/reference/expected_fg.md)),
   or raw shots (then
-  [`expected_fg()`](https://loukesio.github.io/ggbasket-site/reference/expected_fg.md)
+  [`expected_fg()`](https://loukesio.github.io/ggbasket/reference/expected_fg.md)
   is called on them).
 
 - by:

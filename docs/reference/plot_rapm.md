@@ -20,7 +20,7 @@ plot_rapm(
 - rp:
 
   Output of
-  [`rapm()`](https://loukesio.github.io/ggbasket-site/reference/rapm.md).
+  [`rapm()`](https://loukesio.github.io/ggbasket/reference/rapm.md).
 
 - n:
 

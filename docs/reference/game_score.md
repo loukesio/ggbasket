@@ -16,7 +16,7 @@ game_score(box)
 - box:
 
   Player box scores from
-  [`box_score()`](https://loukesio.github.io/ggbasket-site/reference/box_score.md).
+  [`box_score()`](https://loukesio.github.io/ggbasket/reference/box_score.md).
 
 ## Value
 

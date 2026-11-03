@@ -2,7 +2,7 @@
 
 Regular-season totals for every NBA (30) and EuroLeague (18) team, with
 the opponents' totals prefixed by `o_`. Ready for
-[`four_factors()`](https://loukesio.github.io/ggbasket-site/reference/four_factors.md).
+[`four_factors()`](https://loukesio.github.io/ggbasket/reference/four_factors.md).
 
 ## Usage
 

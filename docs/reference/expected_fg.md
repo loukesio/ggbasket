@@ -6,7 +6,7 @@ and angle per league and shot value; otherwise a binned average (0.5 m
 distance bands by zone). Extra context columns (shot clock, score
 margin) can be added as `extra` smooth terms, which is the regression
 version of a classification-tree "high-pressure" model (see
-[`pressure_effects()`](https://loukesio.github.io/ggbasket-site/reference/pressure_effects.md)).
+[`pressure_effects()`](https://loukesio.github.io/ggbasket/reference/pressure_effects.md)).
 
 ## Usage
 

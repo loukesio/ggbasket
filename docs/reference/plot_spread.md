@@ -62,7 +62,7 @@ plot_spread(
 
 With `shrink = TRUE` and `made`/`attempts` pairs, percentages are shrunk
 (see
-[`shrink_rate()`](https://loukesio.github.io/ggbasket-site/reference/shrink_rate.md))
+[`shrink_rate()`](https://loukesio.github.io/ggbasket/reference/shrink_rate.md))
 so a 0/2 shooter no longer defines the range.
 
 ## Examples

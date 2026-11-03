@@ -26,7 +26,7 @@ plot_assist_roles(
 - net:
 
   Output of
-  [`assist_network()`](https://loukesio.github.io/ggbasket-site/reference/assist_network.md).
+  [`assist_network()`](https://loukesio.github.io/ggbasket/reference/assist_network.md).
 
 - min_assists:
 

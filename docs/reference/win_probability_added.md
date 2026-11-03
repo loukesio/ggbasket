@@ -1,7 +1,7 @@
 # Win probability added
 
 Credits every change in win probability (from
-[`win_probability()`](https://loukesio.github.io/ggbasket-site/reference/win_probability.md))
+[`win_probability()`](https://loukesio.github.io/ggbasket/reference/win_probability.md))
 to the players involved, from their team's point of view: the player who
 made the play (shooter, free-throw shooter, player who lost the ball)
 gets the change, and the five opponents on the floor share the opposite
@@ -21,7 +21,7 @@ win_probability_added(wp)
 - wp:
 
   Output of
-  [`win_probability()`](https://loukesio.github.io/ggbasket-site/reference/win_probability.md),
+  [`win_probability()`](https://loukesio.github.io/ggbasket/reference/win_probability.md),
   with line-ups.
 
 ## Value

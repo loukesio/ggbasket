@@ -13,7 +13,7 @@ plot_lineups(lu, n = 6, title = NULL, subtitle = NULL, caption = NULL)
 - lu:
 
   Output of
-  [`lineups()`](https://loukesio.github.io/ggbasket-site/reference/lineups.md).
+  [`lineups()`](https://loukesio.github.io/ggbasket/reference/lineups.md).
 
 - n:
 

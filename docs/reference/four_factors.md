@@ -22,7 +22,7 @@ four_factors(data, ft_coef = 0.44, min_is_team = TRUE, per = NULL)
 - ft_coef:
 
   Passed to
-  [`possessions()`](https://loukesio.github.io/ggbasket-site/reference/possessions.md).
+  [`possessions()`](https://loukesio.github.io/ggbasket/reference/possessions.md).
 
 - min_is_team:
 

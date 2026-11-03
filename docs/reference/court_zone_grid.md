@@ -2,7 +2,7 @@
 
 Used to paint zone charts: each cell of a `res`-metre grid is classified
 with
-[`shot_zone()`](https://loukesio.github.io/ggbasket-site/reference/shot_zone.md),
+[`shot_zone()`](https://loukesio.github.io/ggbasket/reference/shot_zone.md),
 so zone shapes follow the real court lines exactly without hand-made
 polygons.
 

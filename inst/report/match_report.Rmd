@@ -167,4 +167,4 @@ if (nrow(lu)) {
 }
 ```
 
-<footer>Report generated with <a href="https://loukesio.github.io/ggbasket-site/">ggbasket</a> on `r format(Sys.Date())`. Win probability: two-parameter score model; the four-factor split uses a league model fitted on 2024/25. Small single-game samples: read on/off and line-up numbers with care.</footer>
+<footer>Report generated with <a href="https://loukesio.github.io/ggbasket/">ggbasket</a> on `r format(Sys.Date())`. Win probability: two-parameter score model; the four-factor split uses a league model fitted on 2024/25. Small single-game samples: read on/off and line-up numbers with care.</footer>

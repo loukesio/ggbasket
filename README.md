@@ -5,7 +5,7 @@ from both leagues into one layout, computes the measures analysts use (win proba
 factors, shot quality, pressure) and draws each answer as a finished, story-first ggplot2 figure.
 
 ```r
-devtools::install_github("loukesio/ggbasket")   # licensed users only, see Licence below
+devtools::install_github("loukesio/ggbasket")
 library(ggbasket)
 
 # one game: the 2025 NBA Finals Game 7 is bundled
@@ -30,8 +30,8 @@ A report holds:
 * box scores, clutch time and line-ups.
 
 It is one self-contained HTML file with the figures inside, ready to e-mail or post. Examples:
-[Olympiacos 84-78 Olimpia Milano](https://loukesio.github.io/ggbasket-site/reports/OLY-MIL-2026-10-30.html) and
-[Oklahoma City 103-91 Indiana, 2025 NBA Finals Game 7](https://loukesio.github.io/ggbasket-site/reports/OKC-IND-2025-06-22.html).
+[Olympiacos 84-78 Olimpia Milano](https://loukesio.github.io/ggbasket/reports/OLY-MIL-2026-10-30.html) and
+[Oklahoma City 103-91 Indiana, 2025 NBA Finals Game 7](https://loukesio.github.io/ggbasket/reports/OKC-IND-2025-06-22.html).
 
 **1. Find the game.**
 
@@ -714,7 +714,5 @@ their ggbasket counterparts.
 
 ## Licence
 
-Copyright (c) 2026 Loukas Theodosiou. All rights reserved. ggbasket is proprietary software: you may look at
-it here, but you may not install, run, copy, modify or redistribute it without written permission. Reports
-made with it may be shared by their recipients for internal use, with attribution. See [LICENSE](LICENSE). For
-licences, contact loukesio@gmail.com. Versions before 0.6.0 were released under the MIT licence.
+MIT, free to use, change and share. Copyright (c) 2026 Loukas Theodosiou; see [LICENSE.md](LICENSE.md).
+Data downloaded from ESPN (via hoopR) and the EuroLeague live API remains subject to those providers' terms.

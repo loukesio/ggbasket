@@ -28,7 +28,7 @@ plot_shot_curve(
 - curve:
 
   Output of
-  [`shot_curve()`](https://loukesio.github.io/ggbasket-site/reference/shot_curve.md).
+  [`shot_curve()`](https://loukesio.github.io/ggbasket/reference/shot_curve.md).
 
 - highlight:
 

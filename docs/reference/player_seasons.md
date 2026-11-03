@@ -18,4 +18,4 @@ court), counting stats, and field-goal attempts by zone (`rim`,
 ## Source
 
 As
-[team_seasons](https://loukesio.github.io/ggbasket-site/reference/team_seasons.md).
+[team_seasons](https://loukesio.github.io/ggbasket/reference/team_seasons.md).

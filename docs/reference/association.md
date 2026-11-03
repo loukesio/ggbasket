@@ -7,7 +7,7 @@ categorical and a numerical one, and Pearson's correlation for two
 numerical ones. `association()` does all three for every pair in `vars`
 and puts them on one 0-1 scale (\|r\| for two numerical variables), with
 a test p-value, so they can be read in one table or one heatmap
-([`plot_association()`](https://loukesio.github.io/ggbasket-site/reference/plot_association.md)).
+([`plot_association()`](https://loukesio.github.io/ggbasket/reference/plot_association.md)).
 
 ## Usage
 

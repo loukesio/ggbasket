@@ -72,7 +72,7 @@ plot_shot_hex(
 
 Shot data needs `x`, `y` in metres from the hoop centre (y towards half
 court), `made`, and optionally `value` and `league`. See
-[`as_ggbasket_shots()`](https://loukesio.github.io/ggbasket-site/reference/as_ggbasket_teams.md)
+[`as_ggbasket_shots()`](https://loukesio.github.io/ggbasket/reference/as_ggbasket_teams.md)
 to take shots out of a play-by-play.
 
 ## Examples

@@ -1,7 +1,7 @@
 Package: ggbasket
 Type: Package
 Title: Learn from Basketball Games: NBA and EuroLeague Play-by-Play, Metrics and Graphics
-Version: 0.6.0
+Version: 0.6.1
 Authors@R: person("Loukas", "Theodosiou", email = "loukesio@gmail.com", role = c("aut", "cre"))
 Description: Reads NBA (ESPN, via 'hoopR') and EuroLeague (official live
     API) play-by-play into one layout with the players on court, and turns
@@ -13,9 +13,9 @@ Description: Reads NBA (ESPN, via 'hoopR') and EuroLeague (official live
     shooting rates, expected field-goal percentage) and story-first 'ggplot2'
     graphics on NBA and FIBA courts. Started as a redesign of the analyses
     in Zuccolotto and Manisera (2020) "Basketball Data Science".
-URL: https://loukesio.github.io/ggbasket-site/, https://github.com/loukesio/ggbasket
+URL: https://loukesio.github.io/ggbasket/, https://github.com/loukesio/ggbasket
 BugReports: https://github.com/loukesio/ggbasket/issues
-License: file LICENSE
+License: MIT + file LICENSE
 Encoding: UTF-8
 Depends: R (>= 4.1.0)
 Imports:

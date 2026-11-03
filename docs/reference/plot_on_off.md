@@ -15,7 +15,7 @@ plot_on_off(oo, n = 12, title = NULL, subtitle = NULL, caption = NULL)
 - oo:
 
   Output of
-  [`on_off()`](https://loukesio.github.io/ggbasket-site/reference/on_off.md),
+  [`on_off()`](https://loukesio.github.io/ggbasket/reference/on_off.md),
   one team (or use `n`).
 
 - n:

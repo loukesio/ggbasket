@@ -4,7 +4,7 @@ Builds passer-to-scorer counts from play-by-play data with one row per
 event and columns `player` (scorer), `assist` (passer, empty when
 unassisted), `result` (`"made"`/`"missed"`) and `points`: the ggbasket
 play-by-play layout (see
-[pbp](https://loukesio.github.io/ggbasket-site/reference/pbp.md)).
+[pbp](https://loukesio.github.io/ggbasket/reference/pbp.md)).
 
 ## Usage
 

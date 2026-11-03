@@ -27,7 +27,7 @@ plot_shot_density(
 - shots:
 
   Shot data (see Details in
-  [`plot_shot_hex()`](https://loukesio.github.io/ggbasket-site/reference/plot_shot_hex.md)).
+  [`plot_shot_hex()`](https://loukesio.github.io/ggbasket/reference/plot_shot_hex.md)).
 
 - compare:
 
