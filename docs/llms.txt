@@ -1,5 +1,8 @@
 # ggbasket
 
+![ggbasket logo: a basketball bouncing on an orange hex
+sticker](reference/figures/logo.gif)
+
 **Learn from basketball games, NBA and EuroLeague.** ggbasket reads
 play-by-play, box-score and shot data from both leagues into one layout,
 computes the measures analysts use (win probability, on/off, four
