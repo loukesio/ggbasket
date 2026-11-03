@@ -10,9 +10,12 @@ template:
     code_font: {google: "Roboto Mono"}
 navbar:
   structure:
-    left: [intro, reference, news]
+    left: [intro, gallery, reference, news]
     right: [search, github]
   components:
+    gallery:
+      text: Gallery
+      href: articles/gallery.html
     github:
       icon: fa-github
       href: https://github.com/loukesio/ggbasket
