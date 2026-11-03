@@ -53,7 +53,8 @@ match_report(
 - names:
 
   Named vector of display names for team codes, e.g.
-  `c(OLY = "Olympiacos", MIL = "Olimpia Milano")`.
+  `c(OLY = "Olympiacos", MIL = "Olimpia Milano")` (default: the full
+  names that come with the play-by-play).
 
 - colours:
 

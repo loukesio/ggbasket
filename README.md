@@ -5,7 +5,7 @@ from both leagues into one layout, computes the measures analysts use (win proba
 factors, shot quality, pressure) and draws each answer as a finished, story-first ggplot2 figure.
 
 ```r
-devtools::install("ggbasket")   # from the project root
+devtools::install_github("loukesio/ggbasket")   # licensed users only, see Licence below
 library(ggbasket)
 
 # one game: the 2025 NBA Finals Game 7 is bundled
@@ -19,24 +19,69 @@ el  <- fetch_euroleague_pbp(season = 2024)                  # official EuroLeagu
 on_off(el, team = "PAN")
 ```
 
-## A match report in one line
+## Creating a match report
 
-Fetch any game and get a shareable report: key findings in words, game flow, win probability with the plays
-that swung it, what decided the result, who mattered, every shot, box scores, clutch time and line-ups. The
-result is one self-contained HTML file (figures inside), ready to e-mail or post. Examples:
+A report holds:
+* the key findings in words;
+* the game flow;
+* win probability, with the plays that swung it;
+* what decided the result, and who mattered;
+* every shot;
+* box scores, clutch time and line-ups.
+
+It is one self-contained HTML file with the figures inside, ready to e-mail or post. Examples:
 [Olympiacos 84-78 Olimpia Milano](https://loukesio.github.io/ggbasket/reports/OLY-MIL-2026-10-30.html) and
 [Oklahoma City 103-91 Indiana, 2025 NBA Finals Game 7](https://loukesio.github.io/ggbasket/reports/OKC-IND-2025-06-22.html).
 
+**1. Find the game.**
+
 ```r
-# EuroLeague: season + game code (a few seconds; context = TRUE adds both teams' season, about a minute)
-match_report(90, "EuroLeague", season = 2026, context = TRUE,
-             names = c(OLY = "Olympiacos", MIL = "Olimpia Milano"), colours = c("#C8102E", "#2E4057"))
+library(ggbasket)
 
-# NBA: ESPN game id
-match_report("401766128", "NBA", names = c(OKC = "Oklahoma City", IND = "Indiana"))
+# EuroLeague: every played game of the season, with its game code
+euroleague_games(2026, team = "OLY")      # 2026 = the 2026/27 season
+#>   game date       round home away home_name          away_name            home_score away_score
+#>     90 2026-10-30     9 OLY  MIL  Olympiacos Piraeus Armani Olimpia Milan         84         78
 
-# just the findings, as text for an e-mail or a chat message
+# NBA: the games on a date, with ESPN's game id
+nba_games("2025-06-22")
+#>   game      date       home away home_name             away_name      home_score away_score
+#>   401766128 2025-06-22 OKC  IND  Oklahoma City Thunder Indiana Pacers        103         91
+```
+
+**2. Make the report.** This takes about 10 seconds. The file is saved in your working directory as
+`<home>-<away>-<date>.html` and opens in your browser.
+
+```r
+match_report(90, "EuroLeague", season = 2026)
+match_report("401766128", "NBA")
+```
+
+**3. Optional extras.**
+
+```r
+match_report(90, "EuroLeague", season = 2026,
+             context = TRUE,                                   # compare with both teams' season (about a minute)
+             names   = c(OLY = "Olympiacos", MIL = "Milano"),  # shorter display names
+             colours = c("#C8102E", "#2E4057"),                # team colours, home first
+             file    = "reports/olympiacos-milano.html")       # where to save it
+```
+
+**4. Share it.** Send the HTML file as an attachment, put it on a shared drive, or publish it on a website. It
+needs no R and no internet connection to open. For a quick message, `match_story()` gives the key findings as
+text:
+
+```r
 match_story(fetch_game(90, "EuroLeague", season = 2026))
+#> "**Olympiacos Piraeus beat Armani Olimpia Milan by 6** (84-78). There were 14 lead changes and 9 ties ..."
+#> "**What decided it: turnovers.** It was worth about +5.9 points to Olympiacos Piraeus (18 turnovers against 14) ..."
+```
+
+**5. Report on several games at once.** Every game of Olympiacos's season so far:
+
+```r
+games <- euroleague_games(2026, team = "OLY")
+for (g in games$game) match_report(g, "EuroLeague", season = 2026, open = FALSE)
 ```
 
 ## Case study: what can we learn from one game?
@@ -154,7 +199,7 @@ Cory Joseph's basket at 77-73 settled a game that was level for its first 21 min
 | Why did the winner win: shooting, turnovers, rebounds or free throws? | `game_factors()`, `plot_game_factors()` |
 | Was it a classic? | `game_summary()`: lead changes, biggest leads, best run, excitement, comeback |
 | Who played well? | `box_score()`, `game_score()`, `win_probability_added()` |
-| Everything at once, to share | `match_report()`, `match_story()`, `fetch_game()` |
+| Everything at once, to share | `euroleague_games()`, `nba_games()`, `match_report()`, `match_story()`, `fetch_game()` |
 
 ## What you can learn from many games
 
@@ -666,3 +711,10 @@ system sans is used. Use `ggsave(..., device = cairo_pdf)` or PNG for the full l
 ggbasket began as a redesign of the analyses in Zuccolotto & Manisera, *Basketball Data Science* (CRC 2020).
 [`BOOK_REVIEW.md`](BOOK_REVIEW.md) holds that chapter-by-chapter critique and the book's figures next to
 their ggbasket counterparts.
+
+## Licence
+
+Copyright (c) 2026 Loukas Theodosiou. All rights reserved. ggbasket is proprietary software: you may look at
+it here, but you may not install, run, copy, modify or redistribute it without written permission. Reports
+made with it may be shared by their recipients for internal use, with attribution. See [LICENSE](LICENSE). For
+licences, contact loukesio@gmail.com. Versions before 0.6.0 were released under the MIT licence.

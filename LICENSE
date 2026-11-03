@@ -1,2 +1,35 @@
-YEAR: 2026
-COPYRIGHT HOLDER: Loukas Theodosiou
+ggbasket - Proprietary Software Licence
+
+Copyright (c) 2026 Loukas Theodosiou. All rights reserved.
+
+This software, including its source code, documentation, figures, templates and
+data products (together, "the Software"), is the proprietary property of
+Loukas Theodosiou ("the Owner").
+
+1. No licence is granted. Except as set out in section 2, no person or entity may
+   use, run, copy, modify, merge, publish, distribute, sublicense, sell, or create
+   derivative works of the Software, in whole or in part, without the prior written
+   permission of the Owner.
+
+2. Viewing. Where the Software is made visible (for example on a public code
+   repository or website), it may be viewed for reference only. Viewing grants no
+   right to install, execute, or reuse the Software or any part of it.
+
+3. Reports. Reports and figures produced by the Owner with the Software may be
+   shared by their recipients for internal purposes, with attribution, but may not
+   be resold or used to reproduce the Software.
+
+4. Permission. Requests for permission or commercial licences:
+   Loukas Theodosiou, loukesio@gmail.com.
+
+5. Third-party data and software. The Software downloads data from third-party
+   services (including ESPN, via the hoopR package, and the EuroLeague live API)
+   and depends on third-party open-source packages. Those remain subject to their
+   own terms, which users of the Software must respect.
+
+6. No warranty. The Software is provided "as is", without warranty of any kind,
+   express or implied. In no event shall the Owner be liable for any claim, damages
+   or other liability arising from the Software or its use.
+
+Versions of the Software published before version 0.6.0 were released under the
+MIT licence; this licence applies to version 0.6.0 and all later versions.

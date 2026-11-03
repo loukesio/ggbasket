@@ -22,7 +22,7 @@ home:
   description: "Play-by-play, metrics and story-first ggplot2 graphics for the NBA and the EuroLeague."
 reference:
 - title: Get the data
-  contents: [fetch_game, pbp, add_lineups, box_score, starts_with("as_ggbasket"), pbp_games, team_seasons, player_seasons, shots_2024]
+  contents: [euroleague_games, fetch_game, pbp, add_lineups, box_score, starts_with("as_ggbasket"), pbp_games, team_seasons, player_seasons, shots_2024]
 - title: One game
   contents: [match_report, match_story, game_flow, scoring_runs, plot_game_flow, win_probability, plot_win_probability, game_factors, plot_game_factors, game_summary, clutch_time, win_probability_added, plot_wpa]
 - title: Many games and player impact

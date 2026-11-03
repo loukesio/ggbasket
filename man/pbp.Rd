@@ -53,7 +53,8 @@ row per event, in game order, with
 }
 \details{
 \itemize{
-\item \code{league}, \code{season}, \code{game_id}, \code{date}, \code{hometeam}, \code{awayteam};
+\item \code{league}, \code{season}, \code{game_id}, \code{date}, \code{hometeam}, \code{awayteam} (codes) and
+\code{hometeam_name}, \code{awayteam_name} (full names);
 \item \code{period}, \code{periodTime} (seconds elapsed in the period), \code{totalTime}
 (seconds elapsed in the game), \code{playlength} (seconds since the previous
 event);

@@ -3,7 +3,8 @@
 #' Every game-level function in ggbasket reads one play-by-play layout: one
 #' row per event, in game order, with
 #'
-#' * `league`, `season`, `game_id`, `date`, `hometeam`, `awayteam`;
+#' * `league`, `season`, `game_id`, `date`, `hometeam`, `awayteam` (codes) and
+#'   `hometeam_name`, `awayteam_name` (full names);
 #' * `period`, `periodTime` (seconds elapsed in the period), `totalTime`
 #'   (seconds elapsed in the game), `playlength` (seconds since the previous
 #'   event);
@@ -81,6 +82,7 @@ pbp_from_espn <- function(x, league = "NBA", period_length = 12, ot_length = 5) 
     phase = c(`1` = "preseason", `2` = "regular", `3` = "playoffs", `5` = "play-in")[as.character(x$season_type)],
     game_id = as.character(x$game_id), date = as.Date(x$game_date),
     hometeam = home, awayteam = away,
+    hometeam_name = paste(x$home_team_name, x$home_team_mascot %||% ""), awayteam_name = paste(x$away_team_name, x$away_team_mascot %||% ""),
     period = per, periodTime = plen - clock, totalTime = start + plen - clock,
     team = team, oppTeam = ifelse(team == "", "", ifelse(team == home, away, home)),
     event_type = ev,
@@ -151,7 +153,8 @@ pbp_from_euroleague <- function(pbp_json, points_json = NULL, season, game_code,
                           pt %in% c("2FGA", "3FGA", "FTA") ~ 0L, .default = NA_integer_)
   d <- tibble::tibble(
     league = league, season = as.integer(season), game_id = paste0("E", season, "_", game_code),
-    hometeam = home, awayteam = away, period = as.integer(q$period),
+    hometeam = home, awayteam = away, hometeam_name = tr(pbp_json$TeamA), awayteam_name = tr(pbp_json$TeamB),
+    period = as.integer(q$period),
     periodTime = plen - clock, totalTime = start + plen - clock,
     team = team, oppTeam = ifelse(team == "", "", ifelse(team == home, away, home)),
     event_type = et,

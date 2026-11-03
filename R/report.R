@@ -134,7 +134,8 @@ match_story <- function(pbp, names = NULL) {
 #'   working directory).
 #' @param context Also compare the game with both teams' season so far.
 #' @param names Named vector of display names for team codes, e.g.
-#'   `c(OLY = "Olympiacos", MIL = "Olimpia Milano")`.
+#'   `c(OLY = "Olympiacos", MIL = "Olimpia Milano")` (default: the full
+#'   names that come with the play-by-play).
 #' @param colours Two team colours, home first.
 #' @param open Open the report when done.
 #' @return The path of the report, invisibly.
@@ -152,6 +153,9 @@ match_report <- function(game = NULL, league = c("EuroLeague", "NBA"), season = 
   if (is.null(pbp)) pbp <- fetch_game(game, league, season)
   pbp <- as.data.frame(pbp)
   league <- pbp$league[1]
+  if (is.null(names) && all(c("hometeam_name", "awayteam_name") %in% names(pbp))) {
+    names <- stats::setNames(trimws(c(pbp$hometeam_name[1], pbp$awayteam_name[1])), c(pbp$hometeam[1], pbp$awayteam[1]))
+  }
   season_pbp <- NULL
   if (context && league == "EuroLeague" && !is.null(season)) {
     teams <- c(pbp$hometeam[1], pbp$awayteam[1])
@@ -182,4 +186,46 @@ match_report <- function(game = NULL, league = c("EuroLeague", "NBA"), season = 
                     envir = new.env(parent = globalenv()), quiet = TRUE)
   if (open) utils::browseURL(file)
   invisible(file)
+}
+
+#' Find games to report on
+#'
+#' `euroleague_games()` lists a EuroLeague season's games with the game code
+#' that [fetch_game()] and [match_report()] need. `nba_games()` lists the NBA
+#' games on a date with ESPN's game id.
+#'
+#' @param season EuroLeague season start year (2026 = 2026/27).
+#' @param team Optional team code (e.g. `"OLY"`) to keep only its games.
+#' @param played_only Keep only games already played.
+#' @return A tibble: `game` (code or id), `date`, `round` (EuroLeague),
+#'   `home`, `away`, `home_name`, `away_name`, `home_score`, `away_score`.
+#' @export
+#' @examples
+#' \dontrun{
+#' tail(euroleague_games(2026, team = "OLY"))   # Olympiacos's latest games
+#' nba_games("2025-06-22")                       # NBA Finals Game 7
+#' }
+euroleague_games <- function(season, team = NULL, played_only = TRUE) {
+  rlang::check_installed("jsonlite")
+  g <- jsonlite::fromJSON(sprintf("https://api-live.euroleague.net/v2/competitions/E/seasons/E%d/games", season))$data
+  out <- tibble::tibble(game = g$gameCode, date = as.Date(substr(g$date, 1, 10)), round = g$round,
+                        home = g$local$club$code, away = g$road$club$code,
+                        home_name = g$local$club$name, away_name = g$road$club$name,
+                        home_score = g$local$score, away_score = g$road$score, played = g$played)
+  if (played_only) out <- out[out$played, ]
+  if (!is.null(team)) out <- out[out$home %in% team | out$away %in% team, ]
+  out <- out[order(out$date, out$game), ]
+  out$played <- NULL
+  out
+}
+
+#' @rdname euroleague_games
+#' @param date A date (`"2025-06-22"` or a `Date`).
+#' @export
+nba_games <- function(date) {
+  rlang::check_installed("hoopR")
+  x <- as.data.frame(suppressMessages(hoopR::espn_nba_scoreboard(season = format(as.Date(date), "%Y%m%d"))))
+  tibble::tibble(game = as.character(x$game_id), date = as.Date(x$game_date), home = x$home_team_abb,
+                 away = x$away_team_abb, home_name = x$home_team_full_name, away_name = x$away_team_full_name,
+                 home_score = as.integer(x$home_score), away_score = as.integer(x$away_score))
 }

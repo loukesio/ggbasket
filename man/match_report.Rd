@@ -32,7 +32,8 @@ working directory).}
 \item{context}{Also compare the game with both teams' season so far.}
 
 \item{names}{Named vector of display names for team codes, e.g.
-\code{c(OLY = "Olympiacos", MIL = "Olimpia Milano")}.}
+\code{c(OLY = "Olympiacos", MIL = "Olimpia Milano")} (default: the full
+names that come with the play-by-play).}
 
 \item{colours}{Two team colours, home first.}
 

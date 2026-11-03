@@ -70,7 +70,8 @@ A tibble in the ggbasket play-by-play layout.
 
 ## Details
 
-- `league`, `season`, `game_id`, `date`, `hometeam`, `awayteam`;
+- `league`, `season`, `game_id`, `date`, `hometeam`, `awayteam` (codes)
+  and `hometeam_name`, `awayteam_name` (full names);
 
 - `period`, `periodTime` (seconds elapsed in the period), `totalTime`
   (seconds elapsed in the game), `playlength` (seconds since the

@@ -2,6 +2,9 @@
 
 ## Get the data
 
+- [`euroleague_games()`](https://loukesio.github.io/ggbasket/reference/euroleague_games.md)
+  [`nba_games()`](https://loukesio.github.io/ggbasket/reference/euroleague_games.md)
+  : Find games to report on
 - [`fetch_game()`](https://loukesio.github.io/ggbasket/reference/fetch_game.md)
   [`fetch_nba_pbp()`](https://loukesio.github.io/ggbasket/reference/fetch_game.md)
   : Download one game's play-by-play

@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="index.html">ggbasket</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,7 +52,7 @@
 </h1></div>
 <p><strong>Learn from basketball games, NBA and EuroLeague.</strong> ggbasket reads play-by-play, box-score and shot data from both leagues into one layout, computes the measures analysts use (win probability, on/off, four factors, shot quality, pressure) and draws each answer as a finished, story-first ggplot2 figure.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"ggbasket"</span><span class="op">)</span>   <span class="co"># from the project root</span></span>
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"loukesio/ggbasket"</span><span class="op">)</span>   <span class="co"># licensed users only, see Licence below</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://loukesio.github.io/ggbasket/">ggbasket</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># one game: the 2025 NBA Finals Game 7 is bundled</span></span>
@@ -65,32 +65,56 @@
 <span><span class="va">el</span>  <span class="op">&lt;-</span> <span class="fu"><a href="reference/pbp.html">fetch_euroleague_pbp</a></span><span class="op">(</span>season <span class="op">=</span> <span class="fl">2024</span><span class="op">)</span>                  <span class="co"># official EuroLeague API, with shot locations</span></span>
 <span><span class="fu"><a href="reference/on_off.html">on_off</a></span><span class="op">(</span><span class="va">el</span>, team <span class="op">=</span> <span class="st">"PAN"</span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
-<h2 id="a-match-report-in-one-line">A match report in one line<a class="anchor" aria-label="anchor" href="#a-match-report-in-one-line"></a>
+<h2 id="creating-a-match-report">Creating a match report<a class="anchor" aria-label="anchor" href="#creating-a-match-report"></a>
 </h2>
-<p>Fetch any game and get a shareable report: key findings in words, game flow, win probability with the plays that swung it, what decided the result, who mattered, every shot, box scores, clutch time and line-ups. The result is one self-contained HTML file (figures inside), ready to e-mail or post. Examples: <a href="https://loukesio.github.io/ggbasket/reports/OLY-MIL-2026-10-30.html">Olympiacos 84-78 Olimpia Milano</a> and <a href="https://loukesio.github.io/ggbasket/reports/OKC-IND-2025-06-22.html">Oklahoma City 103-91 Indiana, 2025 NBA Finals Game 7</a>.</p>
+<p>A report holds: * the key findings in words; * the game flow; * win probability, with the plays that swung it; * what decided the result, and who mattered; * every shot; * box scores, clutch time and line-ups.</p>
+<p>It is one self-contained HTML file with the figures inside, ready to e-mail or post. Examples: <a href="https://loukesio.github.io/ggbasket/reports/OLY-MIL-2026-10-30.html">Olympiacos 84-78 Olimpia Milano</a> and <a href="https://loukesio.github.io/ggbasket/reports/OKC-IND-2025-06-22.html">Oklahoma City 103-91 Indiana, 2025 NBA Finals Game 7</a>.</p>
+<p><strong>1. Find the game.</strong></p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># EuroLeague: season + game code (a few seconds; context = TRUE adds both teams' season, about a minute)</span></span>
-<span><span class="fu"><a href="reference/match_report.html">match_report</a></span><span class="op">(</span><span class="fl">90</span>, <span class="st">"EuroLeague"</span>, season <span class="op">=</span> <span class="fl">2026</span>, context <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>             names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>OLY <span class="op">=</span> <span class="st">"Olympiacos"</span>, MIL <span class="op">=</span> <span class="st">"Olimpia Milano"</span><span class="op">)</span>, colours <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#C8102E"</span>, <span class="st">"#2E4057"</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://loukesio.github.io/ggbasket/">ggbasket</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># NBA: ESPN game id</span></span>
-<span><span class="fu"><a href="reference/match_report.html">match_report</a></span><span class="op">(</span><span class="st">"401766128"</span>, <span class="st">"NBA"</span>, names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>OKC <span class="op">=</span> <span class="st">"Oklahoma City"</span>, IND <span class="op">=</span> <span class="st">"Indiana"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># EuroLeague: every played game of the season, with its game code</span></span>
+<span><span class="fu"><a href="reference/euroleague_games.html">euroleague_games</a></span><span class="op">(</span><span class="fl">2026</span>, team <span class="op">=</span> <span class="st">"OLY"</span><span class="op">)</span>      <span class="co"># 2026 = the 2026/27 season</span></span>
+<span><span class="co">#&gt;   game date       round home away home_name          away_name            home_score away_score</span></span>
+<span><span class="co">#&gt;     90 2026-10-30     9 OLY  MIL  Olympiacos Piraeus Armani Olimpia Milan         84         78</span></span>
 <span></span>
-<span><span class="co"># just the findings, as text for an e-mail or a chat message</span></span>
-<span><span class="fu"><a href="reference/match_story.html">match_story</a></span><span class="op">(</span><span class="fu"><a href="reference/fetch_game.html">fetch_game</a></span><span class="op">(</span><span class="fl">90</span>, <span class="st">"EuroLeague"</span>, season <span class="op">=</span> <span class="fl">2026</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># NBA: the games on a date, with ESPN's game id</span></span>
+<span><span class="fu"><a href="reference/euroleague_games.html">nba_games</a></span><span class="op">(</span><span class="st">"2025-06-22"</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   game      date       home away home_name             away_name      home_score away_score</span></span>
+<span><span class="co">#&gt;   401766128 2025-06-22 OKC  IND  Oklahoma City Thunder Indiana Pacers        103         91</span></span></code></pre></div>
+<p><strong>2. Make the report.</strong> This takes about 10 seconds. The file is saved in your working directory as <code>&lt;home&gt;-&lt;away&gt;-&lt;date&gt;.html</code> and opens in your browser.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/match_report.html">match_report</a></span><span class="op">(</span><span class="fl">90</span>, <span class="st">"EuroLeague"</span>, season <span class="op">=</span> <span class="fl">2026</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/match_report.html">match_report</a></span><span class="op">(</span><span class="st">"401766128"</span>, <span class="st">"NBA"</span><span class="op">)</span></span></code></pre></div>
+<p><strong>3. Optional extras.</strong></p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/match_report.html">match_report</a></span><span class="op">(</span><span class="fl">90</span>, <span class="st">"EuroLeague"</span>, season <span class="op">=</span> <span class="fl">2026</span>,</span>
+<span>             context <span class="op">=</span> <span class="cn">TRUE</span>,                                   <span class="co"># compare with both teams' season (about a minute)</span></span>
+<span>             names   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>OLY <span class="op">=</span> <span class="st">"Olympiacos"</span>, MIL <span class="op">=</span> <span class="st">"Milano"</span><span class="op">)</span>,  <span class="co"># shorter display names</span></span>
+<span>             colours <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#C8102E"</span>, <span class="st">"#2E4057"</span><span class="op">)</span>,                <span class="co"># team colours, home first</span></span>
+<span>             file    <span class="op">=</span> <span class="st">"reports/olympiacos-milano.html"</span><span class="op">)</span>       <span class="co"># where to save it</span></span></code></pre></div>
+<p><strong>4. Share it.</strong> Send the HTML file as an attachment, put it on a shared drive, or publish it on a website. It needs no R and no internet connection to open. For a quick message, <code><a href="reference/match_story.html">match_story()</a></code> gives the key findings as text:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/match_story.html">match_story</a></span><span class="op">(</span><span class="fu"><a href="reference/fetch_game.html">fetch_game</a></span><span class="op">(</span><span class="fl">90</span>, <span class="st">"EuroLeague"</span>, season <span class="op">=</span> <span class="fl">2026</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; "**Olympiacos Piraeus beat Armani Olimpia Milan by 6** (84-78). There were 14 lead changes and 9 ties ..."</span></span>
+<span><span class="co">#&gt; "**What decided it: turnovers.** It was worth about +5.9 points to Olympiacos Piraeus (18 turnovers against 14) ..."</span></span></code></pre></div>
+<p><strong>5. Report on several games at once.</strong> Every game of Olympiacos’s season so far:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">games</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/euroleague_games.html">euroleague_games</a></span><span class="op">(</span><span class="fl">2026</span>, team <span class="op">=</span> <span class="st">"OLY"</span><span class="op">)</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">g</span> <span class="kw">in</span> <span class="va">games</span><span class="op">$</span><span class="va">game</span><span class="op">)</span> <span class="fu"><a href="reference/match_report.html">match_report</a></span><span class="op">(</span><span class="va">g</span>, <span class="st">"EuroLeague"</span>, season <span class="op">=</span> <span class="fl">2026</span>, open <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="case-study-what-can-we-learn-from-one-game">Case study: what can we learn from one game?<a class="anchor" aria-label="anchor" href="#case-study-what-can-we-learn-from-one-game"></a>
 </h2>
 <p><strong>Olympiacos 84-78 Olimpia Milano</strong>, EuroLeague round 9, 30 October 2026. Everything below comes from the game’s play-by-play, downloaded with one call, and is redrawn by <code>Rscript gallery/make_case.R</code>.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">el</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/pbp.html">fetch_euroleague_pbp</a></span><span class="op">(</span><span class="fl">2026</span><span class="op">)</span>            <span class="co"># the season so far, with shot locations</span></span>
 <span><span class="va">gm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">el</span>, <span class="va">game_id</span> <span class="op">==</span> <span class="st">"E2026_90"</span><span class="op">)</span></span></code></pre></div>
 <p><strong>1. How did the game unfold?</strong> The first half was a coin toss: 14 lead changes and 9 ties, with five runs of six or more unanswered points. Milano led for the last time in the 21st minute. Olympiacos’s biggest run was 9-0 and their biggest lead 11; Milano never led by more than 3.</p>
 <div class="float">
 <img src="reference/figures/case/01_flow.png" alt="case figure: flow"><div class="figcaption">case figure: flow</div>
 </div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/game_summary.html">game_summary</a></span><span class="op">(</span><span class="va">gm</span><span class="op">)</span>                      <span class="co"># lead changes, ties, biggest leads, best run</span></span>
 <span><span class="fu"><a href="reference/scoring_runs.html">scoring_runs</a></span><span class="op">(</span><span class="va">gm</span>, min_points <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/plot_game_flow.html">plot_game_flow</a></span><span class="op">(</span><span class="va">gm</span>, min_run <span class="op">=</span> <span class="fl">6</span>, colours <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#C8102E"</span>, <span class="st">"#2E4057"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -98,28 +122,28 @@
 <div class="float">
 <img src="reference/figures/case/02_win_probability.png" alt="case figure: win probability"><div class="figcaption">case figure: win probability</div>
 </div>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">wp</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/win_probability.html">win_probability</a></span><span class="op">(</span><span class="va">gm</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/plot_win_probability.html">plot_win_probability</a></span><span class="op">(</span><span class="va">wp</span>, n_key <span class="op">=</span> <span class="fl">4</span>, colours <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#C8102E"</span>, <span class="st">"#2E4057"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><strong>3. Why did Olympiacos win?</strong> Not by shooting: Milano’s effective field-goal percentage was higher (66% against 64%). The margin came from possessions. * <strong>Turnovers:</strong> Milano lost the ball 18 times against Olympiacos’s 14 (26% of possessions against 20%), worth about +6.5 points. * <strong>Offensive rebounds:</strong> Olympiacos grabbed 42% of their own misses against Milano’s 33%, worth +3.4. * <strong>Free throws:</strong> almost level (10 made against 11).</p>
 <div class="float">
 <img src="reference/figures/case/03_factors.png" alt="case figure: factors"><div class="figcaption">case figure: factors</div>
 </div>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gf</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/game_factors.html">game_factors</a></span><span class="op">(</span><span class="fu"><a href="reference/box_score.html">box_score</a></span><span class="op">(</span><span class="va">el</span>, by <span class="op">=</span> <span class="st">"team"</span><span class="op">)</span><span class="op">)</span>   <span class="co"># fitted on the season; one game alone also works</span></span>
 <span><span class="fu"><a href="reference/plot_game_factors.html">plot_game_factors</a></span><span class="op">(</span><span class="va">gf</span>, <span class="st">"E2026_90"</span>, team <span class="op">=</span> <span class="st">"OLY"</span><span class="op">)</span></span></code></pre></div>
 <p><strong>4. Was this a typical Olympiacos game?</strong> No. Against their eight other games so far: * It was their best shooting night (64% eFG) and the most turnovers they have forced (26%). * It was also the best shooting they have allowed (66%), so the defence won the ball back rather than contesting shots.</p>
 <div class="float">
 <img src="reference/figures/case/04_vs_season.png" alt="case figure: vs season"><div class="figcaption">case figure: vs season</div>
 </div>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">oly</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/four_factors.html">four_factors</a></span><span class="op">(</span><span class="fu"><a href="reference/box_score.html">box_score</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">el</span>, <span class="va">hometeam</span> <span class="op">==</span> <span class="st">"OLY"</span> <span class="op">|</span> <span class="va">awayteam</span> <span class="op">==</span> <span class="st">"OLY"</span><span class="op">)</span>, by <span class="op">=</span> <span class="st">"team"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">oly</span>, <span class="va">team</span> <span class="op">==</span> <span class="st">"OLY"</span><span class="op">)</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"game_id"</span>, <span class="st">"efg"</span>, <span class="st">"tov_pct"</span>, <span class="st">"orb_pct"</span>, <span class="st">"o_efg"</span>, <span class="st">"o_tov_pct"</span>, <span class="st">"drb_pct"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
 <p><strong>5. Who made the difference?</strong> Codi Miller-McIntyre (24 points, 4 of 9 threes, +18 on the floor) and Sasha Vezenkov (23 points, 8 of 10 twos) moved Olympiacos’s win probability the most. Win probability added counts a player’s own plays and a fifth of every opponent play while they were on the floor. For Milano, Moses Wright and Burnell added the most; RJ Cole scored 17 but was −10 on the floor.</p>
 <div class="float">
 <img src="reference/figures/case/05_wpa.png" alt="case figure: wpa"><div class="figcaption">case figure: wpa</div>
 </div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">wpa</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/win_probability_added.html">win_probability_added</a></span><span class="op">(</span><span class="va">wp</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/plot_wpa.html">plot_wpa</a></span><span class="op">(</span><span class="va">wpa</span>, colours <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>OLY <span class="op">=</span> <span class="st">"#C8102E"</span>, MIL <span class="op">=</span> <span class="st">"#2E4057"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/box_score.html">box_score</a></span><span class="op">(</span><span class="va">gm</span><span class="op">)</span>                          <span class="co"># points, shooting, plus-minus for every player</span></span></code></pre></div>
@@ -127,7 +151,7 @@
 <div class="float">
 <img src="reference/figures/case/06_shots.png" alt="case figure: shots"><div class="figcaption">case figure: shots</div>
 </div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sh</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/as_ggbasket_teams.html">as_ggbasket_shots</a></span><span class="op">(</span><span class="va">gm</span>, league <span class="op">=</span> <span class="st">"EuroLeague"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/plot_shot_density.html">plot_shot_density</a></span><span class="op">(</span><span class="va">sh</span>, facet <span class="op">=</span> <span class="st">"team"</span>, points <span class="op">=</span> <span class="cn">TRUE</span>, league <span class="op">=</span> <span class="st">"EuroLeague"</span><span class="op">)</span></span></code></pre></div>
 <p><strong>7. Who did Olympiacos play best with?</strong> In this game, Olympiacos were best with Miller-McIntyre on the floor. Over the nine games so far, Vezenkov is the steadiest player (median Game Score 15.5), and the team is +21 per 100 possessions with Jean Montero on the floor against +2 without him. These are small early-season samples, worth watching rather than concluding from.</p>
@@ -144,7 +168,7 @@
 <div class="float">
 <img src="reference/figures/case/09_on_off_season.png" alt="case figure: on off season"><div class="figcaption">case figure: on off season</div>
 </div>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/plot_on_off.html">plot_on_off</a></span><span class="op">(</span><span class="fu"><a href="reference/on_off.html">on_off</a></span><span class="op">(</span><span class="va">gm</span>, team <span class="op">=</span> <span class="st">"OLY"</span>, min_minutes <span class="op">=</span> <span class="fl">8</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">ob</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/game_score.html">game_score</a></span><span class="op">(</span><span class="fu"><a href="reference/box_score.html">box_score</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">el</span>, <span class="va">hometeam</span> <span class="op">==</span> <span class="st">"OLY"</span> <span class="op">|</span> <span class="va">awayteam</span> <span class="op">==</span> <span class="st">"OLY"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/plot_consistency.html">plot_consistency</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">ob</span>, <span class="va">team</span> <span class="op">==</span> <span class="st">"OLY"</span><span class="op">)</span>, players <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sasha Vezenkov"</span>, <span class="st">"Jean Montero"</span>, <span class="st">"Tyson Ward"</span><span class="op">)</span><span class="op">)</span></span>
@@ -196,7 +220,7 @@
 <tr>
 <td>Everything at once, to share</td>
 <td>
-<code><a href="reference/match_report.html">match_report()</a></code>, <code><a href="reference/match_story.html">match_story()</a></code>, <code><a href="reference/fetch_game.html">fetch_game()</a></code>
+<code><a href="reference/euroleague_games.html">euroleague_games()</a></code>, <code><a href="reference/euroleague_games.html">nba_games()</a></code>, <code><a href="reference/match_report.html">match_report()</a></code>, <code><a href="reference/match_story.html">match_story()</a></code>, <code><a href="reference/fetch_game.html">fetch_game()</a></code>
 </td>
 </tr>
 </tbody>
@@ -329,7 +353,7 @@
 <h2 id="gallery">Gallery<a class="anchor" aria-label="anchor" href="#gallery"></a>
 </h2>
 <p>Every figure takes one to three lines of code once the data is loaded. Open <strong>Code for these figures</strong> under each section for the exact calls; the shared setup is:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://loukesio.github.io/ggbasket/">ggbasket</a></span><span class="op">)</span>; <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>; <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="co"># season play-by-play, built once by data-raw/make_pbp.R (or with fetch_euroleague_pbp() / pbp_from_espn())</span></span>
 <span><span class="va">nba_pbp</span> <span class="op">&lt;-</span> <span class="fu">arrow</span><span class="fu">::</span><span class="fu"><a href="https://arrow.apache.org/docs/r/reference/read_parquet.html" class="external-link">read_parquet</a></span><span class="op">(</span><span class="st">"nba_pbp_2024.parquet"</span><span class="op">)</span>; <span class="va">el_pbp</span> <span class="op">&lt;-</span> <span class="fu">arrow</span><span class="fu">::</span><span class="fu"><a href="https://arrow.apache.org/docs/r/reference/read_parquet.html" class="external-link">read_parquet</a></span><span class="op">(</span><span class="st">"el_pbp_2024.parquet"</span><span class="op">)</span></span>
@@ -384,7 +408,7 @@
 </tbody>
 </table>
 <details><summary><b>Code for these figures</b>
-</summary><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">out</span><span class="op">(</span><span class="fu"><a href="reference/plot_game_flow.html">plot_game_flow</a></span><span class="op">(</span><span class="va">nba_pbp</span>, <span class="va">g7</span>, min_run <span class="op">=</span> <span class="fl">7</span>, colours <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">okc</span>, <span class="st">"#B8860B"</span><span class="op">)</span>,</span>
 <span>                   title <span class="op">=</span> <span class="st">"Game 7 was close for 27 minutes, then OKC ran away"</span>,</span>
 <span>                   subtitle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"2025 NBA Finals, Game 7. Lead of"</span>, <span class="fu"><a href="reference/colour_text.html">colour_text</a></span><span class="op">(</span><span class="st">"Oklahoma City"</span>, <span class="va">okc</span><span class="op">)</span>, <span class="st">"(up) or"</span>,</span>
@@ -482,7 +506,7 @@
 </tbody>
 </table>
 <details><summary><b>Code for these figures</b>
-</summary><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">oo</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/on_off.html">on_off</a></span><span class="op">(</span><span class="va">nba_reg</span>, team <span class="op">=</span> <span class="st">"DEN"</span>, min_minutes <span class="op">=</span> <span class="fl">500</span><span class="op">)</span></span>
 <span><span class="va">j</span> <span class="op">&lt;-</span> <span class="va">oo</span><span class="op">[</span><span class="va">oo</span><span class="op">$</span><span class="va">player</span> <span class="op">==</span> <span class="st">"Nikola Jokic"</span>, <span class="op">]</span></span>
 <span><span class="fu">out</span><span class="op">(</span><span class="fu"><a href="reference/plot_on_off.html">plot_on_off</a></span><span class="op">(</span><span class="va">oo</span>, n <span class="op">=</span> <span class="fl">11</span>,</span>
@@ -614,7 +638,7 @@
 </tbody>
 </table>
 <details><summary><b>Code for these figures</b>
-</summary><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">out</span><span class="op">(</span><span class="fu"><a href="reference/plot_shot_hex.html">plot_shot_hex</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">nba_sh</span>, <span class="va">player</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">mvps</span><span class="op">)</span>, baseline <span class="op">=</span> <span class="va">nba_sh</span>, facet <span class="op">=</span> <span class="st">"player"</span>,</span>
 <span>                  title <span class="op">=</span> <span class="st">"Four stars, four shot diets"</span>, caption <span class="op">=</span> <span class="va">cap_now</span><span class="op">)</span>, <span class="st">"28_shot_hex"</span>, <span class="fl">10</span>, <span class="fl">9</span><span class="op">)</span></span>
 <span></span>
@@ -760,7 +784,7 @@
 </tbody>
 </table>
 <details><summary><b>Code for these figures</b>
-</summary><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">el_ff</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">ff</span>, <span class="va">league</span> <span class="op">==</span> <span class="st">"EuroLeague"</span><span class="op">)</span></span>
 <span><span class="fu">out</span><span class="op">(</span><span class="fu"><a href="reference/plot_net_rating.html">plot_net_rating</a></span><span class="op">(</span><span class="va">ff</span>, <span class="st">"EuroLeague"</span>, highlight <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OLY"</span>, <span class="st">"PAN"</span>, <span class="st">"ULK"</span>, <span class="st">"MCO"</span><span class="op">)</span>,</span>
 <span>                    title <span class="op">=</span> <span class="st">"Panathinaikos and Olympiacos won with offence, Fenerbahce and Real Madrid with defence"</span>,</span>
@@ -838,7 +862,7 @@
 </tbody>
 </table>
 <details><summary><b>Code for these figures</b>
-</summary><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tr</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/team_ratings.html">team_ratings</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="fu"><a href="reference/box_score.html">box_score</a></span><span class="op">(</span><span class="va">nba_reg</span>, by <span class="op">=</span> <span class="st">"team"</span><span class="op">)</span>, <span class="fu"><a href="reference/box_score.html">box_score</a></span><span class="op">(</span><span class="va">el_reg</span>, by <span class="op">=</span> <span class="st">"team"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu">out</span><span class="op">(</span><span class="fu"><a href="reference/plot_team_ratings.html">plot_team_ratings</a></span><span class="op">(</span><span class="va">tr</span>, title <span class="op">=</span> <span class="st">"Once the schedule is accounted for, OKC were 12.7 points better than an average team"</span>,</span>
 <span>                      caption <span class="op">=</span> <span class="va">cap_both</span><span class="op">)</span>, <span class="st">"38_team_ratings"</span>, <span class="fl">11</span>, <span class="fl">9</span><span class="op">)</span></span>
@@ -964,7 +988,7 @@
 </tbody>
 </table>
 <details><summary><b>Code for these figures</b>
-</summary><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">player_seasons</span>, <span class="va">minutes</span> <span class="op">&gt;=</span> <span class="fl">1000</span><span class="op">)</span></span>
 <span><span class="va">pl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span><span class="va">pl</span>, pts36 <span class="op">=</span> <span class="fl">36</span> <span class="op">*</span> <span class="va">pts</span> <span class="op">/</span> <span class="va">minutes</span>, ast36 <span class="op">=</span> <span class="fl">36</span> <span class="op">*</span> <span class="va">ast</span> <span class="op">/</span> <span class="va">minutes</span>, reb36 <span class="op">=</span> <span class="fl">36</span> <span class="op">*</span> <span class="op">(</span><span class="va">orb</span> <span class="op">+</span> <span class="va">drb</span><span class="op">)</span> <span class="op">/</span> <span class="va">minutes</span>,</span>
 <span>                stl36 <span class="op">=</span> <span class="fl">36</span> <span class="op">*</span> <span class="va">stl</span> <span class="op">/</span> <span class="va">minutes</span>, blk36 <span class="op">=</span> <span class="fl">36</span> <span class="op">*</span> <span class="va">blk</span> <span class="op">/</span> <span class="va">minutes</span>, tov36 <span class="op">=</span> <span class="fl">36</span> <span class="op">*</span> <span class="va">tov</span> <span class="op">/</span> <span class="va">minutes</span>,</span>
@@ -1079,6 +1103,11 @@
 </h2>
 <p>ggbasket began as a redesign of the analyses in Zuccolotto &amp; Manisera, <em>Basketball Data Science</em> (CRC 2020). <a href="BOOK_REVIEW.html"><code>BOOK_REVIEW.md</code></a> holds that chapter-by-chapter critique and the book’s figures next to their ggbasket counterparts.</p>
 </div>
+<div class="section level2">
+<h2 id="licence">Licence<a class="anchor" aria-label="anchor" href="#licence"></a>
+</h2>
+<p>Copyright (c) 2026 Loukas Theodosiou. All rights reserved. ggbasket is proprietary software: you may look at it here, but you may not install, run, copy, modify or redistribute it without written permission. Reports made with it may be shared by their recipients for internal use, with attribution. See <a href="LICENSE">LICENSE</a>. For licences, contact <a href="mailto:loukesio@gmail.com" class="email">loukesio@gmail.com</a>. Versions before 0.6.0 were released under the MIT licence.</p>
+</div>
 </div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
@@ -1091,8 +1120,7 @@
 <div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li>
-<a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
+<li>file <a href="LICENSE-text.html">LICENSE</a>
 </li>
 </ul>
 </div>
