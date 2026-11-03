@@ -1,7 +1,7 @@
 # Heatmap of associations
 
 Lower-triangle heatmap of
-[`association()`](https://loukesio.github.io/ggbasket/reference/association.md):
+[`association()`](https://loukesio.github.io/ggbasket-site/reference/association.md):
 one sequential colour scale from 0 (independent) to 1 (perfectly
 dependent); each cell names the index used, so a Cramer's V is never
 mistaken for a correlation.
@@ -17,7 +17,7 @@ plot_association(assoc, title = NULL, subtitle = NULL, caption = NULL)
 - assoc:
 
   Output of
-  [`association()`](https://loukesio.github.io/ggbasket/reference/association.md).
+  [`association()`](https://loukesio.github.io/ggbasket-site/reference/association.md).
 
 - title, subtitle, caption:
 

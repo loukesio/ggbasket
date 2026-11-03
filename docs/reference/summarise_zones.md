@@ -3,7 +3,7 @@
 Attempts, makes, FG%, points per shot and share of attempts per zone,
 plus the league average in the same zone and the player's FG% shrunk
 towards it (see
-[`shrink_rate()`](https://loukesio.github.io/ggbasket/reference/shrink_rate.md)).
+[`shrink_rate()`](https://loukesio.github.io/ggbasket-site/reference/shrink_rate.md)).
 
 ## Usage
 
@@ -22,7 +22,7 @@ summarise_zones(
 - shots:
 
   Shot data (see Details in
-  [`plot_shot_hex()`](https://loukesio.github.io/ggbasket/reference/plot_shot_hex.md)).
+  [`plot_shot_hex()`](https://loukesio.github.io/ggbasket-site/reference/plot_shot_hex.md)).
 
 - by:
 

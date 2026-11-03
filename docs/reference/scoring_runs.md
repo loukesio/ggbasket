@@ -14,8 +14,8 @@ scoring_runs(pbp, min_points = 8, allow = 0)
 - pbp:
 
   Play-by-play in the ggbasket layout (see
-  [pbp](https://loukesio.github.io/ggbasket/reference/pbp.md)), one or
-  more games.
+  [pbp](https://loukesio.github.io/ggbasket-site/reference/pbp.md)), one
+  or more games.
 
 - min_points:
 

@@ -30,8 +30,8 @@ A report holds:
 * box scores, clutch time and line-ups.
 
 It is one self-contained HTML file with the figures inside, ready to e-mail or post. Examples:
-[Olympiacos 84-78 Olimpia Milano](https://loukesio.github.io/ggbasket/reports/OLY-MIL-2026-10-30.html) and
-[Oklahoma City 103-91 Indiana, 2025 NBA Finals Game 7](https://loukesio.github.io/ggbasket/reports/OKC-IND-2025-06-22.html).
+[Olympiacos 84-78 Olimpia Milano](https://loukesio.github.io/ggbasket-site/reports/OLY-MIL-2026-10-30.html) and
+[Oklahoma City 103-91 Indiana, 2025 NBA Finals Game 7](https://loukesio.github.io/ggbasket-site/reports/OKC-IND-2025-06-22.html).
 
 **1. Find the game.**
 

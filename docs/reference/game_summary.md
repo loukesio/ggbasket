@@ -13,13 +13,13 @@ game_summary(pbp, params = NULL)
 - pbp:
 
   Play-by-play in the ggbasket layout (see
-  [pbp](https://loukesio.github.io/ggbasket/reference/pbp.md)), one or
-  more games.
+  [pbp](https://loukesio.github.io/ggbasket-site/reference/pbp.md)), one
+  or more games.
 
 - params:
 
   Win-probability parameters, see
-  [`win_probability()`](https://loukesio.github.io/ggbasket/reference/win_probability.md).
+  [`win_probability()`](https://loukesio.github.io/ggbasket-site/reference/win_probability.md).
 
 ## Value
 

@@ -17,7 +17,7 @@ on_off(pbp, team = NULL, min_minutes = 100)
 - pbp:
 
   Play-by-play in the ggbasket layout with line-ups (see
-  [`add_lineups()`](https://loukesio.github.io/ggbasket/reference/add_lineups.md)).
+  [`add_lineups()`](https://loukesio.github.io/ggbasket-site/reference/add_lineups.md)).
 
 - team:
 

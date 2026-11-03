@@ -2,7 +2,7 @@
 
 `colour_text()` wraps text in a coloured (and by default bold) HTML
 span, for titles and subtitles drawn by
-[`theme_ggbasket()`](https://loukesio.github.io/ggbasket/reference/theme_ggbasket.md):
+[`theme_ggbasket()`](https://loukesio.github.io/ggbasket-site/reference/theme_ggbasket.md):
 naming the groups in their own colour makes a legend unnecessary.
 `ggbasket_caption()` builds the standard "Data · Graphic" caption.
 

@@ -1,12 +1,13 @@
 # Box scores from play-by-play
 
 Counts every event of a play-by-play in the ggbasket layout (see
-[pbp](https://loukesio.github.io/ggbasket/reference/pbp.md)) into player
-or team box scores, one row per game. Player rows also carry minutes and
-plus-minus from the line-ups on court. Team rebounds (no player
-credited) are left out, as in official box scores. Team rows carry the
-opponent's totals with an `o_` prefix, so they go straight into
-[`four_factors()`](https://loukesio.github.io/ggbasket/reference/four_factors.md).
+[pbp](https://loukesio.github.io/ggbasket-site/reference/pbp.md)) into
+player or team box scores, one row per game. Player rows also carry
+minutes and plus-minus from the line-ups on court. Team rebounds (no
+player credited) are left out, as in official box scores. Team rows
+carry the opponent's totals with an `o_` prefix, so they go straight
+into
+[`four_factors()`](https://loukesio.github.io/ggbasket-site/reference/four_factors.md).
 
 ## Usage
 

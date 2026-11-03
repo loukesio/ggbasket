@@ -1,7 +1,7 @@
 # Regularised adjusted plus-minus (RAPM)
 
 Each stint (see
-[`stints()`](https://loukesio.github.io/ggbasket/reference/stints.md))
+[`stints()`](https://loukesio.github.io/ggbasket-site/reference/stints.md))
 is one observation: the home margin per 100 possessions, explained by +1
 for every home player on court, -1 for every away player, and a
 home-court intercept, weighted by possessions. Ridge regression (penalty

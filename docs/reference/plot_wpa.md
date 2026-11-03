@@ -20,7 +20,7 @@ plot_wpa(
 - wpa:
 
   Output of
-  [`win_probability_added()`](https://loukesio.github.io/ggbasket/reference/win_probability_added.md).
+  [`win_probability_added()`](https://loukesio.github.io/ggbasket-site/reference/win_probability_added.md).
 
 - game:
 

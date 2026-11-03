@@ -27,7 +27,7 @@ shot_zone_levels(detail = FALSE)
 - x, y:
 
   Shot coordinates in metres (see
-  [`geom_court()`](https://loukesio.github.io/ggbasket/reference/geom_court.md)).
+  [`geom_court()`](https://loukesio.github.io/ggbasket-site/reference/geom_court.md)).
 
 - league:
 

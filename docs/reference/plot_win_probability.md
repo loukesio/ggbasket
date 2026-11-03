@@ -1,7 +1,7 @@
 # Win probability chart
 
 Home win probability through the game, from
-[`win_probability()`](https://loukesio.github.io/ggbasket/reference/win_probability.md),
+[`win_probability()`](https://loukesio.github.io/ggbasket-site/reference/win_probability.md),
 with the plays that moved it most numbered and listed under the title.
 
 ## Usage
@@ -23,7 +23,7 @@ plot_win_probability(
 - wp:
 
   Output of
-  [`win_probability()`](https://loukesio.github.io/ggbasket/reference/win_probability.md).
+  [`win_probability()`](https://loukesio.github.io/ggbasket-site/reference/win_probability.md).
 
 - game:
 

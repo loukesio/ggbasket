@@ -104,7 +104,7 @@ WNBA, college) play-by-play from ESPN as served by
 which `fetch_euroleague_pbp()` downloads.
 
 Who is on court is not part of either feed.
-[`add_lineups()`](https://loukesio.github.io/ggbasket/reference/add_lineups.md)
+[`add_lineups()`](https://loukesio.github.io/ggbasket-site/reference/add_lineups.md)
 rebuilds it from substitutions: a player who acts in a period before
 being subbed in started that period. A player who plays a whole period
 without touching the ball or being substituted is carried over from the

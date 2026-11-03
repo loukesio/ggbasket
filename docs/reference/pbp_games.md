@@ -2,8 +2,8 @@
 
 Every event of the 2025 NBA Finals Game 7 (Oklahoma City 103, Indiana
 91) and the 2025 EuroLeague final, in the ggbasket play-by-play layout
-(see [pbp](https://loukesio.github.io/ggbasket/reference/pbp.md)), with
-the players on court.
+(see [pbp](https://loukesio.github.io/ggbasket-site/reference/pbp.md)),
+with the players on court.
 
 ## Usage
 
@@ -14,7 +14,7 @@ pbp_games
 ## Format
 
 A tibble, one row per event; columns as described in
-[pbp](https://loukesio.github.io/ggbasket/reference/pbp.md).
+[pbp](https://loukesio.github.io/ggbasket-site/reference/pbp.md).
 
 ## Source
 

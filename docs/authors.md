@@ -11,12 +11,12 @@ Source:
 
 Theodosiou L (2026). *ggbasket: Learn from Basketball Games: NBA and
 EuroLeague Play-by-Play, Metrics and Graphics*. R package version 0.6.0,
-<https://loukesio.github.io/ggbasket/>.
+<https://loukesio.github.io/ggbasket-site/>.
 
 @Manual{,\
   title = {ggbasket: Learn from Basketball Games: NBA and EuroLeague Play-by-Play, Metrics and Graphics},\
   author = {Loukas Theodosiou},\
   year = {2026},\
   note = {R package version 0.6.0},\
-  url = {https://loukesio.github.io/ggbasket/},\
+  url = {https://loukesio.github.io/ggbasket-site/},\
 }

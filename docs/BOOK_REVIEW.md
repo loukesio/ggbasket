@@ -43,14 +43,14 @@ keeps it.
 
 | Topic (book function) | What it does | Problems | ggbasket fix |
 |----|----|----|----|
-| Possessions, pace, ORtg/DRtg, four factors (`fourfactors`) | Kubatko et al. formulas: POSS = FGA + 0.44·FTA − ORB + TOV | 0.44 is fitted to the NBA, not FIBA. Pace is “per minute”, so the axis reads 10.2–10.7. The four-factor bars are **differences from the mean of the selected teams only** (p. 25), so with 4 teams you learn nothing about the league | `four_factors(ft_coef=)` gives pace per 48/40 by league; [`plot_four_factors()`](https://loukesio.github.io/ggbasket/reference/plot_four_factors.md) puts the selected teams in the whole-league distribution, right = better, with Oliver’s weights in the strip titles |
-| ORtg and DRtg as two bar charts (Fig. 2.2) | Two panels, each sorted alphabetically | The trade-off between the two ratings can’t be seen | [`plot_ratings()`](https://loukesio.github.io/ggbasket/reference/plot_ratings.md): ORtg × DRtg map, net-rating diagonals, quadrants |
-| Bar-line plot (`barline`) | Stacked bars + a line on a **secondary y-axis** | Dual axes invite false comparisons (bar height vs line height). The bars ordered by plus-minus are shooting *percentages*, which don’t stack meaningfully | [`plot_ranked()`](https://loukesio.github.io/ggbasket/reference/plot_ranked.md): stacked *counts* + an aligned dot column with its own axis |
-| Radial plots (`radialprofile`) | One common min–max axis for all variables; optional standardisation over the *selected* 9 players | The authors flag the problems themselves (p. 30–33): area and variable order mislead, and the common scale flattens small-range stats (steals 0.029–0.052 on a 0.005–0.313 axis). Standardising over 9 hand-picked players makes “average” meaningless | [`plot_profile()`](https://loukesio.github.io/ggbasket/reference/plot_profile.md): **percentiles within a reference group** (league, position), so every axis is 0–100 and comparable. Bars by default, radar optional |
-| Scatter / bubble (`scatterplot`, `bubbleplot`) | Points labelled by case number, rainbow / blue–yellow–red palettes; bubble size rescaled 0–100 | Case numbers make the reader cross-reference a table. Rescaled sizes hide units. Red–green palettes (Fig. 5.6) fail for colour-blind readers | [`plot_quadrant()`](https://loukesio.github.io/ggbasket/reference/plot_quadrant.md): mean cross, corner captions, repelled labels on highlights and extremes, size = area in real units, ColorBrewer RdBu / Okabe–Ito |
-| Variability (`variability`) | Range, CV, weighted CV; bubble diagram | The 3P% example’s range (40 pts) is driven by **Steven Adams 0/2** (p. 44). The book notes this but doesn’t fix it; raw small-sample percentages are the issue | [`plot_spread()`](https://loukesio.github.io/ggbasket/reference/plot_spread.md) with [`shrink_rate()`](https://loukesio.github.io/ggbasket/reference/shrink_rate.md): empirical-Bayes beta-binomial shrinkage, weighted CV in the axis label |
-| Inequality (`inequality`) | Lorenz curve + Gini for top-n players | One panel per team. The Gini depends on n (the book says to keep n fixed, p. 46) and on traded players | [`plot_lorenz()`](https://loukesio.github.io/ggbasket/reference/plot_lorenz.md): all teams on one panel (grey), extremes highlighted, Gini written on the plot. [`gini()`](https://loukesio.github.io/ggbasket/reference/gini.md) reproduces the book’s 38.12% |
-| Shot charts (`shotchart`) | NBA court in feet; “sectors” are pie slices × distance rings, rainbow colour on e.g. play length; density polygons/raster/hexbin | Sectors don’t follow court lines (the 3-point line cuts through them). There is no league baseline, so “50% here” has no reference. NBA only. Coordinates need manual rescaling | [`plot_shot_zones()`](https://loukesio.github.io/ggbasket/reference/plot_shot_zones.md): real zones (rim, paint, mid L/C/R, corner 3s, above-break 3s) for **NBA and FIBA** geometry, coloured by FG% vs league (shrunk). [`plot_shot_hex()`](https://loukesio.github.io/ggbasket/reference/plot_shot_hex.md): size = frequency, colour = vs league from the same spot. `plot_shot_density(compare=)`: density *difference* map |
+| Possessions, pace, ORtg/DRtg, four factors (`fourfactors`) | Kubatko et al. formulas: POSS = FGA + 0.44·FTA − ORB + TOV | 0.44 is fitted to the NBA, not FIBA. Pace is “per minute”, so the axis reads 10.2–10.7. The four-factor bars are **differences from the mean of the selected teams only** (p. 25), so with 4 teams you learn nothing about the league | `four_factors(ft_coef=)` gives pace per 48/40 by league; [`plot_four_factors()`](https://loukesio.github.io/ggbasket-site/reference/plot_four_factors.md) puts the selected teams in the whole-league distribution, right = better, with Oliver’s weights in the strip titles |
+| ORtg and DRtg as two bar charts (Fig. 2.2) | Two panels, each sorted alphabetically | The trade-off between the two ratings can’t be seen | [`plot_ratings()`](https://loukesio.github.io/ggbasket-site/reference/plot_ratings.md): ORtg × DRtg map, net-rating diagonals, quadrants |
+| Bar-line plot (`barline`) | Stacked bars + a line on a **secondary y-axis** | Dual axes invite false comparisons (bar height vs line height). The bars ordered by plus-minus are shooting *percentages*, which don’t stack meaningfully | [`plot_ranked()`](https://loukesio.github.io/ggbasket-site/reference/plot_ranked.md): stacked *counts* + an aligned dot column with its own axis |
+| Radial plots (`radialprofile`) | One common min–max axis for all variables; optional standardisation over the *selected* 9 players | The authors flag the problems themselves (p. 30–33): area and variable order mislead, and the common scale flattens small-range stats (steals 0.029–0.052 on a 0.005–0.313 axis). Standardising over 9 hand-picked players makes “average” meaningless | [`plot_profile()`](https://loukesio.github.io/ggbasket-site/reference/plot_profile.md): **percentiles within a reference group** (league, position), so every axis is 0–100 and comparable. Bars by default, radar optional |
+| Scatter / bubble (`scatterplot`, `bubbleplot`) | Points labelled by case number, rainbow / blue–yellow–red palettes; bubble size rescaled 0–100 | Case numbers make the reader cross-reference a table. Rescaled sizes hide units. Red–green palettes (Fig. 5.6) fail for colour-blind readers | [`plot_quadrant()`](https://loukesio.github.io/ggbasket-site/reference/plot_quadrant.md): mean cross, corner captions, repelled labels on highlights and extremes, size = area in real units, ColorBrewer RdBu / Okabe–Ito |
+| Variability (`variability`) | Range, CV, weighted CV; bubble diagram | The 3P% example’s range (40 pts) is driven by **Steven Adams 0/2** (p. 44). The book notes this but doesn’t fix it; raw small-sample percentages are the issue | [`plot_spread()`](https://loukesio.github.io/ggbasket-site/reference/plot_spread.md) with [`shrink_rate()`](https://loukesio.github.io/ggbasket-site/reference/shrink_rate.md): empirical-Bayes beta-binomial shrinkage, weighted CV in the axis label |
+| Inequality (`inequality`) | Lorenz curve + Gini for top-n players | One panel per team. The Gini depends on n (the book says to keep n fixed, p. 46) and on traded players | [`plot_lorenz()`](https://loukesio.github.io/ggbasket-site/reference/plot_lorenz.md): all teams on one panel (grey), extremes highlighted, Gini written on the plot. [`gini()`](https://loukesio.github.io/ggbasket-site/reference/gini.md) reproduces the book’s 38.12% |
+| Shot charts (`shotchart`) | NBA court in feet; “sectors” are pie slices × distance rings, rainbow colour on e.g. play length; density polygons/raster/hexbin | Sectors don’t follow court lines (the 3-point line cuts through them). There is no league baseline, so “50% here” has no reference. NBA only. Coordinates need manual rescaling | [`plot_shot_zones()`](https://loukesio.github.io/ggbasket-site/reference/plot_shot_zones.md): real zones (rim, paint, mid L/C/R, corner 3s, above-break 3s) for **NBA and FIBA** geometry, coloured by FG% vs league (shrunk). [`plot_shot_hex()`](https://loukesio.github.io/ggbasket-site/reference/plot_shot_hex.md): size = frequency, colour = vs league from the same spot. `plot_shot_density(compare=)`: density *difference* map |
 
 ### Ch. 3: Discovering patterns
 
@@ -66,7 +66,7 @@ keeps it.
 - **Correlation matrix + network** (`corranalysis`, Fig. 3.2). It uses
   ellipses, crosses for non-significant cells, no multiplicity
   correction, and a hard 0.5 threshold for the network. →
-  [`plot_corr_matrix()`](https://loukesio.github.io/ggbasket/reference/plot_corr_matrix.md):
+  [`plot_corr_matrix()`](https://loukesio.github.io/ggbasket-site/reference/plot_corr_matrix.md):
   clustered order, Holm-adjusted significance shown by fading,
   coefficients printed.
 - **Scatter-plot matrix by playoff group** (Fig. 3.3). The claim that
@@ -76,7 +76,7 @@ keeps it.
   hypothesis.
 - **MDS** (`MDSmap`). A Kruskal map plus *four separate LOESS level
   plots* to interpret it (Fig. 3.5). →
-  [`plot_similarity_map()`](https://loukesio.github.io/ggbasket/reference/plot_similarity_map.md):
+  [`plot_similarity_map()`](https://loukesio.github.io/ggbasket-site/reference/plot_similarity_map.md):
   one map with variable arrows (a biplot), PCA by default (more stable,
   reproducible) or MDS with stress reported.
 - **Assist network** (`assistnet`, Fig. 3.6–3.8). Kamada–Kawai layout
@@ -85,10 +85,10 @@ keeps it.
   Green” comparison (1.16 vs 1.11 points per shot, 10.8 vs 11.2 s) is
   **on/off data confounded by lineups, opponents and garbage time**, and
   has no uncertainty. →
-  [`plot_assist_network()`](https://loukesio.github.io/ggbasket/reference/plot_assist_network.md)
+  [`plot_assist_network()`](https://loukesio.github.io/ggbasket-site/reference/plot_assist_network.md)
   (fixed circular order by assists, width = count, colour = share of own
   baskets assisted) and
-  [`plot_assist_matrix()`](https://loukesio.github.io/ggbasket/reference/plot_assist_matrix.md),
+  [`plot_assist_matrix()`](https://loukesio.github.io/ggbasket-site/reference/plot_assist_matrix.md),
   which is often clearer than any network.
 - **Kernel densities in time** (`densityplot`). Frequencies in three
   hand-set windows with “best scorer” labels. The windows (e.g. 4 ft /
@@ -105,12 +105,12 @@ keeps it.
     is included;
   - P_i is unshrunk, so a 15-attempt threshold still leaves noisy
     rankings. →
-    [`expected_fg()`](https://loukesio.github.io/ggbasket/reference/expected_fg.md)
+    [`expected_fg()`](https://loukesio.github.io/ggbasket-site/reference/expected_fg.md)
     (logistic GAM on distance × angle per league and shot value, plus
     optional `extra` smooths such as shot clock or score margin) and
-    [`shot_making()`](https://loukesio.github.io/ggbasket/reference/shot_making.md)
+    [`shot_making()`](https://loukesio.github.io/ggbasket-site/reference/shot_making.md)
     (FG% over expected, shrunk, points added) with
-    [`plot_shot_making()`](https://loukesio.github.io/ggbasket/reference/plot_shot_making.md).
+    [`plot_shot_making()`](https://loukesio.github.io/ggbasket-site/reference/plot_shot_making.md).
 
 ### Ch. 4: Finding groups
 
@@ -121,9 +121,9 @@ keeps it.
   clusters means ~6 teams each. Cluster membership is not checked for
   stability, and the order of clusters changes between runs (hence
   `set.seed(29)`). →
-  [`cluster_quality()`](https://loukesio.github.io/ggbasket/reference/cluster_quality.md)
+  [`cluster_quality()`](https://loukesio.github.io/ggbasket-site/reference/cluster_quality.md)
   (25 starts, silhouette as a second criterion) and
-  [`plot_cluster_profiles()`](https://loukesio.github.io/ggbasket/reference/plot_cluster_profiles.md)
+  [`plot_cluster_profiles()`](https://loukesio.github.io/ggbasket-site/reference/plot_cluster_profiles.md)
   (a heatmap of cluster means in SD with n, CHI and the most typical
   members named).
 - **k-means of GSW shots** (points, distance, quarter time, play
@@ -147,7 +147,7 @@ keeps it.
   correctly notes the violated assumptions (counts, negative
   predictions) and moves to LOESS. The useful output is the
   **residual**: who turns it over less than their assist load predicts.
-  [`plot_fit()`](https://loukesio.github.io/ggbasket/reference/plot_fit.md)
+  [`plot_fit()`](https://loukesio.github.io/ggbasket-site/reference/plot_fit.md)
   makes this the point by colouring by residual and naming the extremes.
 - **Scoring probability and expected points** (`scoringprob`,
   `expectedpts`). Nadaraya–Watson Gaussian kernel smoothing over
@@ -163,11 +163,11 @@ keeps it.
       runs to 80 ft and dives to zero past half court.
 
   →
-  [`shot_curve()`](https://loukesio.github.io/ggbasket/reference/shot_curve.md)
+  [`shot_curve()`](https://loukesio.github.io/ggbasket-site/reference/shot_curve.md)
   adds bootstrap bands, `split_value = TRUE` (2s and 3s smoothed
   separately, keeping the discontinuity), a default bandwidth, and
   attempt density.
-  [`plot_shot_curve()`](https://loukesio.github.io/ggbasket/reference/plot_shot_curve.md)
+  [`plot_shot_curve()`](https://loukesio.github.io/ggbasket-site/reference/plot_shot_curve.md)
   maps density to line width, so thin line = few shots.
 - **FOCUS: surface area dynamics** (Metulini et al.). Convex hull of 5
   players from 80 Hz GPS, a two-regime Markov-switching model and a VAR
@@ -237,25 +237,25 @@ still runs.
 
 | BasketballAnalyzeR | ggbasket | Main change |
 |----|----|----|
-| `fourfactors()` + [`plot()`](https://rdrr.io/r/graphics/plot.default.html) | [`four_factors()`](https://loukesio.github.io/ggbasket/reference/four_factors.md), [`plot_ratings()`](https://loukesio.github.io/ggbasket/reference/plot_ratings.md), [`plot_four_factors()`](https://loukesio.github.io/ggbasket/reference/plot_four_factors.md) | league context, net-rating map, FIBA pace |
-| `barline()` | [`plot_ranked()`](https://loukesio.github.io/ggbasket/reference/plot_ranked.md) | no dual axis |
+| `fourfactors()` + [`plot()`](https://rdrr.io/r/graphics/plot.default.html) | [`four_factors()`](https://loukesio.github.io/ggbasket-site/reference/four_factors.md), [`plot_ratings()`](https://loukesio.github.io/ggbasket-site/reference/plot_ratings.md), [`plot_four_factors()`](https://loukesio.github.io/ggbasket-site/reference/plot_four_factors.md) | league context, net-rating map, FIBA pace |
+| `barline()` | [`plot_ranked()`](https://loukesio.github.io/ggbasket-site/reference/plot_ranked.md) | no dual axis |
 | `radialprofile()` | `plot_profile(style = "bars" / "radar")` | percentiles in a reference group |
-| `scatterplot()`, `bubbleplot()` | [`plot_quadrant()`](https://loukesio.github.io/ggbasket/reference/plot_quadrant.md), [`plot_fit()`](https://loukesio.github.io/ggbasket/reference/plot_fit.md), [`plot_corr_matrix()`](https://loukesio.github.io/ggbasket/reference/plot_corr_matrix.md) | direct labels, residual story, Holm-adjusted significance |
-| `variability()` | [`plot_spread()`](https://loukesio.github.io/ggbasket/reference/plot_spread.md), [`shrink_rate()`](https://loukesio.github.io/ggbasket/reference/shrink_rate.md) | shrinkage of small samples |
-| `inequality()` | [`lorenz()`](https://loukesio.github.io/ggbasket/reference/gini.md), [`gini()`](https://loukesio.github.io/ggbasket/reference/gini.md), [`plot_lorenz()`](https://loukesio.github.io/ggbasket/reference/plot_lorenz.md) | all teams in one panel |
-| `shotchart()` | [`plot_shot_zones()`](https://loukesio.github.io/ggbasket/reference/plot_shot_zones.md), [`plot_shot_hex()`](https://loukesio.github.io/ggbasket/reference/plot_shot_hex.md), [`plot_shot_density()`](https://loukesio.github.io/ggbasket/reference/plot_shot_density.md), [`geom_court()`](https://loukesio.github.io/ggbasket/reference/geom_court.md), [`shot_zone()`](https://loukesio.github.io/ggbasket/reference/shot_zone.md) | real zones, NBA + FIBA, vs-league colour, metres |
-| `densityplot()`, `scoringprob()`, `expectedpts()` | [`shot_curve()`](https://loukesio.github.io/ggbasket/reference/shot_curve.md), [`plot_shot_curve()`](https://loukesio.github.io/ggbasket/reference/plot_shot_curve.md) | bootstrap bands, split at the 3-point line, density as line width |
-| CART shot-making (FOCUS 3.6) | [`expected_fg()`](https://loukesio.github.io/ggbasket/reference/expected_fg.md), [`shot_making()`](https://loukesio.github.io/ggbasket/reference/shot_making.md), [`plot_shot_making()`](https://loukesio.github.io/ggbasket/reference/plot_shot_making.md) | GAM expected FG%, shrunk FG% over expected |
-| `corranalysis()` | [`plot_corr_matrix()`](https://loukesio.github.io/ggbasket/reference/plot_corr_matrix.md) | clustered order, Holm |
-| `MDSmap()` | [`plot_similarity_map()`](https://loukesio.github.io/ggbasket/reference/plot_similarity_map.md) | biplot arrows instead of level plots |
-| `kclustering()`, `hclustering()` | [`cluster_quality()`](https://loukesio.github.io/ggbasket/reference/cluster_quality.md), [`plot_cluster_quality()`](https://loukesio.github.io/ggbasket/reference/cluster_quality.md), [`plot_cluster_profiles()`](https://loukesio.github.io/ggbasket/reference/plot_cluster_profiles.md) | silhouette, one heatmap with typical members |
-| `assistnet()` | [`assist_network()`](https://loukesio.github.io/ggbasket/reference/assist_network.md), [`plot_assist_network()`](https://loukesio.github.io/ggbasket/reference/plot_assist_network.md), [`plot_assist_matrix()`](https://loukesio.github.io/ggbasket/reference/plot_assist_matrix.md) | stable layout, matrix view |
+| `scatterplot()`, `bubbleplot()` | [`plot_quadrant()`](https://loukesio.github.io/ggbasket-site/reference/plot_quadrant.md), [`plot_fit()`](https://loukesio.github.io/ggbasket-site/reference/plot_fit.md), [`plot_corr_matrix()`](https://loukesio.github.io/ggbasket-site/reference/plot_corr_matrix.md) | direct labels, residual story, Holm-adjusted significance |
+| `variability()` | [`plot_spread()`](https://loukesio.github.io/ggbasket-site/reference/plot_spread.md), [`shrink_rate()`](https://loukesio.github.io/ggbasket-site/reference/shrink_rate.md) | shrinkage of small samples |
+| `inequality()` | [`lorenz()`](https://loukesio.github.io/ggbasket-site/reference/gini.md), [`gini()`](https://loukesio.github.io/ggbasket-site/reference/gini.md), [`plot_lorenz()`](https://loukesio.github.io/ggbasket-site/reference/plot_lorenz.md) | all teams in one panel |
+| `shotchart()` | [`plot_shot_zones()`](https://loukesio.github.io/ggbasket-site/reference/plot_shot_zones.md), [`plot_shot_hex()`](https://loukesio.github.io/ggbasket-site/reference/plot_shot_hex.md), [`plot_shot_density()`](https://loukesio.github.io/ggbasket-site/reference/plot_shot_density.md), [`geom_court()`](https://loukesio.github.io/ggbasket-site/reference/geom_court.md), [`shot_zone()`](https://loukesio.github.io/ggbasket-site/reference/shot_zone.md) | real zones, NBA + FIBA, vs-league colour, metres |
+| `densityplot()`, `scoringprob()`, `expectedpts()` | [`shot_curve()`](https://loukesio.github.io/ggbasket-site/reference/shot_curve.md), [`plot_shot_curve()`](https://loukesio.github.io/ggbasket-site/reference/plot_shot_curve.md) | bootstrap bands, split at the 3-point line, density as line width |
+| CART shot-making (FOCUS 3.6) | [`expected_fg()`](https://loukesio.github.io/ggbasket-site/reference/expected_fg.md), [`shot_making()`](https://loukesio.github.io/ggbasket-site/reference/shot_making.md), [`plot_shot_making()`](https://loukesio.github.io/ggbasket-site/reference/plot_shot_making.md) | GAM expected FG%, shrunk FG% over expected |
+| `corranalysis()` | [`plot_corr_matrix()`](https://loukesio.github.io/ggbasket-site/reference/plot_corr_matrix.md) | clustered order, Holm |
+| `MDSmap()` | [`plot_similarity_map()`](https://loukesio.github.io/ggbasket-site/reference/plot_similarity_map.md) | biplot arrows instead of level plots |
+| `kclustering()`, `hclustering()` | [`cluster_quality()`](https://loukesio.github.io/ggbasket-site/reference/cluster_quality.md), [`plot_cluster_quality()`](https://loukesio.github.io/ggbasket-site/reference/cluster_quality.md), [`plot_cluster_profiles()`](https://loukesio.github.io/ggbasket-site/reference/plot_cluster_profiles.md) | silhouette, one heatmap with typical members |
+| `assistnet()` | [`assist_network()`](https://loukesio.github.io/ggbasket-site/reference/assist_network.md), [`plot_assist_network()`](https://loukesio.github.io/ggbasket-site/reference/plot_assist_network.md), [`plot_assist_matrix()`](https://loukesio.github.io/ggbasket-site/reference/plot_assist_matrix.md) | stable layout, matrix view |
 | `PbPmanipulation()` + manual rescaling | `as_ggbasket_teams/players/shots()` | converters into one convention |
-| Cramer’s V, eta-squared (Sec. 3.1, no BAR function) | [`association()`](https://loukesio.github.io/ggbasket/reference/association.md), [`plot_association()`](https://loukesio.github.io/ggbasket/reference/plot_association.md) | all three indices on one 0-1 heatmap, index named in each cell |
-| Assist Gini per player (Sec. 3.4) | [`assist_network()`](https://loukesio.github.io/ggbasket/reference/assist_network.md) (`ast_gini`, `recv_gini`, `partners`), [`plot_assist_roles()`](https://loukesio.github.io/ggbasket/reference/plot_assist_roles.md) | hub vs two-man-game map |
-| Joint density (Sec. 3.5.3, `ggpairs`) | [`plot_joint()`](https://loukesio.github.io/ggbasket/reference/plot_joint.md) | filled 2-D density + marginals + labelled players |
-| High-pressure CART (Sec. 3.6) | [`pressure_situations()`](https://loukesio.github.io/ggbasket/reference/pressure_situations.md), [`pressure_effects()`](https://loukesio.github.io/ggbasket/reference/pressure_effects.md), [`plot_pressure()`](https://loukesio.github.io/ggbasket/reference/plot_pressure.md) | logistic model with expected FG% offset, effects in percentage points with intervals; shot clock estimated from play-by-play |
-| *(not in the book)* | [`player_rates()`](https://loukesio.github.io/ggbasket/reference/player_rates.md), [`expected_wins()`](https://loukesio.github.io/ggbasket/reference/expected_wins.md), [`plot_luck()`](https://loukesio.github.io/ggbasket/reference/plot_luck.md) | TS%, usage, AST%, rebound/steal/block/turnover rates; Pythagorean wins and luck |
+| Cramer’s V, eta-squared (Sec. 3.1, no BAR function) | [`association()`](https://loukesio.github.io/ggbasket-site/reference/association.md), [`plot_association()`](https://loukesio.github.io/ggbasket-site/reference/plot_association.md) | all three indices on one 0-1 heatmap, index named in each cell |
+| Assist Gini per player (Sec. 3.4) | [`assist_network()`](https://loukesio.github.io/ggbasket-site/reference/assist_network.md) (`ast_gini`, `recv_gini`, `partners`), [`plot_assist_roles()`](https://loukesio.github.io/ggbasket-site/reference/plot_assist_roles.md) | hub vs two-man-game map |
+| Joint density (Sec. 3.5.3, `ggpairs`) | [`plot_joint()`](https://loukesio.github.io/ggbasket-site/reference/plot_joint.md) | filled 2-D density + marginals + labelled players |
+| High-pressure CART (Sec. 3.6) | [`pressure_situations()`](https://loukesio.github.io/ggbasket-site/reference/pressure_situations.md), [`pressure_effects()`](https://loukesio.github.io/ggbasket-site/reference/pressure_effects.md), [`plot_pressure()`](https://loukesio.github.io/ggbasket-site/reference/plot_pressure.md) | logistic model with expected FG% offset, effects in percentage points with intervals; shot clock estimated from play-by-play |
+| *(not in the book)* | [`player_rates()`](https://loukesio.github.io/ggbasket-site/reference/player_rates.md), [`expected_wins()`](https://loukesio.github.io/ggbasket-site/reference/expected_wins.md), [`plot_luck()`](https://loukesio.github.io/ggbasket-site/reference/plot_luck.md) | TS%, usage, AST%, rebound/steal/block/turnover rates; Pythagorean wins and luck |
 
 Not covered: the GPS/convex-hull spacing analysis of Section 5.3 (needs
 player-tracking data) and the self-organising-map / topological roles
@@ -268,7 +268,7 @@ tool).
 
 1.  **Hierarchical shooting.** `made ~ 1 + (1 | player)` per zone with
     brms (beta-binomial or logit). This is the full-Bayes version of
-    [`shrink_rate()`](https://loukesio.github.io/ggbasket/reference/shrink_rate.md).
+    [`shrink_rate()`](https://loukesio.github.io/ggbasket-site/reference/shrink_rate.md).
     Posterior intervals then show on every percentage and zone chart.
 2.  **xFG with a shooter effect.**
     `made ~ s(dist, angle, by = league) + (1 | player) + (1 | defender_team)`.
@@ -281,7 +281,7 @@ tool).
     `mclust`) gives each player a membership probability (“60% stretch
     big, 40% wing”), which is what the book’s FOCUS on new roles wants.
 5.  **Lead-lag style.** Combine
-    [`plot_profile()`](https://loukesio.github.io/ggbasket/reference/plot_profile.md)
+    [`plot_profile()`](https://loukesio.github.io/ggbasket-site/reference/plot_profile.md)
     percentiles with the RQ4 “ahead of their time” smoothed path.
 
 ------------------------------------------------------------------------

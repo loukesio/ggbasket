@@ -21,7 +21,7 @@ plot_pressure(
 - eff:
 
   Output of
-  [`pressure_effects()`](https://loukesio.github.io/ggbasket/reference/pressure_effects.md).
+  [`pressure_effects()`](https://loukesio.github.io/ggbasket-site/reference/pressure_effects.md).
 
 - labels:
 

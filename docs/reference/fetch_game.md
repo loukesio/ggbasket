@@ -34,4 +34,4 @@ fetch_nba_pbp(game_ids)
 ## Value
 
 A tibble in the ggbasket play-by-play layout (see
-[pbp](https://loukesio.github.io/ggbasket/reference/pbp.md)).
+[pbp](https://loukesio.github.io/ggbasket-site/reference/pbp.md)).

@@ -15,7 +15,7 @@ plot_team_ratings(tr, title = NULL, subtitle = NULL, caption = NULL)
 - tr:
 
   Output of
-  [`team_ratings()`](https://loukesio.github.io/ggbasket/reference/team_ratings.md).
+  [`team_ratings()`](https://loukesio.github.io/ggbasket-site/reference/team_ratings.md).
 
 - title, subtitle, caption:
 

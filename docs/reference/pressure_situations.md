@@ -15,13 +15,13 @@ pressure_situations(pbp, league = "NBA", orb_reset = 14)
 - pbp:
 
   Play-by-play in the ggbasket layout (see
-  [pbp](https://loukesio.github.io/ggbasket/reference/pbp.md)), all
+  [pbp](https://loukesio.github.io/ggbasket-site/reference/pbp.md)), all
   teams of each game.
 
 - league:
 
   League label for
-  [`expected_fg()`](https://loukesio.github.io/ggbasket/reference/expected_fg.md).
+  [`expected_fg()`](https://loukesio.github.io/ggbasket-site/reference/expected_fg.md).
 
 - orb_reset:
 
@@ -31,7 +31,7 @@ pressure_situations(pbp, league = "NBA", orb_reset = 14)
 ## Value
 
 The field-goal attempts as from
-[`as_ggbasket_shots()`](https://loukesio.github.io/ggbasket/reference/as_ggbasket_teams.md),
+[`as_ggbasket_shots()`](https://loukesio.github.io/ggbasket-site/reference/as_ggbasket_teams.md),
 plus `shot_clock_left`, `score_margin`, `team_miss_rate` and the five
 situation factors.
 

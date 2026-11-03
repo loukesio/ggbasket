@@ -22,8 +22,8 @@ fit_win_probability(pbp)
 - pbp:
 
   Play-by-play in the ggbasket layout (see
-  [pbp](https://loukesio.github.io/ggbasket/reference/pbp.md)), one or
-  more games.
+  [pbp](https://loukesio.github.io/ggbasket-site/reference/pbp.md)), one
+  or more games.
 
 - params:
 

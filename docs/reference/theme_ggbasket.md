@@ -4,7 +4,7 @@
 Scherer's graphics: white background, bold left-aligned title, a
 subtitle that wraps by itself and renders markdown (so words can be
 coloured to replace a legend, see
-[`colour_text()`](https://loukesio.github.io/ggbasket/reference/colour_text.md)),
+[`colour_text()`](https://loukesio.github.io/ggbasket-site/reference/colour_text.md)),
 a monospaced caption, and generous margins. Titles and subtitles wrap to
 the plot width by themselves. `theme_court()` is the same look without
 axes, for shot charts.
@@ -26,7 +26,7 @@ theme_court(base_size = 11.5, base_family = NULL)
 - base_family:
 
   Body font family. Default: picked by
-  [`ggbasket_fonts()`](https://loukesio.github.io/ggbasket/reference/ggbasket_fonts.md).
+  [`ggbasket_fonts()`](https://loukesio.github.io/ggbasket-site/reference/ggbasket_fonts.md).
 
 - grid:
 
