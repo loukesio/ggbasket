@@ -1,7 +1,7 @@
 Package: ggbasket
 Type: Package
 Title: Learn from Basketball Games: NBA and EuroLeague Play-by-Play, Metrics and Graphics
-Version: 0.4.0
+Version: 0.5.0
 Authors@R: person("Loukas", "Theodosiou", email = "loukesio@gmail.com", role = c("aut", "cre"))
 Description: Reads NBA (ESPN, via 'hoopR') and EuroLeague (official live
     API) play-by-play into one layout with the players on court, and turns
@@ -41,6 +41,8 @@ Suggests:
     MASS,
     mgcv,
     patchwork,
+    rmarkdown,
+    knitr,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 LazyData: true

@@ -64,6 +64,16 @@ Main entry points:
   [`theme_ggbasket()`](https://loukesio.github.io/ggbasket/reference/theme_ggbasket.md),
   [`colour_text()`](https://loukesio.github.io/ggbasket/reference/colour_text.md)
 
+## See also
+
+Useful links:
+
+- <https://loukesio.github.io/ggbasket/>
+
+- <https://github.com/loukesio/ggbasket>
+
+- Report bugs at <https://github.com/loukesio/ggbasket/issues>
+
 ## Author
 
 **Maintainer**: Loukas Theodosiou <loukesio@gmail.com>

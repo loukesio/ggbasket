@@ -2,6 +2,9 @@
 
 ## Get the data
 
+- [`fetch_game()`](https://loukesio.github.io/ggbasket/reference/fetch_game.md)
+  [`fetch_nba_pbp()`](https://loukesio.github.io/ggbasket/reference/fetch_game.md)
+  : Download one game's play-by-play
 - [`pbp_from_espn()`](https://loukesio.github.io/ggbasket/reference/pbp.md)
   [`pbp_from_euroleague()`](https://loukesio.github.io/ggbasket/reference/pbp.md)
   [`fetch_euroleague_pbp()`](https://loukesio.github.io/ggbasket/reference/pbp.md)
@@ -26,6 +29,10 @@
 
 ## One game
 
+- [`match_report()`](https://loukesio.github.io/ggbasket/reference/match_report.md)
+  : One-click match report
+- [`match_story()`](https://loukesio.github.io/ggbasket/reference/match_story.md)
+  : The key findings of a game, in words
 - [`game_flow()`](https://loukesio.github.io/ggbasket/reference/game_flow.md)
   : The score, event by event
 - [`scoring_runs()`](https://loukesio.github.io/ggbasket/reference/scoring_runs.md)

@@ -1,0 +1,170 @@
+---
+title: "`r params$title_text`"
+output:
+  html_document:
+    self_contained: true
+    toc: false
+    theme: null
+    highlight: null
+    mathjax: null
+params:
+  pbp: NULL
+  season_pbp: NULL
+  names: NULL
+  colours: NULL
+  date: ""
+  title_text: "Match report"
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, dpi = 150, fig.align = "center",
+                      out.width = "100%")
+library(ggbasket)
+library(ggplot2)
+g <- as.data.frame(params$pbp)
+home <- g$hometeam[1]; away <- g$awayteam[1]
+nm <- params$names %||% stats::setNames(c(home, away), c(home, away))
+nm <- c(nm, stats::setNames(setdiff(c(home, away), names(nm)), setdiff(c(home, away), names(nm))))
+cols <- params$colours %||% ggbasket_colours$categorical[c(1, 2)]
+cols <- stats::setNames(cols, c(home, away))
+s <- game_summary(g)
+league <- g$league[1]
+cap <- ggbasket_caption(sprintf("%s, %s · %s play-by-play", league, params$date,
+                                if (league == "NBA") "ESPN" else "EuroLeague live API"))
+ct <- function(t) colour_text(nm[[t]], cols[[t]])
+```
+
+```{=html}
+<style>
+body { font-family: "Fira Sans", -apple-system, Helvetica, Arial, sans-serif; color: #1F1F1F; background: #fff;
+       max-width: 980px; margin: 0 auto; padding: 24px 20px 60px; line-height: 1.55; }
+h1.title { font-size: 2.1em; margin-bottom: 0.1em; }
+h2 { margin-top: 1.8em; padding-bottom: 4px; border-bottom: 2px solid #eee; font-size: 1.35em; }
+.scoreline { font-size: 1.15em; color: #555; margin-bottom: 1.2em; }
+.findings { background: #F5F5F7; border-left: 4px solid #00798c; padding: 12px 18px; border-radius: 4px; }
+.findings li { margin: 0.35em 0; }
+table { border-collapse: collapse; font-size: 0.86em; width: 100%; margin: 0.6em 0 1.4em; }
+th { text-align: left; border-bottom: 2px solid #ddd; padding: 4px 6px; }
+td { border-bottom: 1px solid #f0f0f0; padding: 3px 6px; }
+.note { color: #777; font-size: 0.85em; }
+footer { margin-top: 3em; color: #888; font-size: 0.8em; border-top: 1px solid #eee; padding-top: 8px; }
+</style>
+```
+
+<div class="scoreline">`r sprintf("%s %d - %d %s", nm[[home]], s$home_pts, s$away_pts, nm[[away]])` &middot; `r league` &middot; `r params$date``r if (isTRUE(s$overtime)) " &middot; overtime" else ""`</div>
+
+## Key findings
+
+<div class="findings">
+```{r findings, results = "asis"}
+cat(paste0("- ", match_story(g, names = nm), collapse = "\n"))
+```
+</div>
+
+## How the game unfolded
+
+```{r flow, fig.width = 10, fig.height = 5.4}
+plot_game_flow(g, colours = unname(cols), min_run = 6,
+               title = sprintf("%s %d-%d %s", nm[[home]], s$home_pts, s$away_pts, nm[[away]]),
+               subtitle = paste("Lead of", ct(home), "(up) or", ct(away), "(down); brackets = runs of 6+ unanswered points"),
+               caption = cap)
+```
+
+## The plays that decided it
+
+```{r wp, fig.width = 10, fig.height = 6}
+wp <- win_probability(g)
+plot_win_probability(wp, colours = unname(cols), title = "Win probability, play by play",
+                     subtitle = paste("Chance that", ct(home), "(up) or", ct(away), "(down) wins, after every play."),
+                     caption = cap)
+```
+
+## Why the result went the way it did
+
+```{r factors, fig.width = 9.5, fig.height = 5}
+gf <- game_factors(box_score(g, by = "team"))
+plot_game_factors(gf, g$game_id[1], title = sprintf("What %s's win was made of", nm[[s$winner]]),
+                  subtitle = "Each of the four factors' share of the margin, from a league model of how the factors turn into points",
+                  caption = cap)
+```
+
+```{r vs-season, fig.width = 10, fig.height = 6.2, eval = !is.null(params$season_pbp)}
+sp <- as.data.frame(params$season_pbp)
+ff <- four_factors(box_score(sp, by = "team"))
+ff <- ff[ff$team %in% c(home, away), ]
+ff$this <- ff$game_id == g$game_id[1]
+vars <- c(`Shooting (eFG%)` = "efg", `Turnover rate` = "tov_pct", `Off. rebound rate` = "orb_pct",
+          `Free-throw rate` = "ft_rate")
+long <- do.call(rbind, lapply(names(vars), function(v) data.frame(var = v, value = ff[[vars[[v]]]], this = ff$this,
+                                                                 team = nm[ff$team])))
+long$var <- factor(long$var, levels = names(vars))
+ggplot(long, aes(value, team)) +
+  geom_point(data = long[!long$this, ], shape = 21, size = 2.6, fill = "grey80", colour = "white",
+             position = position_jitter(height = 0.12, seed = 1)) +
+  geom_point(data = long[long$this, ], aes(fill = team), shape = 21, size = 4, colour = "white", stroke = 0.8) +
+  scale_fill_manual(values = stats::setNames(unname(cols), nm[names(cols)]), guide = "none") +
+  scale_x_continuous(labels = scales::label_percent()) +
+  facet_wrap(~var, scales = "free_x", ncol = 2) +
+  theme_ggbasket(grid = "x") + theme(strip.text = element_text(face = "bold")) +
+  labs(x = NULL, y = NULL, title = "This game against each team's season so far",
+       subtitle = "Grey = the team's other games this season; coloured = this game", caption = cap)
+```
+
+## Who mattered
+
+```{r wpa, fig.width = 9, fig.height = 6.5}
+wpa <- win_probability_added(wp)
+plot_wpa(wpa, colours = cols, title = "Win probability added",
+         subtitle = "Each player's plays, plus a fifth of every opponent play while on the floor; players with 2+ points either way",
+         caption = cap)
+```
+
+## Where the shots came from
+
+```{r shots, fig.width = 11, fig.height = 5.8}
+sh <- as_ggbasket_shots(g, league = league)
+if (nrow(sh) > 0 && any(!is.na(sh$x))) {
+  sh$team <- unname(nm[sh$team])
+  plot_shot_density(sh, facet = "team", points = TRUE, league = league,
+                    title = "Every shot of the game",
+                    subtitle = "Heat = where each team shot from; dots = made, crosses = missed", caption = cap)
+}
+```
+
+## Box scores
+
+```{r box, results = "asis"}
+bx <- game_score(box_score(g))
+for (t in c(home, away)) {
+  b <- bx[bx$team == t & bx$min > 0, ]
+  b <- b[order(-b$min), ]
+  tab <- data.frame(Player = b$player, MIN = round(b$min), PTS = b$pts,
+                    `2P` = sprintf("%d/%d", b$p2m, b$p2a), `3P` = sprintf("%d/%d", b$p3m, b$p3a),
+                    FT = sprintf("%d/%d", b$ftm, b$fta), REB = b$orb + b$drb, AST = b$ast, STL = b$stl,
+                    BLK = b$blk, TOV = b$tov, `+/-` = b$pm, GmSc = round(b$game_score, 1), check.names = FALSE)
+  cat(sprintf("\n\n**%s**\n\n", nm[[t]]))
+  print(knitr::kable(tab, format = "html", row.names = FALSE))
+}
+```
+
+## Clutch time and line-ups
+
+```{r clutch, results = "asis"}
+cl <- clutch_time(g)
+if (nrow(cl)) {
+  cb <- box_score(cl)
+  cb <- cb[cb$pts > 0 | cb$tov > 0 | cb$ast > 0, ]
+  cat("Last 5 minutes with the score within 5 points:\n\n")
+  print(knitr::kable(data.frame(Team = unname(nm[cb$team]), Player = cb$player, PTS = cb$pts, AST = cb$ast,
+                                TOV = cb$tov, `+/-` = cb$pm, check.names = FALSE), format = "html", row.names = FALSE))
+} else cat("The game never reached clutch time (last 5 minutes within 5 points).\n\n")
+lu <- lineups(g, min_minutes = 4)
+if (nrow(lu)) {
+  cat("\nFive-player units with 4+ minutes together:\n\n")
+  print(knitr::kable(data.frame(Team = unname(nm[lu$team]), `Line-up` = gsub(" | ", ", ", lu$lineup, fixed = TRUE),
+                                MIN = round(lu$min, 1), `Pts for` = lu$pts_for, `Pts against` = lu$pts_against,
+                                check.names = FALSE), format = "html", row.names = FALSE))
+}
+```
+
+<footer>Report generated with <a href="https://loukesio.github.io/ggbasket/">ggbasket</a> on `r format(Sys.Date())`. Win probability: two-parameter score model; the four-factor split uses a league model fitted on 2024/25. Small single-game samples: read on/off and line-up numbers with care.</footer>

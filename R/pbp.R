@@ -208,17 +208,22 @@ fetch_euroleague_pbp <- function(season, games = NULL, shots = TRUE, pause = 1) 
     }
     NULL
   }
-  if (is.null(games)) {
-    g <- get(sprintf("https://api-live.euroleague.net/v2/competitions/E/seasons/E%d/games", season))$data
-    games <- g$gameCode[g$played]
-  }
+  g <- get(sprintf("https://api-live.euroleague.net/v2/competitions/E/seasons/E%d/games", season))$data
+  if (is.null(games)) games <- g$gameCode[g$played]
+  phase <- c(RS = "regular", PI = "play-in", PO = "playoffs", FF = "final four")
   out <- lapply(games, function(code) {
     pj <- get(sprintf("https://live.euroleague.net/api/PlayByPlay?gamecode=%d&seasoncode=E%d", code, season))
     Sys.sleep(pause)
     if (is.null(pj)) { warning("could not download game ", code); return(NULL) }
     sj <- if (shots) get(sprintf("https://live.euroleague.net/api/Points?gamecode=%d&seasoncode=E%d", code, season))
     if (shots) Sys.sleep(pause)
-    pbp_from_euroleague(pj, sj, season = season, game_code = code)
+    d <- pbp_from_euroleague(pj, sj, season = season, game_code = code)
+    i <- if (!is.null(g)) match(code, g$gameCode) else NA
+    if (!is.na(i)) {
+      d$date <- as.Date(substr(g$date[i], 1, 10))
+      d$phase <- unname(phase[g$phaseType$code[i]])
+    }
+    d
   })
   dplyr::bind_rows(out)
 }

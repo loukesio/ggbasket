@@ -17,7 +17,7 @@ possessions and how they ended) is other."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">ggbasket</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,7 +53,7 @@ possessions and how they ended) is <code>other</code>.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">game_factors</span><span class="op">(</span><span class="va">teams</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">game_factors</span><span class="op">(</span><span class="va">teams</span>, coefs <span class="op">=</span> <span class="cn">NULL</span>, min_games <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -64,12 +64,24 @@ possessions and how they ended) is <code>other</code>.</p>
 <dd><p>Team-game box scores from <code>box_score(pbp, by = "team")</code>,
 many games (a season), both teams of each game.</p></dd>
 
+
+<dt id="arg-coefs">coefs<a class="anchor" aria-label="anchor" href="#arg-coefs"></a></dt>
+<dd><p>Coefficients to use instead of fitting them (named
+<code>d_efg</code>, <code>d_tov</code>, <code>d_orb</code>, <code>d_ftr</code>).</p></dd>
+
+
+<dt id="arg-min-games">min_games<a class="anchor" aria-label="anchor" href="#arg-min-games"></a></dt>
+<dd><p>With fewer games than this (and no <code>coefs</code>), the
+coefficients fitted on every 2024/25 game of the league are used, so a
+single game can be explained on its own.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>The four factors per team and game plus <code>margin</code>, the four
 contributions (<code>c_shooting</code>, <code>c_turnovers</code>, <code>c_rebounding</code>,
-<code>c_free_throws</code>), <code>c_other</code>; the model is attached as attribute <code>fit</code>.</p>
+<code>c_free_throws</code>), <code>c_other</code>; the model (if fitted) is attached as
+attribute <code>fit</code>.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -4,16 +4,24 @@
 \alias{game_factors}
 \title{What decided the game?}
 \usage{
-game_factors(teams)
+game_factors(teams, coefs = NULL, min_games = 30)
 }
 \arguments{
 \item{teams}{Team-game box scores from \code{box_score(pbp, by = "team")},
 many games (a season), both teams of each game.}
+
+\item{coefs}{Coefficients to use instead of fitting them (named
+\code{d_efg}, \code{d_tov}, \code{d_orb}, \code{d_ftr}).}
+
+\item{min_games}{With fewer games than this (and no \code{coefs}), the
+coefficients fitted on every 2024/25 game of the league are used, so a
+single game can be explained on its own.}
 }
 \value{
 The four factors per team and game plus \code{margin}, the four
 contributions (\code{c_shooting}, \code{c_turnovers}, \code{c_rebounding},
-\code{c_free_throws}), \code{c_other}; the model is attached as attribute \code{fit}.
+\code{c_free_throws}), \code{c_other}; the model (if fitted) is attached as
+attribute \code{fit}.
 }
 \description{
 Splits each game's margin into Dean Oliver's four factors. Across all the

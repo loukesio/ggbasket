@@ -222,19 +222,31 @@ clutch_time <- function(pbp, minutes = 5, margin = 5) {
 #'
 #' @param teams Team-game box scores from `box_score(pbp, by = "team")`,
 #'   many games (a season), both teams of each game.
+#' @param coefs Coefficients to use instead of fitting them (named
+#'   `d_efg`, `d_tov`, `d_orb`, `d_ftr`).
+#' @param min_games With fewer games than this (and no `coefs`), the
+#'   coefficients fitted on every 2024/25 game of the league are used, so a
+#'   single game can be explained on its own.
 #' @return The four factors per team and game plus `margin`, the four
 #'   contributions (`c_shooting`, `c_turnovers`, `c_rebounding`,
-#'   `c_free_throws`), `c_other`; the model is attached as attribute `fit`.
+#'   `c_free_throws`), `c_other`; the model (if fitted) is attached as
+#'   attribute `fit`.
 #' @export
-game_factors <- function(teams) {
+game_factors <- function(teams, coefs = NULL, min_games = 30) {
   ff <- four_factors(teams)
   ff$margin <- ff$pts - ff$o_pts
   ff$d_efg <- 100 * (ff$efg - ff$o_efg)
   ff$d_tov <- 100 * (ff$tov_pct - ff$o_tov_pct)
   ff$d_orb <- 100 * (ff$orb_pct - (1 - ff$drb_pct))
   ff$d_ftr <- 100 * (ff$ft_rate - ff$o_ft_rate)
-  fit <- stats::lm(margin ~ 0 + d_efg + d_tov + d_orb + d_ftr, data = ff)
-  b <- stats::coef(fit)
+  fit <- NULL
+  if (is.null(coefs) && length(unique(ff$game_id)) >= min_games) {
+    fit <- stats::lm(margin ~ 0 + d_efg + d_tov + d_orb + d_ftr, data = ff)
+    b <- stats::coef(fit)
+  } else {
+    lg <- if ("league" %in% names(ff)) as.character(ff$league[1]) else "NBA"
+    b <- coefs %||% factor_coefs[[if (identical(toupper(lg), "NBA")) "NBA" else "EuroLeague"]]
+  }
   ff$c_shooting <- b[["d_efg"]] * ff$d_efg
   ff$c_turnovers <- b[["d_tov"]] * ff$d_tov
   ff$c_rebounding <- b[["d_orb"]] * ff$d_orb

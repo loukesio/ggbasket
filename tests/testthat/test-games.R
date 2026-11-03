@@ -75,7 +75,7 @@ test_that("clutch time, game score and the game plots work", {
     for (v in c("pts", "p2m", "p3m", "orb", "tov", "ftm", "drb")) x[[paste0("o_", v)]] <- rev(x[[v]])
     x
   }))
-  gf <- game_factors(rbind(tb, fake))
+  gf <- game_factors(rbind(tb, fake), min_games = 5)
   expect_equal(gf$margin, gf$c_shooting + gf$c_turnovers + gf$c_rebounding + gf$c_free_throws + gf$c_other)
   expect_s3_class(plot_game_factors(gf, "401766128"), "ggplot")
 })
@@ -109,4 +109,16 @@ test_that("literature measures behave", {
   ps <- expected_fg(pressure_situations(pbp_games[pbp_games$league == "NBA", ], orb_reset = 14))
   tp <- team_shot_profile(ps)
   expect_true(all(tp$early_share >= 0 & tp$early_share <= 1))
+})
+
+test_that("match story and report work offline on a bundled game", {
+  g7 <- pbp_games[pbp_games$game_id == "401766128", ]
+  st <- match_story(g7, names = c(OKC = "Oklahoma City", IND = "Indiana"))
+  expect_true(length(st) >= 6)
+  expect_match(st[1], "Oklahoma City beat Indiana by 12")
+  expect_match(st[2], "turnovers")
+  skip_if_not(rmarkdown::pandoc_available())
+  f <- tempfile(fileext = ".html")
+  match_report(pbp = g7, file = f, open = FALSE)
+  expect_true(file.exists(f) && file.size(f) > 1e5)
 })
