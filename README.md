@@ -156,7 +156,6 @@ Cory Joseph's basket at 77-73 settled a game that was level for its first 21 min
 | Who played well? | `box_score()`, `game_score()`, `win_probability_added()` |
 | Everything at once, to share | `match_report()`, `match_story()`, `fetch_game()` |
 
-
 ## What you can learn from many games
 
 | Question | Functions |
@@ -167,7 +166,6 @@ Cory Joseph's basket at 77-73 settled a game that was level for its first 21 min
 | Who creates for whom? | `assist_network()`, `plot_assist_network()`, `plot_assist_matrix()`, `plot_assist_roles()` |
 | Does pressure (shot clock, score, streaks, end of period) change shooting? | `pressure_situations()`, `pressure_effects()`, `plot_pressure()` |
 | How does a shot's value change with distance or shot clock? | `shot_curve()`, `plot_shot_curve()` |
-
 
 ## Teams, players and shots
 
@@ -417,8 +415,10 @@ out(plot_shot_making(subset(sm, league == "NBA"), min_attempts = 500,
 |---|---|
 | **Where net rating comes from.** EuroLeague teams split into offence and defence. `plot_net_rating()` | **The same for the NBA.** OKC's defence was the league's best. `plot_net_rating()` |
 | ![gallery figure: ratings](man/figures/gallery/13_ratings.png) | ![gallery figure: ratings nba](man/figures/gallery/13b_ratings_nba.png) |
-| **Offence against defence map.** Every team as a dot, both leagues. `plot_ratings()` | **Four factors against the whole league.** Final Four teams on every team's spread. `plot_four_factors()` |
-| ![gallery figure: ratings map](man/figures/gallery/13c_ratings_map.png) | ![gallery figure: four factors spread](man/figures/gallery/14b_four_factors_spread.png) |
+| **Offence against defence, EuroLeague.** Centred on the league average; corners say how a team wins. `plot_ratings()` | **Offence against defence, NBA.** `plot_ratings()` |
+| ![gallery figure: ratings map](man/figures/gallery/13c_ratings_map.png) | ![gallery figure: ratings map nba](man/figures/gallery/13d_ratings_map_nba.png) |
+| **Four factors against the whole league.** Final Four teams on every team's spread. `plot_four_factors()` | |
+| ![gallery figure: four factors spread](man/figures/gallery/14b_four_factors_spread.png) | |
 | **Four factors as a ranking table.** The 2025 EuroLeague Final Four. `plot_factor_ranks()` | **Schedule-adjusted ratings.** Simple Rating System with home advantage, both leagues. `team_ratings()`, `plot_team_ratings()` |
 | ![gallery figure: four factors](man/figures/gallery/14_four_factors.png) | ![gallery figure: team ratings](man/figures/gallery/38_team_ratings.png) |
 | **Transition.** How often teams run, and how well. `team_shot_profile()` + `plot_quadrant()` | **Shot quality.** Expected value of shots taken and allowed (EuroLeague). `team_shot_profile()` |
@@ -439,10 +439,14 @@ out(plot_net_rating(ff, "EuroLeague", highlight = c("OLY", "PAN", "ULK", "MCO"),
 out(plot_net_rating(ff, "NBA", highlight = c("OKC", "CLE", "BOS", "HOU"),
                     title = "OKC's net rating was built on the league's best defence",
                     caption = cap_now), "13b_ratings_nba", 9, 9.5)
-out(plot_ratings(ff, facet = "league", highlight = c("OKC", "CLE", "BOS", "HOU", "OLY", "ULK", "PAN", "MCO"),
-                 title = "Offence against defence: OKC sit alone in the top-right corner",
-                 subtitle = "Each dot is a team: right = scores more per 100 possessions, up = allows fewer. Grey diagonals mark equal net rating (5-point steps), so teams on the same diagonal are equally good overall",
-                 caption = cap_now), "13c_ratings_map", 11, 6)
+out(plot_ratings(subset(ff, league == "EuroLeague"), highlight = c("OLY", "PAN", "ULK", "MCO"),
+                 title = "Panathinaikos and Olympiacos win with offence, Real Madrid and Fenerbahce with defence",
+                 subtitle = "EuroLeague 2024/25. The centre is an average team; up and right are both better. Colour = net rating. Bold = the Final Four",
+                 caption = cap_now), "13c_ratings_map", 9, 8.4)
+out(plot_ratings(subset(ff, league == "NBA"), highlight = c("OKC", "CLE", "BOS", "HOU"),
+                 title = "OKC's defence set them apart; Cleveland and Boston won mostly with offence",
+                 subtitle = "NBA 2024/25. The centre is an average team; up and right are both better. Colour = net rating",
+                 caption = cap_now), "13d_ratings_map_nba", 9, 8.4)
 
 ff4 <- ff
 nm <- c(OLY = "Olympiacos", PAN = "Panathinaikos", ULK = "Fenerbahce", MCO = "Monaco")

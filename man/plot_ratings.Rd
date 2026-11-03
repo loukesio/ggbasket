@@ -2,7 +2,7 @@
 % Please edit documentation in R/teams.R
 \name{plot_ratings}
 \alias{plot_ratings}
-\title{Offensive vs defensive rating, with net-rating contours}
+\title{Offence against defence: how each team wins}
 \usage{
 plot_ratings(
   ff,
@@ -10,7 +10,7 @@ plot_ratings(
   highlight = NULL,
   colour = NULL,
   size = NULL,
-  net_breaks = seq(-15, 15, by = 5),
+  net_breaks = NULL,
   facet = NULL,
   title = NULL,
   subtitle = NULL,
@@ -18,29 +18,34 @@ plot_ratings(
 )
 }
 \arguments{
-\item{ff}{Output of \code{\link[=four_factors]{four_factors()}} (needs \code{ortg}, \code{drtg}).}
+\item{ff}{Output of \code{\link[=four_factors]{four_factors()}} (needs \code{ortg}, \code{drtg}, \code{pts}, \code{poss}).}
 
 \item{label}{Column used for labels.}
 
-\item{highlight}{Labels to emphasise.}
+\item{highlight}{Labels to emphasise (bold, with a dark outline).}
 
-\item{colour}{Optional column to colour by (e.g. \code{"league"} or a cluster).}
+\item{colour}{Optional column to colour by instead of net rating (e.g.
+\code{"league"}).}
 
 \item{size}{Optional column for point size (e.g. wins).}
 
-\item{net_breaks}{Net-rating contours to draw.}
+\item{net_breaks}{Extra net-rating diagonals to draw (the zero line is
+always drawn).}
 
-\item{facet}{Optional column to facet by (e.g. \code{"league"}), each with its
-own scales.}
+\item{facet}{Optional column to facet by (e.g. \code{"league"}); each panel is
+centred on its own league average.}
 
 \item{title, subtitle, caption}{Labels.}
 }
 \description{
-One point per team: points scored per 100 possessions (x) against points
-allowed (y, reversed so good defence is up). Diagonal lines are constant
-net rating, so "how good is this team overall" is read off the diagonals and
-"how do they get there" off the axes, a trade-off that side-by-side bar
-charts of ORtg and DRtg hide.
+One dot per team. Both axes are measured against the league average, so
+the centre of the chart is an average team and up and right are both
+good: x = points scored per 100 possessions above average (offence),
+y = points allowed per 100 possessions below average (defence). The four
+corners are labelled in words, dot colour is net rating (offence +
+defence), and the dashed diagonal separates teams that outscore their
+opponents from those that do not. Both axes use the same scale, so five
+points of offence look as big as five points of defence.
 }
 \examples{
 ff <- four_factors(team_seasons)

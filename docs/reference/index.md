@@ -105,7 +105,7 @@
 - [`plot_factor_ranks()`](https://loukesio.github.io/ggbasket/reference/plot_factor_ranks.md)
   : Four factors as a ranking table
 - [`plot_ratings()`](https://loukesio.github.io/ggbasket/reference/plot_ratings.md)
-  : Offensive vs defensive rating, with net-rating contours
+  : Offence against defence: how each team wins
 - [`plot_four_factors()`](https://loukesio.github.io/ggbasket/reference/plot_four_factors.md)
   : Four factors: where each team sits in the league
 - [`team_ratings()`](https://loukesio.github.io/ggbasket/reference/team_ratings.md)

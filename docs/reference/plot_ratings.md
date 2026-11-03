@@ -1,10 +1,13 @@
-# Offensive vs defensive rating, with net-rating contours
+# Offence against defence: how each team wins
 
-One point per team: points scored per 100 possessions (x) against points
-allowed (y, reversed so good defence is up). Diagonal lines are constant
-net rating, so "how good is this team overall" is read off the diagonals
-and "how do they get there" off the axes, a trade-off that side-by-side
-bar charts of ORtg and DRtg hide.
+One dot per team. Both axes are measured against the league average, so
+the centre of the chart is an average team and up and right are both
+good: x = points scored per 100 possessions above average (offence), y =
+points allowed per 100 possessions below average (defence). The four
+corners are labelled in words, dot colour is net rating (offence +
+defence), and the dashed diagonal separates teams that outscore their
+opponents from those that do not. Both axes use the same scale, so five
+points of offence look as big as five points of defence.
 
 ## Usage
 
@@ -15,7 +18,7 @@ plot_ratings(
   highlight = NULL,
   colour = NULL,
   size = NULL,
-  net_breaks = seq(-15, 15, by = 5),
+  net_breaks = NULL,
   facet = NULL,
   title = NULL,
   subtitle = NULL,
@@ -29,7 +32,7 @@ plot_ratings(
 
   Output of
   [`four_factors()`](https://loukesio.github.io/ggbasket/reference/four_factors.md)
-  (needs `ortg`, `drtg`).
+  (needs `ortg`, `drtg`, `pts`, `poss`).
 
 - label:
 
@@ -37,11 +40,11 @@ plot_ratings(
 
 - highlight:
 
-  Labels to emphasise.
+  Labels to emphasise (bold, with a dark outline).
 
 - colour:
 
-  Optional column to colour by (e.g. `"league"` or a cluster).
+  Optional column to colour by instead of net rating (e.g. `"league"`).
 
 - size:
 
@@ -49,12 +52,12 @@ plot_ratings(
 
 - net_breaks:
 
-  Net-rating contours to draw.
+  Extra net-rating diagonals to draw (the zero line is always drawn).
 
 - facet:
 
-  Optional column to facet by (e.g. `"league"`), each with its own
-  scales.
+  Optional column to facet by (e.g. `"league"`); each panel is centred
+  on its own league average.
 
 - title, subtitle, caption:
 

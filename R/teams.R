@@ -1,67 +1,88 @@
-#' Offensive vs defensive rating, with net-rating contours
+#' Offence against defence: how each team wins
 #'
-#' One point per team: points scored per 100 possessions (x) against points
-#' allowed (y, reversed so good defence is up). Diagonal lines are constant
-#' net rating, so "how good is this team overall" is read off the diagonals and
-#' "how do they get there" off the axes, a trade-off that side-by-side bar
-#' charts of ORtg and DRtg hide.
+#' One dot per team. Both axes are measured against the league average, so
+#' the centre of the chart is an average team and up and right are both
+#' good: x = points scored per 100 possessions above average (offence),
+#' y = points allowed per 100 possessions below average (defence). The four
+#' corners are labelled in words, dot colour is net rating (offence +
+#' defence), and the dashed diagonal separates teams that outscore their
+#' opponents from those that do not. Both axes use the same scale, so five
+#' points of offence look as big as five points of defence.
 #'
-#' @param ff Output of [four_factors()] (needs `ortg`, `drtg`).
+#' @param ff Output of [four_factors()] (needs `ortg`, `drtg`, `pts`, `poss`).
 #' @param label Column used for labels.
-#' @param highlight Labels to emphasise.
-#' @param colour Optional column to colour by (e.g. `"league"` or a cluster).
+#' @param highlight Labels to emphasise (bold, with a dark outline).
+#' @param colour Optional column to colour by instead of net rating (e.g.
+#'   `"league"`).
 #' @param size Optional column for point size (e.g. wins).
-#' @param net_breaks Net-rating contours to draw.
-#' @param facet Optional column to facet by (e.g. `"league"`), each with its
-#'   own scales.
+#' @param net_breaks Extra net-rating diagonals to draw (the zero line is
+#'   always drawn).
+#' @param facet Optional column to facet by (e.g. `"league"`); each panel is
+#'   centred on its own league average.
 #' @param title,subtitle,caption Labels.
 #' @export
 #' @examples
 #' ff <- four_factors(team_seasons)
 #' plot_ratings(subset(ff, league == "NBA"), highlight = c("OKC", "CLE", "BOS"))
 plot_ratings <- function(ff, label = "team", highlight = NULL, colour = NULL, size = NULL,
-                         net_breaks = seq(-15, 15, by = 5), facet = NULL,
+                         net_breaks = NULL, facet = NULL,
                          title = NULL, subtitle = NULL, caption = NULL) {
-  ff$.lab <- as.character(ff[[label]])
-  ff$.hl <- ff$.lab %in% highlight
-  centre <- ff |>
-    dplyr::group_by(dplyr::across(dplyr::all_of(facet))) |>
-    dplyr::summarise(mo = mean(.data$ortg), md = mean(.data$drtg), .groups = "drop")
-  rng <- range(c(ff$ortg, ff$drtg))
-  span <- seq(rng[1] - 10, rng[2] + 10, length.out = 2)
-  iso <- expand.grid(net = net_breaks, end = 1:2)
-  iso$ortg <- span[iso$end]
-  iso$drtg <- iso$ortg - iso$net
-  iso_lab <- iso[iso$end == 2, ]
-  p <- ggplot2::ggplot(ff, ggplot2::aes(.data$ortg, .data$drtg)) +
-    ggplot2::geom_line(data = iso, mapping = ggplot2::aes(.data$ortg, .data$drtg, group = .data$net),
-                       colour = "grey85", linewidth = 0.35, inherit.aes = FALSE) +
-    ggplot2::geom_vline(data = centre, ggplot2::aes(xintercept = .data$mo), colour = "grey70",
-                        linetype = "22") +
-    ggplot2::geom_hline(data = centre, ggplot2::aes(yintercept = .data$md), colour = "grey70",
-                        linetype = "22")
-  pt_aes <- ggplot2::aes()
-  pt_args <- list(alpha = 0.9)
-  if (!is.null(colour)) pt_aes$colour <- rlang::quo(.data[[colour]]) else
-    pt_args$colour <- ifelse(ff$.hl, ggbasket_colours$highlight, "grey35")
-  if (!is.null(size)) pt_aes$size <- rlang::quo(.data[[size]]) else pt_args$size <- 2.6
-  p <- p + do.call(ggplot2::geom_point, c(list(mapping = pt_aes), pt_args))
-  p <- p +
+  d <- as.data.frame(ff)
+  grp <- if (is.null(facet)) rep("all", nrow(d)) else d[[facet]]
+  avg <- tapply(100 * d$pts, grp, sum) / tapply(d$poss, grp, sum)
+  d$off <- d$ortg - avg[grp]
+  d$def <- avg[grp] - d$drtg
+  d$net <- d$off + d$def
+  d$.lab <- as.character(d[[label]])
+  d$.hl <- d$.lab %in% highlight
+  lim <- max(abs(c(d$off, d$def))) * 1.12
+  corners <- data.frame(x = c(lim, -lim, lim, -lim), y = c(lim, lim, -lim, -lim),
+                        hjust = c(1, 0, 1, 0), vjust = c(1, 1, 0, 0),
+                        label = c("Good at both ends", "Defence carries them", "Offence carries them",
+                                  "Struggles at both ends"))
+  if (!is.null(facet)) corners <- merge(corners, data.frame(.f = unique(d[[facet]])), by = NULL) |>
+    stats::setNames(c(names(corners), facet))
+  diag <- data.frame(net = unique(c(0, net_breaks)))
+  p <- ggplot2::ggplot(d, ggplot2::aes(.data$off, .data$def)) +
+    ggplot2::annotate("rect", xmin = 0, xmax = Inf, ymin = 0, ymax = Inf, fill = "#F3F6F8") +
+    ggplot2::geom_hline(yintercept = 0, colour = "grey60", linewidth = 0.4) +
+    ggplot2::geom_vline(xintercept = 0, colour = "grey60", linewidth = 0.4) +
+    ggplot2::geom_abline(data = diag, ggplot2::aes(slope = -1, intercept = .data$net), colour = "grey55",
+                         linetype = "22", linewidth = 0.4) +
+    ggplot2::geom_text(data = corners, ggplot2::aes(x = .data$x, y = .data$y, label = .data$label,
+                                                    hjust = .data$hjust, vjust = .data$vjust),
+                       colour = "grey45", size = 3.2, fontface = "italic", inherit.aes = FALSE) +
+    ggplot2::annotate("text", x = lim * 0.55, y = -lim * 0.55, angle = -45, vjust = -0.6, size = 2.8,
+                      colour = "grey40", label = "above this line: outscore opponents") +
+    ggplot2::annotate("text", x = lim * 0.55, y = -lim * 0.55, angle = -45, vjust = 1.6, size = 2.8,
+                      colour = "grey40", label = "below: outscored")
+  pt_aes <- ggplot2::aes(fill = .data$net)
+  if (!is.null(colour)) pt_aes$fill <- rlang::quo(.data[[colour]])
+  if (!is.null(size)) pt_aes$size <- rlang::quo(.data[[size]])
+  p <- p + ggplot2::geom_point(pt_aes, shape = 21, size = if (is.null(size)) 3.4 else NULL,
+                               colour = ifelse(d$.hl, ggbasket_colours$ink, ggbasket_colours$paper),
+                               stroke = ifelse(d$.hl, 1.1, 0.5)) +
     ggrepel::geom_text_repel(family = gb_family(), ggplot2::aes(label = .data$.lab),
-                             size = ifelse(ff$.hl, 3.6, 2.9),
-                             fontface = ifelse(ff$.hl, "bold", "plain"),
-                             colour = ifelse(ff$.hl, "black", "grey35"),
-                             box.padding = 0.25, min.segment.length = 0.3, seed = 2) +
-    ggplot2::scale_y_reverse() +
-    ggplot2::coord_cartesian(xlim = range(ff$ortg) + c(-1, 1), ylim = rev(range(ff$drtg) + c(-1, 1))) +
-    theme_ggbasket() +
-    ggplot2::labs(x = "Offensive rating (points scored per 100 possessions) \u2192 better",
-                  y = "Defensive rating (points allowed per 100) \u2192 better",
-                  title = title, caption = caption,
-                  subtitle = subtitle %||% "Grey diagonals: constant net rating (5-point steps). Top right = good at both ends")
-  if (!is.null(colour) && colour == "league") p <- p + scale_colour_league(name = NULL)
+                             size = ifelse(d$.hl, 3.6, 2.8), fontface = ifelse(d$.hl, "bold", "plain"),
+                             colour = ifelse(d$.hl, ggbasket_colours$ink, "grey35"),
+                             box.padding = 0.3, min.segment.length = 0.3, seed = 2)
+  if (is.null(colour)) {
+    p <- p + ggplot2::scale_fill_gradientn(colours = ggbasket_colours$diverging, limits = c(-1, 1) * max(abs(d$net)),
+                                           name = "Net rating", labels = function(x) sprintf("%+.0f", x),
+                                           guide = ggplot2::guide_colourbar(barwidth = grid::unit(10, "lines"),
+                                                                            barheight = grid::unit(0.5, "lines")))
+  } else if (colour == "league") p <- p + scale_fill_league(name = NULL)
   if (!is.null(size)) p <- p + ggplot2::scale_size_area(max_size = 6)
-  if (!is.null(facet)) p <- p + ggplot2::facet_wrap(facet, scales = "free")
+  p <- p +
+    ggplot2::scale_x_continuous(labels = function(x) sprintf("%+.0f", x)) +
+    ggplot2::scale_y_continuous(labels = function(x) sprintf("%+.0f", x)) +
+    ggplot2::coord_equal(xlim = c(-lim, lim), ylim = c(-lim, lim)) +
+    theme_ggbasket() +
+    ggplot2::labs(x = "Offence: points scored per 100 possessions, above league average \u2192",
+                  y = "Defence: points allowed per 100, below league average \u2192",
+                  title = title, caption = caption,
+                  subtitle = subtitle %||% "The centre is an average team; up and right are both better. Colour = net rating (offence + defence)")
+  if (!is.null(facet)) p <- p + ggplot2::facet_wrap(facet)
   p
 }
 

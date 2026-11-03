@@ -429,8 +429,10 @@ Every figure below comes from real 2024/25 NBA and EuroLeague data;
 |----|----|
 | **Where net rating comes from.** EuroLeague teams split into offence and defence. [`plot_net_rating()`](https://loukesio.github.io/ggbasket/reference/plot_net_rating.md) | **The same for the NBA.** OKC’s defence was the league’s best. [`plot_net_rating()`](https://loukesio.github.io/ggbasket/reference/plot_net_rating.md) |
 | ![gallery figure: ratings](reference/figures/gallery/13_ratings.png) | ![gallery figure: ratings nba](reference/figures/gallery/13b_ratings_nba.png) |
-| **Offence against defence map.** Every team as a dot, both leagues. [`plot_ratings()`](https://loukesio.github.io/ggbasket/reference/plot_ratings.md) | **Four factors against the whole league.** Final Four teams on every team’s spread. [`plot_four_factors()`](https://loukesio.github.io/ggbasket/reference/plot_four_factors.md) |
-| ![gallery figure: ratings map](reference/figures/gallery/13c_ratings_map.png) | ![gallery figure: four factors spread](reference/figures/gallery/14b_four_factors_spread.png) |
+| **Offence against defence, EuroLeague.** Centred on the league average; corners say how a team wins. [`plot_ratings()`](https://loukesio.github.io/ggbasket/reference/plot_ratings.md) | **Offence against defence, NBA.** [`plot_ratings()`](https://loukesio.github.io/ggbasket/reference/plot_ratings.md) |
+| ![gallery figure: ratings map](reference/figures/gallery/13c_ratings_map.png) | ![gallery figure: ratings map nba](reference/figures/gallery/13d_ratings_map_nba.png) |
+| **Four factors against the whole league.** Final Four teams on every team’s spread. [`plot_four_factors()`](https://loukesio.github.io/ggbasket/reference/plot_four_factors.md) |  |
+| ![gallery figure: four factors spread](reference/figures/gallery/14b_four_factors_spread.png) |  |
 | **Four factors as a ranking table.** The 2025 EuroLeague Final Four. [`plot_factor_ranks()`](https://loukesio.github.io/ggbasket/reference/plot_factor_ranks.md) | **Schedule-adjusted ratings.** Simple Rating System with home advantage, both leagues. [`team_ratings()`](https://loukesio.github.io/ggbasket/reference/team_ratings.md), [`plot_team_ratings()`](https://loukesio.github.io/ggbasket/reference/plot_team_ratings.md) |
 | ![gallery figure: four factors](reference/figures/gallery/14_four_factors.png) | ![gallery figure: team ratings](reference/figures/gallery/38_team_ratings.png) |
 | **Transition.** How often teams run, and how well. [`team_shot_profile()`](https://loukesio.github.io/ggbasket/reference/team_shot_profile.md) + [`plot_quadrant()`](https://loukesio.github.io/ggbasket/reference/plot_quadrant.md) | **Shot quality.** Expected value of shots taken and allowed (EuroLeague). [`team_shot_profile()`](https://loukesio.github.io/ggbasket/reference/team_shot_profile.md) |
@@ -451,10 +453,14 @@ Every figure below comes from real 2024/25 NBA and EuroLeague data;
 `out``(`[`plot_net_rating`](https://loukesio.github.io/ggbasket/reference/plot_net_rating.md)`(``ff``, ``"NBA"``, highlight ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"OKC"``, ``"CLE"``, ``"BOS"``, ``"HOU"``)``,`\
 `                    title ``=`` ``"OKC's net rating was built on the league's best defence"``,`\
 `                    caption ``=`` ``cap_now``)``, ``"13b_ratings_nba"``, ``9``, ``9.5``)`\
-`out``(`[`plot_ratings`](https://loukesio.github.io/ggbasket/reference/plot_ratings.md)`(``ff``, facet ``=`` ``"league"``, highlight ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"OKC"``, ``"CLE"``, ``"BOS"``, ``"HOU"``, ``"OLY"``, ``"ULK"``, ``"PAN"``, ``"MCO"``)``,`\
-`                 title ``=`` ``"Offence against defence: OKC sit alone in the top-right corner"``,`\
-`                 subtitle ``=`` ``"Each dot is a team: right = scores more per 100 possessions, up = allows fewer. Grey diagonals mark equal net rating (5-point steps), so teams on the same diagonal are equally good overall"``,`\
-`                 caption ``=`` ``cap_now``)``, ``"13c_ratings_map"``, ``11``, ``6``)`\
+`out``(`[`plot_ratings`](https://loukesio.github.io/ggbasket/reference/plot_ratings.md)`(`[`subset`](https://rdrr.io/r/base/subset.html)`(``ff``, ``league`` ``==`` ``"EuroLeague"``)``, highlight ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"OLY"``, ``"PAN"``, ``"ULK"``, ``"MCO"``)``,`\
+`                 title ``=`` ``"Panathinaikos and Olympiacos win with offence, Real Madrid and Fenerbahce with defence"``,`\
+`                 subtitle ``=`` ``"EuroLeague 2024/25. The centre is an average team; up and right are both better. Colour = net rating. Bold = the Final Four"``,`\
+`                 caption ``=`` ``cap_now``)``, ``"13c_ratings_map"``, ``9``, ``8.4``)`\
+`out``(`[`plot_ratings`](https://loukesio.github.io/ggbasket/reference/plot_ratings.md)`(`[`subset`](https://rdrr.io/r/base/subset.html)`(``ff``, ``league`` ``==`` ``"NBA"``)``, highlight ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"OKC"``, ``"CLE"``, ``"BOS"``, ``"HOU"``)``,`\
+`                 title ``=`` ``"OKC's defence set them apart; Cleveland and Boston won mostly with offence"``,`\
+`                 subtitle ``=`` ``"NBA 2024/25. The centre is an average team; up and right are both better. Colour = net rating"``,`\
+`                 caption ``=`` ``cap_now``)``, ``"13d_ratings_map_nba"``, ``9``, ``8.4``)`\
 \
 `ff4`` ``<-`` ``ff`\
 `nm`` ``<-`` `[`c`](https://rdrr.io/r/base/c.html)`(``OLY ``=`` ``"Olympiacos"``, PAN ``=`` ``"Panathinaikos"``, ULK ``=`` ``"Fenerbahce"``, MCO ``=`` ``"Monaco"``)`\

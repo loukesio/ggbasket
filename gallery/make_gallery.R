@@ -141,10 +141,14 @@ if (want("ratings")) {
   out(plot_net_rating(ff, "NBA", highlight = c("OKC", "CLE", "BOS", "HOU"),
                       title = "OKC's net rating was built on the league's best defence",
                       caption = cap_now), "13b_ratings_nba", 9, 9.5)
-  out(plot_ratings(ff, facet = "league", highlight = c("OKC", "CLE", "BOS", "HOU", "OLY", "ULK", "PAN", "MCO"),
-                   title = "Offence against defence: OKC sit alone in the top-right corner",
-                   subtitle = "Each dot is a team: right = scores more per 100 possessions, up = allows fewer. Grey diagonals mark equal net rating (5-point steps), so teams on the same diagonal are equally good overall",
-                   caption = cap_now), "13c_ratings_map", 11, 6)
+  out(plot_ratings(subset(ff, league == "EuroLeague"), highlight = c("OLY", "PAN", "ULK", "MCO"),
+                   title = "Panathinaikos and Olympiacos win with offence, Real Madrid and Fenerbahce with defence",
+                   subtitle = "EuroLeague 2024/25. The centre is an average team; up and right are both better. Colour = net rating. Bold = the Final Four",
+                   caption = cap_now), "13c_ratings_map", 9, 8.4)
+  out(plot_ratings(subset(ff, league == "NBA"), highlight = c("OKC", "CLE", "BOS", "HOU"),
+                   title = "OKC's defence set them apart; Cleveland and Boston won mostly with offence",
+                   subtitle = "NBA 2024/25. The centre is an average team; up and right are both better. Colour = net rating",
+                   caption = cap_now), "13d_ratings_map_nba", 9, 8.4)
 }
 if (want("fourfactors")) {
   ff4 <- ff
