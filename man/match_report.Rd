@@ -9,6 +9,7 @@ match_report(
   league = c("EuroLeague", "NBA"),
   season = NULL,
   pbp = NULL,
+  season_pbp = NULL,
   file = NULL,
   context = FALSE,
   names = NULL,
@@ -26,6 +27,9 @@ match_report(
 \item{season}{EuroLeague season start year (e.g. \code{2026} for 2026/27).}
 
 \item{pbp}{Play-by-play of the game, if already downloaded.}
+
+\item{season_pbp}{Play-by-play of the teams' other games, if already
+downloaded (used instead of \code{context}).}
 
 \item{file}{Output file (default: \code{"<home>-<away>-<date>.html"} in the
 working directory).}

@@ -130,6 +130,8 @@ match_story <- function(pbp, names = NULL) {
 #'
 #' @inheritParams fetch_game
 #' @param pbp Play-by-play of the game, if already downloaded.
+#' @param season_pbp Play-by-play of the teams' other games, if already
+#'   downloaded (used instead of `context`).
 #' @param file Output file (default: `"<home>-<away>-<date>.html"` in the
 #'   working directory).
 #' @param context Also compare the game with both teams' season so far.
@@ -148,7 +150,8 @@ match_story <- function(pbp, names = NULL) {
 #' match_report("401766128", "NBA")
 #' match_report(pbp = subset(pbp_games, game_id == "401766128"), context = FALSE)
 #' }
-match_report <- function(game = NULL, league = c("EuroLeague", "NBA"), season = NULL, pbp = NULL, file = NULL,
+match_report <- function(game = NULL, league = c("EuroLeague", "NBA"), season = NULL, pbp = NULL, season_pbp = NULL,
+                         file = NULL,
                          context = FALSE, names = NULL, colours = NULL, interactive = TRUE,
                          open = base::interactive()) {
   rlang::check_installed("rmarkdown", "to write the report")
@@ -159,7 +162,7 @@ match_report <- function(game = NULL, league = c("EuroLeague", "NBA"), season = 
   if (is.null(names) && all(c("hometeam_name", "awayteam_name") %in% names(pbp))) {
     names <- stats::setNames(trimws(c(pbp$hometeam_name[1], pbp$awayteam_name[1])), c(pbp$hometeam[1], pbp$awayteam[1]))
   }
-  season_pbp <- NULL
+  if (!is.null(season_pbp)) context <- FALSE
   if (context && league == "EuroLeague" && !is.null(season)) {
     teams <- c(pbp$hometeam[1], pbp$awayteam[1])
     g <- jsonlite::fromJSON(sprintf("https://api-live.euroleague.net/v2/competitions/E/seasons/E%d/games", season))$data

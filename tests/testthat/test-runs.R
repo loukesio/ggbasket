@@ -23,3 +23,16 @@ test_that("plot_game_flow_interactive builds a widget", {
   expect_s3_class(w, "girafe")
   expect_false(any(grepl("^liberation", vapply(w$dependencies, `[[`, "", "name"))))
 })
+
+test_that("lineup_explorer embeds stints that add up to the final score", {
+  skip_if_not_installed("htmltools")
+  g7 <- subset(pbp_games, game_id == "401766128")
+  x <- as.character(lineup_explorer(g7))
+  js <- regmatches(x, regexpr("var D=\\{.*?\\};var root", x))
+  d <- jsonlite::fromJSON(sub(";var root$", "", sub("^var D=", "", js)), simplifyVector = FALSE)
+  okc <- d$teams[[1]]
+  expect_equal(okc$code, "OKC")
+  expect_equal(sum(vapply(okc$game, `[[`, 0, "f")), 103)
+  expect_equal(sum(vapply(okc$game, `[[`, 0, "a")), 91)
+  expect_equal(sum(vapply(okc$game, `[[`, 0, "s")), 48 * 60)
+})

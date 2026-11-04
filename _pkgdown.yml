@@ -29,7 +29,7 @@ reference:
 - title: One game
   contents: [match_report, match_story, game_flow, scoring_runs, explain_runs, plot_game_flow, plot_game_flow_interactive, win_probability, plot_win_probability, game_factors, plot_game_factors, game_summary, clutch_time, win_probability_added, plot_wpa]
 - title: Many games and player impact
-  contents: [stints, on_off, lineups, plot_on_off, plot_lineups, rapm, plot_rapm, game_score, plot_consistency, assist_network, plot_assist_network, plot_assist_matrix, plot_assist_roles, pressure_situations, pressure_effects, plot_pressure]
+  contents: [stints, on_off, lineups, lineup_explorer, plot_on_off, plot_lineups, rapm, plot_rapm, game_score, plot_consistency, assist_network, plot_assist_network, plot_assist_matrix, plot_assist_roles, pressure_situations, pressure_effects, plot_pressure]
 - title: Teams
   contents: [possessions, four_factors, four_factor_info, plot_net_rating, plot_factor_ranks, plot_ratings, plot_four_factors, team_ratings, plot_team_ratings, team_shot_profile, expected_wins, plot_luck, gini, lorenz, plot_lorenz]
 - title: Players
